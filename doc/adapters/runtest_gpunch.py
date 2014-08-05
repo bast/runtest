@@ -12,8 +12,8 @@ class Filter(runtest.Filter):
     def add(self, *args, **kwargs):
         try:
             runtest.Filter.add(self, *args, **kwargs)
-        except runtest.FilterKeywordError as e:
-            sys.stderr.write(e.message)
+        except runtest.FilterKeywordError, e:
+            sys.stderr.write(str(e))
             sys.exit(-1)
 
 
@@ -55,17 +55,20 @@ class TestRun(runtest.TestRun):
                     try:
                         f.check(self.work_dir, '%s' % out, 'reference/%s' % out, self.verbose)
                         sys.stdout.write('passed\n')
-                    except IOError as e:
+                    except IOError, e:
                         sys.stderr.write('ERROR: could not open file %s\n' % e.filename)
                         sys.exit(-1)
-                    except runtest.TestFailedError as e:
-                        sys.stderr.write(e.message)
+                    except runtest.TestFailedError, e:
+                        sys.stderr.write(str(e))
                         self.return_code += 1
-                    except runtest.BadFilterError as e:
-                        sys.stderr.write(e.message)
+                    except runtest.BadFilterError, e:
+                        sys.stderr.write(str(e))
                         sys.exit(-1)
-            except runtest.AcceptedError as e:
-                sys.stdout.write(e.message)
-            except runtest.SubprocessError as e:
-                sys.stderr.write(e.message)
+                    except runtest.FilterKeywordError, e:
+                        sys.stderr.write(str(e))
+                        sys.exit(-1)
+            except runtest.AcceptedError, e:
+                sys.stdout.write(str(e))
+            except runtest.SubprocessError, e:
+                sys.stderr.write(str(e))
                 sys.exit(-1)
