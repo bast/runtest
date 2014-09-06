@@ -15,7 +15,8 @@
       https://github.com/rbast/runtest
 """
 
-RUNTEST_VERSION = 'v0.1.7'
+# since version 1.0.0 we follow http://semver.org/
+__version__ = '1.0.0'
 
 import re
 import os
@@ -119,7 +120,7 @@ class TestRun:
 
     #--------------------------------------------------------------------------
     def _parse_args(self, input_dir, argv):
-        parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % RUNTEST_VERSION)
+        parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
         parser.add_option('--binary-dir',
                           '-b',
                           action='store',
