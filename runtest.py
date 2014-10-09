@@ -16,7 +16,7 @@
 """
 
 # since version 1.0.0 we follow http://semver.org/
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 import re
 import os
@@ -434,12 +434,12 @@ class Filter:
         for n, line in enumerate(text):
             i = 0
             for w in line.split():
-                i += 1
-                if (f.use_mask) and (i not in f.mask):
-                    continue
                 # do not consider words like TzB1g
                 # otherwise we would extract 1 later
                 if re.match(r'^[0-9\.eEdD\+\-]*$', w):
+                    i += 1
+                    if (f.use_mask) and (i not in f.mask):
+                        continue
                     is_integer = False
                     if len(pattern_float.findall(w)) > 0:
                         is_integer = (pattern_float.findall(w) == pattern_int.findall(w))
