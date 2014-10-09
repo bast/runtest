@@ -16,7 +16,7 @@
 """
 
 # since version 1.0.0 we follow http://semver.org/
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 import re
 import os
@@ -303,6 +303,15 @@ class Filter:
             log_ref.write(''.join(ref_filtered))
             ref_numbers, ref_location = self._extract_numbers(f, ref_filtered)
 
+            if out_numbers == [] and ref_numbers == []:
+                # no numbers are extracted
+                if out_filtered != ref_filtered:
+                    log_diff.write('ERROR: extracted strings do not match\n')
+                    log_diff.write('own gave:\n')
+                    log_diff.write(''.join(out_filtered) + '\n')
+                    log_diff.write('reference gave:\n')
+                    log_diff.write(''.join(ref_filtered) + '\n')
+
             if len(out_numbers) == len(ref_numbers):
                 l = self._compare_numbers(f, out_numbers, ref_numbers)
                 if 0 in l:
@@ -317,7 +326,7 @@ class Filter:
                                     log_diff.write('ERROR   %s' % self._underline(f, start_char, length, ref_numbers[i], is_integer))
 
             if len(out_numbers) != len(ref_numbers):
-                log_diff.write('extracted sizes do not match\n')
+                log_diff.write('ERROR: extracted sizes do not match\n')
                 log_diff.write('own gave %i numbers:\n' % len(out_numbers))
                 log_diff.write(''.join(out_filtered) + '\n')
                 log_diff.write('reference gave %i numbers:\n' % len(ref_numbers))
