@@ -16,7 +16,7 @@
 """
 
 # since version 1.0.0 we follow http://semver.org/
-__version__ = '1.0.3'
+__version__ = '1.0.4'
 
 import re
 import os
@@ -323,7 +323,7 @@ class Filter:
                             if line_num == k:
                                 if l[i] == 0:
                                     is_integer = isinstance(num, int)
-                                    log_diff.write('ERROR   %s' % self._underline(f, start_char, length, ref_numbers[i], is_integer))
+                                    log_diff.write('ERROR   %s' % self._underline(f, start_char, length, ref_numbers[i], out_numbers[i], is_integer))
 
             if len(out_numbers) != len(ref_numbers):
                 log_diff.write('ERROR: extracted sizes do not match\n')
@@ -460,13 +460,14 @@ class Filter:
         return numbers, location
 
     #--------------------------------------------------------------------------
-    def _underline(self, f, start_char, length, reference, is_integer):
+    def _underline(self, f, start_char, length, reference, number, is_integer):
         """
         Input:
             - f -- filter task
             - start_char -- position of start character
             - length -- underline length
             - reference -- reference number
+            - number -- obtained (calculated) number
             - is_integer -- whether reference number is integer
 
         Returns:
@@ -486,9 +487,9 @@ class Filter:
         if not is_integer:
             if f.tolerance_is_set:
                 if f.tolerance_is_relative:
-                    s += ' (rel tolerance: %e)' % f.tolerance
+                    s += ' (rel diff: %6.2e)' % abs(1.0 - number/reference)
                 else:
-                    s += ' (abs tolerance: %e)' % f.tolerance
+                    s += ' (abs diff: %6.2e)' % abs(number - reference)
 
         return s + '\n'
 
