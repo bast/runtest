@@ -16,7 +16,7 @@
 """
 
 # since version 1.0.0 we follow http://semver.org/
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 import re
 import os
@@ -453,6 +453,9 @@ class Filter:
                         else:
                             numbers.append(float(m))
                         location.append((n, index, len(m)))
+        if f.use_mask:
+            if numbers == []:
+                raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
         return numbers, location
 
