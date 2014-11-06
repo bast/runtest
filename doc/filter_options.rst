@@ -151,7 +151,7 @@ Example:
 
   f = Filter()
   f.add(from_string = 'no.    eigenvalue (eV)   mean-res.',
-        nr_lines    = 4,
+        num_lines   = 4,
         tolerance   = 1.0e-4,
         mask        = [1, 2, 3])
 
