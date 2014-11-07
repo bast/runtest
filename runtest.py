@@ -16,7 +16,7 @@
 """
 
 # since version 1.0.0 we follow http://semver.org/
-__version__ = '1.0.4'
+__version__ = '1.0.5'
 
 import re
 import os
@@ -489,7 +489,10 @@ class Filter:
                 if f.tolerance_is_relative:
                     s += ' (rel diff: %6.2e)' % abs(1.0 - number/reference)
                 else:
-                    s += ' (abs diff: %6.2e)' % abs(number - reference)
+                    if f.ignore_sign:
+                        s += ' (abs diff: %6.2e ignoring signs)' % abs(abs(number) - abs(reference))
+                    else:
+                        s += ' (abs diff: %6.2e)' % abs(number - reference)
 
         return s + '\n'
 
