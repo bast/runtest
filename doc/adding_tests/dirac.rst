@@ -39,10 +39,12 @@ First we load some standard modules and import functionality from the library
    test = TestRun(__file__, sys.argv)
 
    f = Filter()
-   f.add(from_string = '@   Elements of the electric dipole',
-         to_string   = '@   anisotropy')
-   f.add(from_string = '************ Expectation values',
-         to_string   = 's0 = T : Expectation value')
+   f.add(from_string   = '@   Elements of the electric dipole',
+         to_string     = '@   anisotropy',
+         rel_tolerance = 1.0e-5)
+   f.add(from_string   = '************ Expectation values',
+         to_string     = 's0 = T : Expectation value',
+         rel_tolerance = 1.0e-5)
 
    test.run(['PBE0gracLB94.inp', 'GLLBsaopLBalpha.inp'], ['Ne.mol'], f)
 
@@ -52,7 +54,7 @@ Then we construct the filter object. It consists of two filter tasks. We can con
 as many filter objects as we like and each can consist of as many tasks as we like.
 
 .. code-block:: python
-   :emphasize-lines: 11-15
+   :emphasize-lines: 11-17
 
    #!/usr/bin/env python
 
@@ -65,10 +67,12 @@ as many filter objects as we like and each can consist of as many tasks as we li
    test = TestRun(__file__, sys.argv)
 
    f = Filter()
-   f.add(from_string = '@   Elements of the electric dipole',
-         to_string   = '@   anisotropy')
-   f.add(from_string = '************ Expectation values',
-         to_string   = 's0 = T : Expectation value')
+   f.add(from_string   = '@   Elements of the electric dipole',
+         to_string     = '@   anisotropy',
+         rel_tolerance = 1.0e-5)
+   f.add(from_string   = '************ Expectation values',
+         to_string     = 's0 = T : Expectation value',
+         rel_tolerance = 1.0e-5)
 
    test.run(['PBE0gracLB94.inp', 'GLLBsaopLBalpha.inp'], ['Ne.mol'], f)
 
@@ -96,10 +100,12 @@ them separately in two lines. This would make no difference, just more typing.
    test = TestRun(__file__, sys.argv)
 
    f = Filter()
-   f.add(from_string = '@   Elements of the electric dipole',
-         to_string   = '@   anisotropy')
-   f.add(from_string = '************ Expectation values',
-         to_string   = 's0 = T : Expectation value')
+   f.add(from_string   = '@   Elements of the electric dipole',
+         to_string     = '@   anisotropy',
+         rel_tolerance = 1.0e-5)
+   f.add(from_string   = '************ Expectation values',
+         to_string     = 's0 = T : Expectation value',
+         rel_tolerance = 1.0e-5)
 
    test.run(['PBE0gracLB94.inp', 'GLLBsaopLBalpha.inp'], ['Ne.mol'], f)
 
