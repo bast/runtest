@@ -1,12 +1,13 @@
 
 """
-   runtest - Numerically tolerant test library.
+   runtest - Numerically tolerant test library
 
    Author:
-      Radovan Bast (lastname at kth.se).
+      Radovan Bast (lastname at kth.se)
 
    License:
-      GNU Lesser General Public License.
+      GNU Lesser General Public License Version 3
+      https://github.com/rbast/runtest/blob/master/LICENSE
 
    Documentation:
       http://runtest.readthedocs.org
