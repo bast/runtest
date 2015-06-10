@@ -1,12 +1,13 @@
 
 """
-   runtest - Numerically tolerant test library.
+   runtest - Numerically tolerant test library
 
    Author:
-      Radovan Bast (lastname at kth.se).
+      Radovan Bast (lastname at kth.se)
 
    License:
-      GNU Lesser General Public License.
+      GNU Lesser General Public License Version 3
+      https://github.com/rbast/runtest/blob/master/LICENSE
 
    Documentation:
       http://runtest.readthedocs.org
@@ -16,7 +17,7 @@
 """
 
 # since version 1.0.0 we follow http://semver.org/
-__version__ = '1.0.5'
+__version__ = '1.1.0'
 
 import re
 import os
@@ -66,6 +67,7 @@ class TestRun:
         self.work_dir   = options.work_dir
         self.verbose    = options.verbose
         self.skip_run   = options.skip_run
+        self.debug      = options.debug
 
         if self.work_dir != self.input_dir:
             self._safe_copy(self.input_dir, self.work_dir)
@@ -90,11 +92,20 @@ class TestRun:
         if sys.platform != "win32":
             command = shlex.split(command)
 
+        if self.debug:
+            print('\nlaunching command: %s' % ' '.join(command))
+
         process = subprocess.Popen(command,
                                    stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
+
+        if self.debug:
+            print('\nstdout:\n%s' % stdout)
+            if stderr != '':
+                print('\nstderr:\n%s' % stderr)
+
         for error in accepted_errors:
             if error in stderr:
                 # we found an error that we expect/accept
@@ -141,6 +152,11 @@ class TestRun:
                           action='store_true',
                           default=False,
                           help='skip actual calculation(s) [default: %default]')
+        parser.add_option('--debug',
+                          '-d',
+                          action='store_true',
+                          default=False,
+                          help='print verbose debug information [default: %default]')
         (options, args) = parser.parse_args(args=argv[1:])
 
         if sys.platform == "win32":
