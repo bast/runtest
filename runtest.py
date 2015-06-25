@@ -16,8 +16,7 @@
       https://github.com/rbast/runtest
 """
 
-# since version 1.0.0 we follow http://semver.org/
-__version__ = '1.1.0'
+__version__ = '1.2.0'  # http://semver.org
 
 import re
 import os
@@ -178,6 +177,7 @@ class _SingleFilter:
                                'to_string',
                                'string',
                                'ignore_below',
+                               'ignore_above',
                                'ignore_sign',
                                'mask',
                                'num_lines',
@@ -213,7 +213,8 @@ class _SingleFilter:
         self.from_string = kwargs.get('from_string', '')
         self.to_string = kwargs.get('to_string', '')
         self.ignore_sign = kwargs.get('ignore_sign', False)
-        self.ignore_below = kwargs.get('ignore_below', 1.0e-40)
+        self.ignore_below = kwargs.get('ignore_below', sys.float_info.min)
+        self.ignore_above = kwargs.get('ignore_above', sys.float_info.max)
         self.num_lines = kwargs.get('num_lines', 0)
 
         if 'rel_tolerance' in kwargs.keys():
@@ -553,7 +554,7 @@ class Filter:
                 # we compare floats
                 if not f.tolerance_is_set:
                     raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-                if abs(r_ref) > f.ignore_below:
+                if (abs(r_ref) > f.ignore_below) and (abs(r_ref) < f.ignore_above):
                     # calculate relative error only for
                     # significant ('nonzero') numbers
                     error = r_out - r_ref

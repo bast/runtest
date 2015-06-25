@@ -112,10 +112,10 @@ Sometimes the sign does is not predictable. For this set ignore_sign to True:
         ignore_sign = True)
 
 
-How to ignore very small numbers
---------------------------------
+How to ignore very small or very large numbers
+----------------------------------------------
 
-For this set ignore_below.
+You can ignore very small numbers with ignore_below.
 Default is 1.0e-40. Ignore all floats that are smaller than this number.
 
 As an example consider the following result tensor::
@@ -137,6 +137,9 @@ at all.  In this case it is useful to set ignore_below to 1.0e-4.
 
 Alternatively one could use absolute tolerance to avoid checking the noisy
 zeros.
+
+You can ignore very large numbers with ignore_above.
+
 
 
 How to ignore certain numbers
