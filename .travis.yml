@@ -10,6 +10,6 @@ before_script:
 script:
   - pep8 --ignore=E501 src/runtest.py
   - pep8 --ignore=E501 test/test.py
-  - py.test --cov src src/runtest.py
+  - py.test --cov src test/test.py
 after_success:
   - coveralls
