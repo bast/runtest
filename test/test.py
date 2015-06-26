@@ -1,11 +1,9 @@
 import os
 import sys
-
-HERE = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(os.path.join(HERE, '..', 'src'))
 import runtest
 
 # ------------------------------------------------------------------------------
+
 
 def test_extract_numbers():
     """
@@ -55,3 +53,23 @@ def test_extract_numbers():
 
     assert numbers == [0.0, -1.901357604797, 3.04e-07, 1, 0.14818471, 1.9013576, 1.9013576, 1.9013576, 1.9013576, 0.0, 0.28175212, 0.28175212, 0.28175212, 0.28175212, 0.0]
     assert locations == [(7, 2, 10), (7, 20, 15), (7, 63, 8), (17, 1, 1), (17, 11, 10), (22, 18, 10), (23, 18, 10), (24, 18, 10), (26, 18, 10), (27, 18, 5), (29, 18, 10), (30, 18, 10), (31, 18, 10), (33, 18, 10), (34, 18, 5)]
+
+# ------------------------------------------------------------------------------
+
+
+def test_compare_numbers():
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.01)
+
+    l1 = [0.0, 1.0, 2.0, -3.0]
+    l2 = [0.0, 1.0, 2.0, -3.0]
+
+    res = runtest.compare_numbers(f.filter_list[0], l1, l2)
+    assert res == [1, 1, 1, 1]
+
+    l1 = [0.0, 1.0, 2.0, -3.0]
+    l2 = [0.0, 1.0, 2.1, -3.0]
+
+    res = runtest.compare_numbers(f.filter_list[0], l1, l2)
+    assert res == [1, 1, 0, 1]

@@ -5,8 +5,11 @@ install:
   - pip install pytest-cov
   - pip install python-coveralls
   - pip install pep8
+before_script:
+  - export PYTHONPATH=$PYTHONPATH:$(pwd)/src
 script:
   - pep8 --ignore=E501 src/runtest.py
+  - pep8 --ignore=E501 test/test.py
   - py.test --cov src src/runtest.py
 after_success:
   - coveralls
