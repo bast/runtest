@@ -1,14 +1,12 @@
 import os
 import sys
+import pytest
 import runtest
 
 # ------------------------------------------------------------------------------
 
 
 def test_extract_numbers():
-    """
-    Tests extract_numbers.
-    """
 
     text = '''<<A( 3),B( 3)>> - linear response function (real):
 -----------------------------------------------------------------------------------------------
@@ -53,6 +51,23 @@ def test_extract_numbers():
 
     assert numbers == [0.0, -1.901357604797, 3.04e-07, 1, 0.14818471, 1.9013576, 1.9013576, 1.9013576, 1.9013576, 0.0, 0.28175212, 0.28175212, 0.28175212, 0.28175212, 0.0]
     assert locations == [(7, 2, 10), (7, 20, 15), (7, 63, 8), (17, 1, 1), (17, 11, 10), (22, 18, 10), (23, 18, 10), (24, 18, 10), (26, 18, 10), (27, 18, 5), (29, 18, 10), (30, 18, 10), (31, 18, 10), (33, 18, 10), (34, 18, 5)]
+
+# ------------------------------------------------------------------------------
+
+
+def test_extract_numbers_mask():
+
+    text = '''1.0 2.0 3.0 4.0
+1.0 2.0 3.0 4.0
+1.0 2.0 3.0 4.0'''
+
+    f = runtest.Filter()
+    f.add(mask = [1, 4])
+
+    numbers, locations = runtest.extract_numbers(f.filter_list[0], text.splitlines())
+
+    assert numbers == [1.0, 4.0, 1.0, 4.0, 1.0, 4.0]
+    assert locations == [(0, 0, 3), (0, 12, 3), (1, 0, 3), (1, 12, 3), (2, 0, 3), (2, 12, 3)]
 
 # ------------------------------------------------------------------------------
 
@@ -121,3 +136,17 @@ def test_compare_numbers_int():
 
     res = runtest.compare_numbers(f.filter_list[0], l1, l2)
     assert res == [1, 0, 1, 1]
+
+# ------------------------------------------------------------------------------
+
+def test_FilterKeywordError():
+
+    f = runtest.Filter()
+    f.add()
+
+    l1 = [0.0, 1.0, 2.0, -3.0]
+
+    with pytest.raises(runtest.FilterKeywordError) as e:
+        res = runtest.compare_numbers(f.filter_list[0], l1, l1)
+
+    assert e.value.message == 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n'
