@@ -48,8 +48,66 @@ class AcceptedError(Exception):
 class SubprocessError(Exception):
     pass
 
+# ------------------------------------------------------------------------------
+
+
+def compare_numbers(f, l1, l2):
+    """
+    Input:
+        - f -- filter task
+        - l1 -- list of numbers
+        - l2 -- another list of numbers
+
+    Returns:
+        - res -- list that contains ones (pass) or zeros (failures)
+                 l1, l2, and res have same length
+
+    Raises:
+        - FilterKeywordError
+    """
+
+    res = []
+
+    for i in range(len(l1)):
+
+        r_out = l1[i]
+        r_ref = l2[i]
+
+        if f.ignore_sign:
+            # if ignore sign take absolute values
+            r_out = abs(r_out)
+            r_ref = abs(r_ref)
+
+        is_integer_out = isinstance(r_out, int)
+        is_integer_ref = isinstance(r_ref, int)
+
+        if is_integer_out and is_integer_ref:
+            # we compare integers
+            if r_out == r_ref:
+                res.append(1)
+            else:
+                res.append(0)
+        else:
+            # we compare floats
+            if not f.tolerance_is_set:
+                raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
+            if (abs(r_ref) > f.ignore_below) and (abs(r_ref) < f.ignore_above):
+                # calculate relative error only for
+                # significant ('nonzero') numbers
+                error = r_out - r_ref
+                if f.tolerance_is_relative:
+                    error /= r_ref
+                if abs(error) > f.tolerance:
+                    res.append(0)
+                else:
+                    res.append(1)
+            else:
+                res.append(1)
+
+    return res
 
 # ------------------------------------------------------------------------------
+
 
 def extract_numbers(f, text):
     """
@@ -386,7 +444,7 @@ class Filter:
                     log_diff.write(''.join(ref_filtered) + '\n')
 
             if len(out_numbers) == len(ref_numbers):
-                l = self._compare_numbers(f, out_numbers, ref_numbers)
+                l = compare_numbers(f, out_numbers, ref_numbers)
                 if 0 in l:
                     log_diff.write('\n')
                     for k, line in enumerate(out_filtered):
@@ -504,58 +562,3 @@ class Filter:
                         s += ' (abs diff: %6.2e)' % abs(number - reference)
 
         return s + '\n'
-
-    def _compare_numbers(self, f, l1, l2):
-        """
-        Input:
-            - f -- filter task
-            - l1 -- list of numbers
-            - l2 -- another list of numbers
-
-        Returns:
-            - res -- list that contains ones (pass) or zeros (failures)
-                     l1, l2, and res have same length
-
-        Raises:
-            - FilterKeywordError
-        """
-
-        res = []
-
-        for i in range(len(l1)):
-
-            r_out = l1[i]
-            r_ref = l2[i]
-
-            if f.ignore_sign:
-                # if ignore sign take absolute values
-                r_out = abs(r_out)
-                r_ref = abs(r_ref)
-
-            is_integer_out = isinstance(r_out, int)
-            is_integer_ref = isinstance(r_ref, int)
-
-            if is_integer_out and is_integer_ref:
-                # we compare integers
-                if r_out == r_ref:
-                    res.append(1)
-                else:
-                    res.append(0)
-            else:
-                # we compare floats
-                if not f.tolerance_is_set:
-                    raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-                if (abs(r_ref) > f.ignore_below) and (abs(r_ref) < f.ignore_above):
-                    # calculate relative error only for
-                    # significant ('nonzero') numbers
-                    error = r_out - r_ref
-                    if f.tolerance_is_relative:
-                        error /= r_ref
-                    if abs(error) > f.tolerance:
-                        res.append(0)
-                    else:
-                        res.append(1)
-                else:
-                    res.append(1)
-
-        return res
