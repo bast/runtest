@@ -57,19 +57,67 @@ def test_extract_numbers():
 # ------------------------------------------------------------------------------
 
 
-def test_compare_numbers():
+def test_compare_numbers_abs():
 
     f = runtest.Filter()
     f.add(abs_tolerance=0.01)
 
     l1 = [0.0, 1.0, 2.0, -3.0]
     l2 = [0.0, 1.0, 2.0, -3.0]
+    l3 = [0.0, 1.0, 2.1, -3.0]
 
     res = runtest.compare_numbers(f.filter_list[0], l1, l2)
     assert res == [1, 1, 1, 1]
 
+    res = runtest.compare_numbers(f.filter_list[0], l1, l3)
+    assert res == [1, 1, 0, 1]
+
+# ------------------------------------------------------------------------------
+
+
+def test_compare_numbers_abs_ignore_sign():
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.01, ignore_sign=True)
+
     l1 = [0.0, 1.0, 2.0, -3.0]
-    l2 = [0.0, 1.0, 2.1, -3.0]
+    l2 = [0.0, 1.0,-2.0, -3.0]
 
     res = runtest.compare_numbers(f.filter_list[0], l1, l2)
+    assert res == [1, 1, 1, 1]
+
+# ------------------------------------------------------------------------------
+
+
+def test_compare_numbers_rel():
+
+    f = runtest.Filter()
+    f.add(rel_tolerance=0.1)
+
+    l1 = [0.0, 1.0, 2.0, -3.0]
+    l2 = [0.0, 1.0, 2.0, -3.0]
+    l3 = [0.0, 1.0, 2.1, -3.0]
+    l4 = [0.0, 1.0, 2.5, -3.0]
+
+    res = runtest.compare_numbers(f.filter_list[0], l1, l2)
+    assert res == [1, 1, 1, 1]
+
+    res = runtest.compare_numbers(f.filter_list[0], l1, l3)
+    assert res == [1, 1, 1, 1]
+
+    res = runtest.compare_numbers(f.filter_list[0], l1, l4)
     assert res == [1, 1, 0, 1]
+
+# ------------------------------------------------------------------------------
+
+
+def test_compare_numbers_int():
+
+    f = runtest.Filter()
+    f.add()
+
+    l1 = [0, 1, 3, 7]
+    l2 = [0, 2, 3, 7]
+
+    res = runtest.compare_numbers(f.filter_list[0], l1, l2)
+    assert res == [1, 0, 1, 1]

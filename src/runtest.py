@@ -66,6 +66,8 @@ def compare_numbers(f, l1, l2):
         - FilterKeywordError
     """
 
+    assert len(l1) == len(l2)
+
     res = []
 
     for i in range(len(l1)):
