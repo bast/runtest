@@ -81,7 +81,7 @@ def test_compare_numbers_abs_ignore_sign():
     f.add(abs_tolerance=0.01, ignore_sign=True)
 
     l1 = [0.0, 1.0, 2.0, -3.0]
-    l2 = [0.0, 1.0,-2.0, -3.0]
+    l2 = [0.0, 1.0, -2.0, -3.0]
 
     res = runtest.compare_numbers(f.filter_list[0], l1, l2)
     assert res == [1, 1, 1, 1]
