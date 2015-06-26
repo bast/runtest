@@ -6,14 +6,14 @@
       Radovan Bast
 
    License:
-      GNU Lesser General Public License Version 3
-      https://github.com/rbast/runtest/blob/master/LICENSE
+      BSD-3
+      https://github.com/bast/runtest/blob/master/LICENSE
 
    Documentation:
       http://runtest.readthedocs.org
 
    Source:
-      https://github.com/rbast/runtest
+      https://github.com/bast/runtest
 """
 
 __version__ = '1.3.0'  # http://semver.org
