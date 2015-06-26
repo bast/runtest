@@ -62,7 +62,7 @@ def test_extract_numbers_mask():
 1.0 2.0 3.0 4.0'''
 
     f = runtest.Filter()
-    f.add(mask = [1, 4])
+    f.add(mask=[1, 4])
 
     numbers, locations = runtest.extract_numbers(f.filter_list[0], text.splitlines())
 
@@ -139,6 +139,7 @@ def test_compare_numbers_int():
 
 # ------------------------------------------------------------------------------
 
+
 def test_FilterKeywordError():
 
     f = runtest.Filter()
@@ -150,3 +151,15 @@ def test_FilterKeywordError():
         res = runtest.compare_numbers(f.filter_list[0], l1, l1)
 
     assert e.value.message == 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n'
+
+# ------------------------------------------------------------------------------
+
+
+def test_parse_args():
+
+    input_dir = '/raboof/mytest'
+    argv = ['./test', '-b', '/raboof/build/']
+
+    options = runtest.parse_args(input_dir, argv)
+
+    assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False, 'log': None}

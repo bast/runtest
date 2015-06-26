@@ -26,7 +26,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.1'  # http://semver.org
+__version__ = '1.3.2'  # http://semver.org
 
 
 class FilterKeywordError(Exception):
@@ -169,13 +169,58 @@ def extract_numbers(f, text):
 # ------------------------------------------------------------------------------
 
 
+def parse_args(input_dir, argv):
+
+    parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
+    parser.add_option('--binary-dir',
+                      '-b',
+                      action='store',
+                      default=input_dir,
+                      help='directory containing the binary/launcher [default: %default]')
+    parser.add_option('--work-dir',
+                      '-w',
+                      action='store',
+                      default=input_dir,
+                      help='working directory [default: %default]')
+    parser.add_option('--verbose',
+                      '-v',
+                      action='store_true',
+                      default=False,
+                      help='give more verbose output upon test failure [default: %default]')
+    parser.add_option('--skip-run',
+                      '-s',
+                      action='store_true',
+                      default=False,
+                      help='skip actual calculation(s) [default: %default]')
+    parser.add_option('--debug',
+                      '-d',
+                      action='store_true',
+                      default=False,
+                      help='print verbose debug information [default: %default]')
+    parser.add_option('--log',
+                      '-l',
+                      action='store',
+                      default=None,
+                      help='log file [default: no logging]')
+    (options, args) = parser.parse_args(args=argv[1:])
+
+    if sys.platform == "win32":
+        # on windows we flip possibly wrong slashes
+        options.binary_dir = string.replace(options.binary_dir, '/', '\\')
+        options.work_dir = string.replace(options.work_dir, '/', '\\')
+
+    return options
+
+
+# ------------------------------------------------------------------------------
+
 class TestRun:
 
     def __init__(self, _file, argv):
 
         self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
 
-        options = self._parse_args(input_dir, argv)
+        options = parse_args(input_dir, argv)
         self.binary_dir = options.binary_dir
         self.work_dir = options.work_dir
         self.verbose = options.verbose
@@ -240,47 +285,6 @@ class TestRun:
                     src_file = os.path.join(src_dir, f)
                     dst_file = os.path.join(dst_dir, f)
                     shutil.copy(src_file, dst_file)
-
-    def _parse_args(self, input_dir, argv):
-        parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
-        parser.add_option('--binary-dir',
-                          '-b',
-                          action='store',
-                          default=input_dir,
-                          help='directory containing the binary/launcher [default: %default]')
-        parser.add_option('--work-dir',
-                          '-w',
-                          action='store',
-                          default=input_dir,
-                          help='working directory [default: %default]')
-        parser.add_option('--verbose',
-                          '-v',
-                          action='store_true',
-                          default=False,
-                          help='give more verbose output upon test failure [default: %default]')
-        parser.add_option('--skip-run',
-                          '-s',
-                          action='store_true',
-                          default=False,
-                          help='skip actual calculation(s) [default: %default]')
-        parser.add_option('--debug',
-                          '-d',
-                          action='store_true',
-                          default=False,
-                          help='print verbose debug information [default: %default]')
-        parser.add_option('--log',
-                          '-l',
-                          action='store',
-                          default=None,
-                          help='log file [default: no logging]')
-        (options, args) = parser.parse_args(args=argv[1:])
-
-        if sys.platform == "win32":
-            # on windows we flip possibly wrong slashes
-            options.binary_dir = string.replace(options.binary_dir, '/', '\\')
-            options.work_dir = string.replace(options.work_dir, '/', '\\')
-
-        return options
 
 
 class _SingleFilter:
