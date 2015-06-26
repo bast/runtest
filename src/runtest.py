@@ -16,8 +16,6 @@
       https://github.com/bast/runtest
 """
 
-__version__ = '1.3.0'  # http://semver.org
-
 import re
 import os
 import sys
@@ -28,53 +26,48 @@ import string
 from optparse import OptionParser
 
 
-#------------------------------------------------------------------------------
+__version__ = '1.3.0'  # http://semver.org
+
+
 class FilterKeywordError(Exception):
     pass
 
 
-#------------------------------------------------------------------------------
 class TestFailedError(Exception):
     pass
 
 
-#------------------------------------------------------------------------------
 class BadFilterError(Exception):
     pass
 
 
-#------------------------------------------------------------------------------
 class AcceptedError(Exception):
     pass
 
 
-#------------------------------------------------------------------------------
 class SubprocessError(Exception):
     pass
 
 
-#------------------------------------------------------------------------------
 class TestRun:
 
-    #--------------------------------------------------------------------------
     def __init__(self, _file, argv):
 
         self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
 
         options = self._parse_args(input_dir, argv)
         self.binary_dir = options.binary_dir
-        self.work_dir   = options.work_dir
-        self.verbose    = options.verbose
-        self.skip_run   = options.skip_run
-        self.debug      = options.debug
-        self.log        = options.log
+        self.work_dir = options.work_dir
+        self.verbose = options.verbose
+        self.skip_run = options.skip_run
+        self.debug = options.debug
+        self.log = options.log
 
         if self.work_dir != self.input_dir:
             self._safe_copy(self.input_dir, self.work_dir)
 
-        os.chdir(self.work_dir) # FIXME possibly problematic
+        os.chdir(self.work_dir)  # FIXME possibly problematic
 
-    #--------------------------------------------------------------------------
     def execute(self,
                 command,
                 stdout_file_name='',
@@ -117,7 +110,6 @@ class TestRun:
             f.write(stdout)
             f.close()
 
-    #--------------------------------------------------------------------------
     def _safe_copy(self, root_src_dir, root_dst_dir, exclude_files=[]):
         for src_dir, dirs, files in os.walk(root_src_dir):
             dst_dir = src_dir.replace(root_src_dir, root_dst_dir)
@@ -129,7 +121,6 @@ class TestRun:
                     dst_file = os.path.join(dst_dir, f)
                     shutil.copy(src_file, dst_file)
 
-    #--------------------------------------------------------------------------
     def _parse_args(self, input_dir, argv):
         parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
         parser.add_option('--binary-dir',
@@ -172,7 +163,6 @@ class TestRun:
         return options
 
 
-#------------------------------------------------------------------------------
 class _SingleFilter:
 
     def __init__(self, **kwargs):
@@ -199,20 +189,20 @@ class _SingleFilter:
                 raise FilterKeywordError(message)
 
         # check for incompatible keywords
-        self._check_incompatible_keywords('from_re'      , 'from_string'  , kwargs)
-        self._check_incompatible_keywords('to_re'        , 'to_string'    , kwargs)
-        self._check_incompatible_keywords('to_string'    , 'num_lines'    , kwargs)
-        self._check_incompatible_keywords('to_re'        , 'num_lines'    , kwargs)
-        self._check_incompatible_keywords('string'       , 'from_string'  , kwargs)
-        self._check_incompatible_keywords('string'       , 'to_string'    , kwargs)
-        self._check_incompatible_keywords('string'       , 'from_re'      , kwargs)
-        self._check_incompatible_keywords('string'       , 'to_re'        , kwargs)
-        self._check_incompatible_keywords('string'       , 'num_lines'    , kwargs)
-        self._check_incompatible_keywords('re'           , 'from_string'  , kwargs)
-        self._check_incompatible_keywords('re'           , 'to_string'    , kwargs)
-        self._check_incompatible_keywords('re'           , 'from_re'      , kwargs)
-        self._check_incompatible_keywords('re'           , 'to_re'        , kwargs)
-        self._check_incompatible_keywords('re'           , 'num_lines'    , kwargs)
+        self._check_incompatible_keywords('from_re', 'from_string', kwargs)
+        self._check_incompatible_keywords('to_re', 'to_string', kwargs)
+        self._check_incompatible_keywords('to_string', 'num_lines', kwargs)
+        self._check_incompatible_keywords('to_re', 'num_lines', kwargs)
+        self._check_incompatible_keywords('string', 'from_string', kwargs)
+        self._check_incompatible_keywords('string', 'to_string', kwargs)
+        self._check_incompatible_keywords('string', 'from_re', kwargs)
+        self._check_incompatible_keywords('string', 'to_re', kwargs)
+        self._check_incompatible_keywords('string', 'num_lines', kwargs)
+        self._check_incompatible_keywords('re', 'from_string', kwargs)
+        self._check_incompatible_keywords('re', 'to_string', kwargs)
+        self._check_incompatible_keywords('re', 'from_re', kwargs)
+        self._check_incompatible_keywords('re', 'to_re', kwargs)
+        self._check_incompatible_keywords('re', 'num_lines', kwargs)
         self._check_incompatible_keywords('rel_tolerance', 'abs_tolerance', kwargs)
 
         # now continue with keywords
@@ -271,14 +261,11 @@ class _SingleFilter:
             raise FilterKeywordError('ERROR: incompatible keywords: "%s" and "%s"\n' % (kw1, kw2))
 
 
-#------------------------------------------------------------------------------
 class Filter:
 
-    #--------------------------------------------------------------------------
     def __init__(self):
         self.filter_list = []
 
-    #--------------------------------------------------------------------------
     def add(self, *args, **kwargs):
         """
         Adds filter task to list of filters.
@@ -288,7 +275,6 @@ class Filter:
         """
         self.filter_list.append(_SingleFilter(*args, **kwargs))
 
-    #--------------------------------------------------------------------------
     def check(self, work_dir, out_name, ref_name, verbose=False):
         """
         Compares output (work_dir/out_name) with reference (work_dir/ref_name)
@@ -312,9 +298,9 @@ class Filter:
             - TestFailedError
         """
 
-        log_out  = open('%s.filtered'  % out_name, 'w')
-        log_ref  = open('%s.reference' % out_name, 'w')
-        log_diff = open('%s.diff'      % out_name, 'w')
+        log_out = open('%s.filtered' % out_name, 'w')
+        log_ref = open('%s.reference' % out_name, 'w')
+        log_diff = open('%s.diff' % out_name, 'w')
 
         for f in self.filter_list:
 
@@ -370,7 +356,6 @@ class Filter:
                 message += diff
             raise TestFailedError(message)
 
-    #--------------------------------------------------------------------------
     def _filter_file(self, f, file_name):
         """
         Input:
@@ -420,7 +405,6 @@ class Filter:
 
         return output_filtered
 
-    #--------------------------------------------------------------------------
     def _extract_numbers(self, f, text):
         """
         Input:
@@ -482,7 +466,6 @@ class Filter:
 
         return numbers, location
 
-    #--------------------------------------------------------------------------
     def _underline(self, f, start_char, length, reference, number, is_integer):
         """
         Input:
@@ -510,7 +493,7 @@ class Filter:
         if not is_integer:
             if f.tolerance_is_set:
                 if f.tolerance_is_relative:
-                    s += ' (rel diff: %6.2e)' % abs(1.0 - number/reference)
+                    s += ' (rel diff: %6.2e)' % abs(1.0 - number / reference)
                 else:
                     if f.ignore_sign:
                         s += ' (abs diff: %6.2e ignoring signs)' % abs(abs(number) - abs(reference))
@@ -519,7 +502,6 @@ class Filter:
 
         return s + '\n'
 
-    #--------------------------------------------------------------------------
     def _compare_numbers(self, f, l1, l2):
         """
         Input:
