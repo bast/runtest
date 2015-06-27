@@ -84,39 +84,6 @@ def test_parse_args():
 # ------------------------------------------------------------------------------
 
 
-def test_underline_rel():
-
-    f = runtest.Filter()
-    f.add(rel_tolerance=1.0e-5)
-
-    res = runtest.underline(f=f.filter_list[0], start_char=18, length=10, reference=1.9013576, number=1.81140369, is_integer=False)
-    assert res == '                  ########## expected: 1.9013576 (rel diff: 4.73e-02)\n'
-
-# ------------------------------------------------------------------------------
-
-
-def test_underline_abs():
-
-    f = runtest.Filter()
-    f.add(abs_tolerance=0.1)
-
-    res = runtest.underline(f=f.filter_list[0], start_char=18, length=10, reference=1.9013576, number=1.81140369, is_integer=False)
-    assert res == '                  ########## expected: 1.9013576 (abs diff: 9.00e-02)\n'
-
-# ------------------------------------------------------------------------------
-
-
-def test_underline_abs_ignore_sign():
-
-    f = runtest.Filter()
-    f.add(abs_tolerance=0.1, ignore_sign=True)
-
-    res = runtest.underline(f=f.filter_list[0], start_char=18, length=10, reference=1.9013576, number=1.81140369, is_integer=False)
-    assert res == '                  ########## expected: 1.9013576 (abs diff: 9.00e-02 ignoring signs)\n'
-
-# ------------------------------------------------------------------------------
-
-
 def test_filter_file():
 
     text = '''
