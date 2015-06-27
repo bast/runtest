@@ -29,7 +29,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.5'  # http://semver.org
+__version__ = '1.3.6'  # http://semver.org
 
 
 class FilterKeywordError(Exception):
@@ -216,8 +216,8 @@ def parse_args(input_dir, argv):
 
     return options
 
-
 # ------------------------------------------------------------------------------
+
 
 def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
     for src_dir, dirs, files in os.walk(root_src_dir):
@@ -230,8 +230,8 @@ def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
                 dst_file = os.path.join(dst_dir, f)
                 shutil.copy(src_file, dst_file)
 
-
 # ------------------------------------------------------------------------------
+
 
 def underline(f, start_char, length, reference, number, is_integer):
     """
@@ -266,8 +266,109 @@ def underline(f, start_char, length, reference, number, is_integer):
 
     return s + '\n'
 
+# ------------------------------------------------------------------------------
+
+
+def filter_file(f, file_name, output):
+    """
+    Input:
+        - f -- filter task
+        - file_name -- the output file to filter
+
+    Returns:
+        - output_filtered -- the filtered output
+
+    Raises:
+        - BadFilterError
+    """
+    output_filtered = []
+
+    for i in range(len(output)):
+        start_line_matches = False
+        if f.from_is_re:
+            start_line_matches = re.match(r'.*%s' % f.from_string, output[i])
+        else:
+            start_line_matches = (f.from_string in output[i])
+        if start_line_matches:
+            if f.num_lines > 0:
+                for n in range(i, i + f.num_lines):
+                    output_filtered.append(output[n])
+            else:
+                for j in range(i, len(output)):
+                    f.end_line_matches = False
+                    if f.to_is_re:
+                        f.end_line_matches = re.match(r'.*%s' % f.to_string, output[j])
+                    else:
+                        f.end_line_matches = (f.to_string in output[j])
+                    if f.end_line_matches:
+                        for n in range(i, j + 1):
+                            output_filtered.append(output[n])
+                        break
+
+    if output_filtered == []:
+        if f.num_lines > 0:
+            r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
+        else:
+            r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
+        message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, file_name)
+        raise BadFilterError(message)
+
+    return output_filtered
 
 # ------------------------------------------------------------------------------
+
+
+def check_for_unrecognized_kw(kwargs):
+
+    recognized_keywords = ['from_re',
+                           'to_re',
+                           're',
+                           'from_string',
+                           'to_string',
+                           'string',
+                           'ignore_below',
+                           'ignore_above',
+                           'ignore_sign',
+                           'mask',
+                           'num_lines',
+                           'rel_tolerance',
+                           'abs_tolerance']
+
+    # check for unrecognized keywords
+    for key in kwargs.keys():
+        if key not in recognized_keywords:
+            available_keywords = (', ').join(recognized_keywords)
+            message = 'ERROR: keyword "%s" not recognized\n       ' % key
+            message += 'available keywords: %s\n' % available_keywords
+            raise FilterKeywordError(message)
+
+# ------------------------------------------------------------------------------
+
+
+def check_for_incompatible_kw(kwargs):
+
+    incompatible_pairs = [('from_re', 'from_string'),
+                          ('to_re', 'to_string'),
+                          ('to_string', 'num_lines'),
+                          ('to_re', 'num_lines'),
+                          ('string', 'from_string'),
+                          ('string', 'to_string'),
+                          ('string', 'from_re'),
+                          ('string', 'to_re'),
+                          ('string', 'num_lines'),
+                          ('re', 'from_string'),
+                          ('re', 'to_string'),
+                          ('re', 'from_re'),
+                          ('re', 'to_re'),
+                          ('re', 'num_lines'),
+                          ('rel_tolerance', 'abs_tolerance')]
+
+    for (kw1, kw2) in incompatible_pairs:
+        if kw1 in kwargs.keys() and kw2 in kwargs.keys():
+            raise FilterKeywordError('ERROR: incompatible keywords: "%s" and "%s"\n' % (kw1, kw2))
+
+# ------------------------------------------------------------------------------
+
 
 class TestRun:
 
@@ -334,44 +435,9 @@ class TestRun:
 class _SingleFilter:
 
     def __init__(self, **kwargs):
-        recognized_keywords = ['from_re',
-                               'to_re',
-                               're',
-                               'from_string',
-                               'to_string',
-                               'string',
-                               'ignore_below',
-                               'ignore_above',
-                               'ignore_sign',
-                               'mask',
-                               'num_lines',
-                               'rel_tolerance',
-                               'abs_tolerance']
 
-        # check for unrecognized keywords
-        for key in kwargs.keys():
-            if key not in recognized_keywords:
-                available_keywords = (', ').join(recognized_keywords)
-                message = 'ERROR: keyword "%s" not recognized\n       ' % key
-                message += 'available keywords: %s\n' % available_keywords
-                raise FilterKeywordError(message)
-
-        # check for incompatible keywords
-        self._check_incompatible_keywords('from_re', 'from_string', kwargs)
-        self._check_incompatible_keywords('to_re', 'to_string', kwargs)
-        self._check_incompatible_keywords('to_string', 'num_lines', kwargs)
-        self._check_incompatible_keywords('to_re', 'num_lines', kwargs)
-        self._check_incompatible_keywords('string', 'from_string', kwargs)
-        self._check_incompatible_keywords('string', 'to_string', kwargs)
-        self._check_incompatible_keywords('string', 'from_re', kwargs)
-        self._check_incompatible_keywords('string', 'to_re', kwargs)
-        self._check_incompatible_keywords('string', 'num_lines', kwargs)
-        self._check_incompatible_keywords('re', 'from_string', kwargs)
-        self._check_incompatible_keywords('re', 'to_string', kwargs)
-        self._check_incompatible_keywords('re', 'from_re', kwargs)
-        self._check_incompatible_keywords('re', 'to_re', kwargs)
-        self._check_incompatible_keywords('re', 'num_lines', kwargs)
-        self._check_incompatible_keywords('rel_tolerance', 'abs_tolerance', kwargs)
+        check_for_unrecognized_kw(kwargs)
+        check_for_incompatible_kw(kwargs)
 
         # now continue with keywords
         self.from_string = kwargs.get('from_string', '')
@@ -424,10 +490,6 @@ class _SingleFilter:
             self.num_lines = 1
             self.from_is_re = True
 
-    def _check_incompatible_keywords(self, kw1, kw2, kwargs):
-        if kw1 in kwargs.keys() and kw2 in kwargs.keys():
-            raise FilterKeywordError('ERROR: incompatible keywords: "%s" and "%s"\n' % (kw1, kw2))
-
 
 class Filter:
 
@@ -472,13 +534,13 @@ class Filter:
 
         for f in self.filter_list:
 
-            out_filtered = self._filter_file(f, out_name)
+            out_filtered = filter_file(f, out_name, open(out_name).readlines())
             log_out.write(''.join(out_filtered))
             out_numbers, out_locations = extract_numbers(f, out_filtered)
             if f.use_mask and out_numbers == []:
                 raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
-            ref_filtered = self._filter_file(f, ref_name)
+            ref_filtered = filter_file(f, ref_name, open(ref_name).readlines())
             log_ref.write(''.join(ref_filtered))
             ref_numbers, ref_locations = extract_numbers(f, ref_filtered)
             if f.use_mask and ref_numbers == []:
@@ -527,52 +589,3 @@ class Filter:
             if verbose:
                 message += diff
             raise TestFailedError(message)
-
-    def _filter_file(self, f, file_name):
-        """
-        Input:
-            - f -- filter task
-            - file_name -- the output file to filter
-
-        Returns:
-            - output_filtered -- the filtered output
-
-        Raises:
-            - BadFilterError
-        """
-
-        output = open(file_name).readlines()
-
-        output_filtered = []
-
-        for i in range(len(output)):
-            start_line_matches = False
-            if f.from_is_re:
-                start_line_matches = re.match(r'.*%s' % f.from_string, output[i])
-            else:
-                start_line_matches = (f.from_string in output[i])
-            if start_line_matches:
-                if f.num_lines > 0:
-                    for n in range(i, i + f.num_lines):
-                        output_filtered.append(output[n])
-                else:
-                    for j in range(i, len(output)):
-                        f.end_line_matches = False
-                        if f.to_is_re:
-                            f.end_line_matches = re.match(r'.*%s' % f.to_string, output[j])
-                        else:
-                            f.end_line_matches = (f.to_string in output[j])
-                        if f.end_line_matches:
-                            for n in range(i, j + 1):
-                                output_filtered.append(output[n])
-                            break
-
-        if output_filtered == []:
-            if f.num_lines > 0:
-                r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
-            else:
-                r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
-            message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, file_name)
-            raise BadFilterError(message)
-
-        return output_filtered
