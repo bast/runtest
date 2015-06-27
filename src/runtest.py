@@ -29,7 +29,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.6'  # http://semver.org
+__version__ = '1.3.7'  # http://semver.org
 
 
 class FilterKeywordError(Exception):
@@ -88,30 +88,6 @@ def tuple_matches(f, tup):
     if f.tolerance_is_relative:
         error /= x_ref
     return abs(error) <= f.tolerance
-
-# ------------------------------------------------------------------------------
-
-
-def compare_lists(f, l1, l2):
-    """
-    Input:
-        - f -- filter task
-        - l1 -- list of numbers
-        - l2 -- another list of numbers
-
-    Returns:
-        - res -- list that contains ones (pass) or zeros (failures)
-                 l1, l2, and res have same length
-
-    Raises:
-        - FilterKeywordError
-    """
-
-    # FIXME this will move up once the caller is unit-tested
-    # if we have any float in there then tolerance must be set
-    if not f.tolerance_is_set and (any(map(is_float, l1)) or any(map(is_float, l2))):
-        raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-    return map(lambda t: tuple_matches(f, t), zip(l1, l2))
 
 # ------------------------------------------------------------------------------
 
@@ -556,7 +532,9 @@ class Filter:
                     log_diff.write(''.join(ref_filtered) + '\n')
 
             if len(out_numbers) == len(ref_numbers):
-                l = compare_lists(f, out_numbers, ref_numbers)
+                if not f.tolerance_is_set and (any(map(is_float, out_numbers)) or any(map(is_float, ref_numbers))):
+                    raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
+                l = map(lambda t: tuple_matches(f, t), zip(out_numbers, ref_numbers))
                 if not all(l):
                     log_diff.write('\n')
                     for k, line in enumerate(out_filtered):
