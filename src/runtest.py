@@ -26,7 +26,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.3'  # http://semver.org
+__version__ = '1.3.4'  # http://semver.org
 
 
 class FilterKeywordError(Exception):
@@ -51,7 +51,46 @@ class SubprocessError(Exception):
 # ------------------------------------------------------------------------------
 
 
-def compare_numbers(f, l1, l2):
+def is_float(x):
+    return isinstance(x, float)
+
+# ------------------------------------------------------------------------------
+
+
+def is_int(n):
+    return isinstance(n, int)
+
+# ------------------------------------------------------------------------------
+
+
+def compare_tuple(f, tup):
+
+    x, x_ref = tup
+
+    if f.ignore_sign:
+        # if ignore sign take absolute values
+        x = abs(x)
+        x_ref = abs(x_ref)
+
+    if is_int(x) and is_int(x_ref):
+        # we compare integers
+        return x == x_ref
+    else:
+        # we compare floats
+        if (abs(x_ref) > f.ignore_below) and (abs(x_ref) < f.ignore_above):
+            # calculate relative error only for
+            # significant ('nonzero') numbers
+            error = x - x_ref
+            if f.tolerance_is_relative:
+                error /= x_ref
+            return abs(error) <= f.tolerance
+        else:
+            return True
+
+# ------------------------------------------------------------------------------
+
+
+def compare_lists(f, l1, l2):
     """
     Input:
         - f -- filter task
@@ -68,45 +107,12 @@ def compare_numbers(f, l1, l2):
 
     assert len(l1) == len(l2)
 
-    res = []
+    # FIXME this should happen further up
+    # if we have any float in there then tolerance must be set
+    if not f.tolerance_is_set and (any(map(is_float, l1)) or any(map(is_float, l2))):
+        raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
 
-    for i in range(len(l1)):
-
-        r_out = l1[i]
-        r_ref = l2[i]
-
-        if f.ignore_sign:
-            # if ignore sign take absolute values
-            r_out = abs(r_out)
-            r_ref = abs(r_ref)
-
-        is_integer_out = isinstance(r_out, int)
-        is_integer_ref = isinstance(r_ref, int)
-
-        if is_integer_out and is_integer_ref:
-            # we compare integers
-            if r_out == r_ref:
-                res.append(1)
-            else:
-                res.append(0)
-        else:
-            # we compare floats
-            if not f.tolerance_is_set:
-                raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-            if (abs(r_ref) > f.ignore_below) and (abs(r_ref) < f.ignore_above):
-                # calculate relative error only for
-                # significant ('nonzero') numbers
-                error = r_out - r_ref
-                if f.tolerance_is_relative:
-                    error /= r_ref
-                if abs(error) > f.tolerance:
-                    res.append(0)
-                else:
-                    res.append(1)
-            else:
-                res.append(1)
-
-    return res
+    return map(lambda t: compare_tuple(f, t), zip(l1, l2))
 
 # ------------------------------------------------------------------------------
 
@@ -489,16 +495,16 @@ class Filter:
                     log_diff.write(''.join(ref_filtered) + '\n')
 
             if len(out_numbers) == len(ref_numbers):
-                l = compare_numbers(f, out_numbers, ref_numbers)
-                if 0 in l:
+                l = compare_lists(f, out_numbers, ref_numbers)
+                if not all(l):
                     log_diff.write('\n')
                     for k, line in enumerate(out_filtered):
                         log_diff.write('.       %s' % line)
                         for i, num in enumerate(out_numbers):
                             (line_num, start_char, length) = out_locations[i]
                             if line_num == k:
-                                if l[i] == 0:
-                                    is_integer = isinstance(num, int)
+                                if not l[i]:
+                                    is_integer = isinstance(num, int)  # FIXME use is_int()
                                     log_diff.write('ERROR   %s' % underline(f, start_char, length, ref_numbers[i], out_numbers[i], is_integer))
 
             if len(out_numbers) != len(ref_numbers):
