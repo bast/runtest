@@ -163,3 +163,15 @@ def test_parse_args():
     options = runtest.parse_args(input_dir, argv)
 
     assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False, 'log': None}
+
+# ------------------------------------------------------------------------------
+
+
+def test_underline():
+
+    f = runtest.Filter()
+    f.add(rel_tolerance=1.0e-5)
+
+    res = runtest.underline(f=f.filter_list[0], start_char=18, length=10, reference=1.9013576, number=1.81140369, is_integer=False)
+
+    assert res == '                  ########## expected: 1.9013576 (rel diff: 4.73e-02)\n'

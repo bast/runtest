@@ -26,7 +26,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.2'  # http://semver.org
+__version__ = '1.3.3'  # http://semver.org
 
 
 class FilterKeywordError(Exception):
@@ -214,6 +214,56 @@ def parse_args(input_dir, argv):
 
 # ------------------------------------------------------------------------------
 
+def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
+    for src_dir, dirs, files in os.walk(root_src_dir):
+        dst_dir = src_dir.replace(root_src_dir, root_dst_dir)
+        if not os.path.exists(dst_dir):
+            os.makedirs(dst_dir)
+        for f in files:
+            if f not in exclude_files:
+                src_file = os.path.join(src_dir, f)
+                dst_file = os.path.join(dst_dir, f)
+                shutil.copy(src_file, dst_file)
+
+
+# ------------------------------------------------------------------------------
+
+def underline(f, start_char, length, reference, number, is_integer):
+    """
+    Input:
+        - f -- filter task
+        - start_char -- position of start character
+        - length -- underline length
+        - reference -- reference number
+        - number -- obtained (calculated) number
+        - is_integer -- whether reference number is integer
+
+    Returns:
+        - s -- underline string with info about reference and tolerance
+    """
+
+    s = ''
+    for i in range(start_char):
+        s += ' '
+    for i in range(length):
+        s += '#'
+    s += ' expected: %s' % reference
+
+    if not is_integer:
+        if f.tolerance_is_set:
+            if f.tolerance_is_relative:
+                s += ' (rel diff: %6.2e)' % abs(1.0 - number / reference)
+            else:
+                if f.ignore_sign:
+                    s += ' (abs diff: %6.2e ignoring signs)' % abs(abs(number) - abs(reference))
+                else:
+                    s += ' (abs diff: %6.2e)' % abs(number - reference)
+
+    return s + '\n'
+
+
+# ------------------------------------------------------------------------------
+
 class TestRun:
 
     def __init__(self, _file, argv):
@@ -229,7 +279,7 @@ class TestRun:
         self.log = options.log
 
         if self.work_dir != self.input_dir:
-            self._safe_copy(self.input_dir, self.work_dir)
+            copy_path(self.input_dir, self.work_dir)
 
         os.chdir(self.work_dir)  # FIXME possibly problematic
 
@@ -274,17 +324,6 @@ class TestRun:
             f = open(stdout_file_name, 'w')
             f.write(stdout)
             f.close()
-
-    def _safe_copy(self, root_src_dir, root_dst_dir, exclude_files=[]):
-        for src_dir, dirs, files in os.walk(root_src_dir):
-            dst_dir = src_dir.replace(root_src_dir, root_dst_dir)
-            if not os.path.exists(dst_dir):
-                os.makedirs(dst_dir)
-            for f in files:
-                if f not in exclude_files:
-                    src_file = os.path.join(src_dir, f)
-                    dst_file = os.path.join(dst_dir, f)
-                    shutil.copy(src_file, dst_file)
 
 
 class _SingleFilter:
@@ -460,7 +499,7 @@ class Filter:
                             if line_num == k:
                                 if l[i] == 0:
                                     is_integer = isinstance(num, int)
-                                    log_diff.write('ERROR   %s' % self._underline(f, start_char, length, ref_numbers[i], out_numbers[i], is_integer))
+                                    log_diff.write('ERROR   %s' % underline(f, start_char, length, ref_numbers[i], out_numbers[i], is_integer))
 
             if len(out_numbers) != len(ref_numbers):
                 log_diff.write('ERROR: extracted sizes do not match\n')
@@ -532,39 +571,3 @@ class Filter:
             raise BadFilterError(message)
 
         return output_filtered
-
-    def _underline(self, f, start_char, length, reference, number, is_integer):
-        """
-        Input:
-            - f -- filter task
-            - start_char -- position of start character
-            - length -- underline length
-            - reference -- reference number
-            - number -- obtained (calculated) number
-            - is_integer -- whether reference number is integer
-
-        Returns:
-            - s -- underline string with info about reference and tolerance
-
-        Raises:
-            - nothing
-        """
-
-        s = ''
-        for i in range(start_char):
-            s += ' '
-        for i in range(length):
-            s += '#'
-        s += ' expected: %s' % reference
-
-        if not is_integer:
-            if f.tolerance_is_set:
-                if f.tolerance_is_relative:
-                    s += ' (rel diff: %6.2e)' % abs(1.0 - number / reference)
-                else:
-                    if f.ignore_sign:
-                        s += ' (abs diff: %6.2e ignoring signs)' % abs(abs(number) - abs(reference))
-                    else:
-                        s += ' (abs diff: %6.2e)' % abs(number - reference)
-
-        return s + '\n'
