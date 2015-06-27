@@ -72,21 +72,6 @@ def test_extract_numbers_mask():
 # ------------------------------------------------------------------------------
 
 
-def test_FilterKeywordError():
-
-    f = runtest.Filter()
-    f.add()
-
-    l1 = [0.0, 1.0, 2.0, -3.0]
-
-    with pytest.raises(runtest.FilterKeywordError) as e:
-        res = runtest.compare_lists(f.filter_list[0], l1, l1)
-
-    assert e.value.message == 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n'
-
-# ------------------------------------------------------------------------------
-
-
 def test_parse_args():
 
     input_dir = '/raboof/mytest'
@@ -182,3 +167,23 @@ def test_incompatible_kw():
         res = runtest.check_for_incompatible_kw(kwargs)
 
     assert e.value.message == 'ERROR: incompatible keywords: "string" and "num_lines"\n'
+
+# ------------------------------------------------------------------------------
+
+
+def test_check():
+
+    HERE = os.path.abspath(os.path.dirname(__file__))
+
+    out_name = os.path.join(HERE, 'out.txt')
+    ref_name = os.path.join(HERE, 'ref.txt')
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.1)
+    f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.01)
+    with pytest.raises(runtest.TestFailedError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: test %s failed\n' % out_name
