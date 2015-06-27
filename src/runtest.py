@@ -26,7 +26,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.4'  # http://semver.org
+__version__ = '1.3.5'  # http://semver.org
 
 
 class FilterKeywordError(Exception):
@@ -63,7 +63,7 @@ def is_int(n):
 # ------------------------------------------------------------------------------
 
 
-def compare_tuple(f, tup):
+def tuple_matches(f, tup):
 
     x, x_ref = tup
 
@@ -73,19 +73,18 @@ def compare_tuple(f, tup):
         x_ref = abs(x_ref)
 
     if is_int(x) and is_int(x_ref):
-        # we compare integers
         return x == x_ref
-    else:
-        # we compare floats
-        if (abs(x_ref) > f.ignore_below) and (abs(x_ref) < f.ignore_above):
-            # calculate relative error only for
-            # significant ('nonzero') numbers
-            error = x - x_ref
-            if f.tolerance_is_relative:
-                error /= x_ref
-            return abs(error) <= f.tolerance
-        else:
-            return True
+
+    if abs(x_ref) < f.ignore_below:
+        return True
+
+    if abs(x_ref) > f.ignore_above:
+        return True
+
+    error = x - x_ref
+    if f.tolerance_is_relative:
+        error /= x_ref
+    return abs(error) <= f.tolerance
 
 # ------------------------------------------------------------------------------
 
@@ -105,14 +104,11 @@ def compare_lists(f, l1, l2):
         - FilterKeywordError
     """
 
-    assert len(l1) == len(l2)
-
-    # FIXME this should happen further up
+    # FIXME this will move up once the caller is unit-tested
     # if we have any float in there then tolerance must be set
     if not f.tolerance_is_set and (any(map(is_float, l1)) or any(map(is_float, l2))):
         raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-
-    return map(lambda t: compare_tuple(f, t), zip(l1, l2))
+    return map(lambda t: tuple_matches(f, t), zip(l1, l2))
 
 # ------------------------------------------------------------------------------
 
