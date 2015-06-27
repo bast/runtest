@@ -1,19 +1,22 @@
 
 """
-   runtest - Numerically tolerant test library
+    runtest - Numerically tolerant test library
 
-   Author:
-      Radovan Bast
+    Author:
+        Radovan Bast
 
-   License:
-      BSD-3
-      https://github.com/bast/runtest/blob/master/LICENSE
+    License:
+        BSD-3
+        https://github.com/bast/runtest/blob/master/LICENSE
 
-   Documentation:
-      http://runtest.readthedocs.org
+    Documentation:
+        http://runtest.readthedocs.org
 
-   Source:
-      https://github.com/bast/runtest
+    Source:
+        https://github.com/bast/runtest
+
+    Issue tracking:
+        https://github.com/bast/runtest/issues
 """
 
 import re
