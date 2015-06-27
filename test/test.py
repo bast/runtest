@@ -187,3 +187,9 @@ def test_check():
     with pytest.raises(runtest.TestFailedError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert e.value.message == 'ERROR: test %s failed\n' % out_name
+
+    f = runtest.Filter()
+    f.add()
+    with pytest.raises(runtest.FilterKeywordError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n'
