@@ -123,6 +123,15 @@ def test_compare_lists_rel():
     res = runtest.compare_lists(f.filter_list[0], l1, l4)
     assert res == [1, 1, 0, 1]
 
+    l1 = [0.0, 1.0e10, 2.0, -3.0]
+    l2 = [0.0, 1.2e10, 2.5, -3.0]
+
+    f = runtest.Filter()
+    f.add(rel_tolerance=0.1, ignore_above=1.0e9)
+
+    res = runtest.compare_lists(f.filter_list[0], l1, l2)
+    assert res == [1, 1, 0, 1]
+
 # ------------------------------------------------------------------------------
 
 
@@ -196,3 +205,57 @@ def test_underline_abs_ignore_sign():
 
     res = runtest.underline(f=f.filter_list[0], start_char=18, length=10, reference=1.9013576, number=1.81140369, is_integer=False)
     assert res == '                  ########## expected: 1.9013576 (abs diff: 9.00e-02 ignoring signs)\n'
+
+# ------------------------------------------------------------------------------
+
+
+def test_filter_file():
+
+    text = '''
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+raboof 1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0'''
+
+    f = runtest.Filter()
+    f.add(rel_tolerance=1.0e-5, from_re='raboof', num_lines=5)
+
+    res = runtest.filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
+    assert res == ['raboof 1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0']
+
+# ------------------------------------------------------------------------------
+
+
+def test_unrecognized_kw():
+
+    kwargs = {'num_lines': 5, 'raboof': 137}
+
+    with pytest.raises(runtest.FilterKeywordError) as e:
+        res = runtest.check_for_unrecognized_kw(kwargs)
+
+    assert e.value.message == 'ERROR: keyword "raboof" not recognized\n' \
+        + '       available keywords: from_re, to_re, re, from_string, ' \
+        + 'to_string, string, ignore_below, ignore_above, ignore_sign, mask, num_lines, rel_tolerance, abs_tolerance\n'
+
+# ------------------------------------------------------------------------------
+
+
+def test_incompatible_kw():
+
+    kwargs = {'num_lines': 5, 'string': 'raboof'}
+
+    with pytest.raises(runtest.FilterKeywordError) as e:
+        res = runtest.check_for_incompatible_kw(kwargs)
+
+    assert e.value.message == 'ERROR: incompatible keywords: "string" and "num_lines"\n'
