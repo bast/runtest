@@ -30,7 +30,7 @@ from optparse import OptionParser
 
 
 # http://semver.org
-__version__ = '1.3.8'
+__version__ = '1.3.9'
 
 
 class FilterKeywordError(Exception):
@@ -523,7 +523,10 @@ class Filter:
                     log_diff.write('reference gave:\n')
                     log_diff.write(''.join(ref_filtered) + '\n')
 
-            if len(out_numbers) == len(ref_numbers):
+            # we need to check for len(out_numbers) > 0
+            # for pure strings len(out_numbers) is 0
+            # TODO need to consider what to do with pure strings in future versions
+            if len(out_numbers) == len(ref_numbers) and len(out_numbers) > 0:
                 if not f.tolerance_is_set and (any(map(is_float, out_numbers)) or any(map(is_float, ref_numbers))):
                     raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
                 l = map(lambda t: tuple_matches(f, t), zip(out_numbers, ref_numbers))
