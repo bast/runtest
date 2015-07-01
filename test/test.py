@@ -150,13 +150,27 @@ def test_check():
     f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
 
     f = runtest.Filter()
-    f.add(abs_tolerance=0.01)
-    with pytest.raises(runtest.TestFailedError) as e:
-        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
-    assert e.value.message == 'ERROR: test %s failed\n' % out_name
-
-    f = runtest.Filter()
     f.add()
     with pytest.raises(runtest.FilterKeywordError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert e.value.message == 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n'
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.01)
+    with pytest.raises(runtest.TestFailedError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: test %s failed\n' % out_name
+    with open(os.path.join(HERE, 'out.txt.diff'), 'r') as f:
+        assert f.read() == '''
+.       1.0 2.0 3.0
+ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n'''
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.01, ignore_sign=True)
+    with pytest.raises(runtest.TestFailedError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: test %s failed\n' % out_name
+    with open(os.path.join(HERE, 'out.txt.diff'), 'r') as f:
+        assert f.read() == '''
+.       1.0 2.0 3.0
+ERROR           ### expected: 3.05 (abs diff: 5.00e-02 ignoring signs)\n'''
