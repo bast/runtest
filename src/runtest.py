@@ -29,7 +29,8 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.7'  # http://semver.org
+# http://semver.org
+__version__ = '1.3.8'
 
 
 class FilterKeywordError(Exception):
@@ -67,6 +68,16 @@ def is_int(n):
 
 
 def tuple_matches(f, tup):
+    """
+    Checks if tuple matches based on f.
+
+    Input:
+        f   -- filter task
+        tup -- tuple
+
+    Returns:
+        (tuple_matches, error_message)
+    """
 
     x, x_ref = tup
 
@@ -76,18 +87,35 @@ def tuple_matches(f, tup):
         x_ref = abs(x_ref)
 
     if is_int(x) and is_int(x_ref):
-        return x == x_ref
+        if x == x_ref:
+            return (True, None)
+        else:
+            return (False, "expected: %s" % x_ref)
 
     if abs(x_ref) < f.ignore_below:
-        return True
+        return (True, None)
 
     if abs(x_ref) > f.ignore_above:
-        return True
+        return (True, None)
 
     error = x - x_ref
     if f.tolerance_is_relative:
         error /= x_ref
-    return abs(error) <= f.tolerance
+        if abs(error) <= f.tolerance:
+            return (True, None)
+        else:
+            if f.ignore_sign:
+                return (False, "expected: %s (rel diff: %6.2e ignoring signs)" % (x_ref, abs(1.0 - abs(x) / abs(x_ref))))
+            else:
+                return (False, "expected: %s (rel diff: %6.2e)" % (x_ref, abs(1.0 - x / x_ref)))
+    else:
+        if abs(error) <= f.tolerance:
+            return (True, None)
+        else:
+            if f.ignore_sign:
+                return (False, "expected: %s (abs diff: %6.2e ignoring signs)" % (x_ref, abs(abs(x) - abs(x_ref))))
+            else:
+                return (False, "expected: %s (abs diff: %6.2e)" % (x_ref, abs(x - x_ref)))
 
 # ------------------------------------------------------------------------------
 
@@ -205,42 +233,6 @@ def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
                 src_file = os.path.join(src_dir, f)
                 dst_file = os.path.join(dst_dir, f)
                 shutil.copy(src_file, dst_file)
-
-# ------------------------------------------------------------------------------
-
-
-def underline(f, start_char, length, reference, number, is_integer):
-    """
-    Input:
-        - f -- filter task
-        - start_char -- position of start character
-        - length -- underline length
-        - reference -- reference number
-        - number -- obtained (calculated) number
-        - is_integer -- whether reference number is integer
-
-    Returns:
-        - s -- underline string with info about reference and tolerance
-    """
-
-    s = ''
-    for i in range(start_char):
-        s += ' '
-    for i in range(length):
-        s += '#'
-    s += ' expected: %s' % reference
-
-    if not is_integer:
-        if f.tolerance_is_set:
-            if f.tolerance_is_relative:
-                s += ' (rel diff: %6.2e)' % abs(1.0 - number / reference)
-            else:
-                if f.ignore_sign:
-                    s += ' (abs diff: %6.2e ignoring signs)' % abs(abs(number) - abs(reference))
-                else:
-                    s += ' (abs diff: %6.2e)' % abs(number - reference)
-
-    return s + '\n'
 
 # ------------------------------------------------------------------------------
 
@@ -535,16 +527,16 @@ class Filter:
                 if not f.tolerance_is_set and (any(map(is_float, out_numbers)) or any(map(is_float, ref_numbers))):
                     raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
                 l = map(lambda t: tuple_matches(f, t), zip(out_numbers, ref_numbers))
-                if not all(l):
+                matching, errors = zip(*l)  # unzip tuples to two lists
+                if not all(matching):
                     log_diff.write('\n')
                     for k, line in enumerate(out_filtered):
                         log_diff.write('.       %s' % line)
                         for i, num in enumerate(out_numbers):
                             (line_num, start_char, length) = out_locations[i]
                             if line_num == k:
-                                if not l[i]:
-                                    is_integer = isinstance(num, int)  # FIXME use is_int()
-                                    log_diff.write('ERROR   %s' % underline(f, start_char, length, ref_numbers[i], out_numbers[i], is_integer))
+                                if errors[i]:
+                                    log_diff.write('ERROR   %s%s %s\n' % (' ' * start_char, '#' * length, errors[i]))
 
             if len(out_numbers) != len(ref_numbers):
                 log_diff.write('ERROR: extracted sizes do not match\n')
