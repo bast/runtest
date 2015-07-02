@@ -206,3 +206,27 @@ def test_check_bad_filter():
     with pytest.raises(runtest.BadFilterError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert e.value.message == 'ERROR: filter ["does not exist" ... "either"] did not extract anything from file %s\n' % out_name
+
+# ------------------------------------------------------------------------------
+
+
+def test_check_different_length():
+
+    HERE = os.path.abspath(os.path.dirname(__file__))
+
+    out_name = os.path.join(HERE, 'out2.txt')
+    ref_name = os.path.join(HERE, 'ref.txt')
+
+    f = runtest.Filter()
+    f.add(abs_tolerance=0.1)
+    with pytest.raises(runtest.TestFailedError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: test %s failed\n' % out_name
+    with open(os.path.join(HERE, 'out2.txt.diff'), 'r') as f:
+        assert f.read() == '''ERROR: extracted sizes do not match
+own gave 4 numbers:
+1.0 2.0 3.0 4.0
+
+reference gave 3 numbers:
+1.0 2.0 3.05
+\n'''
