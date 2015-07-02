@@ -184,3 +184,25 @@ ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n'''
         assert f.read() == '''
 .       1.0 2.0 3.0
 ERROR           ### expected: 3.05 (abs diff: 5.00e-02 ignoring signs)\n'''
+
+# ------------------------------------------------------------------------------
+
+
+def test_check_bad_filter():
+
+    HERE = os.path.abspath(os.path.dirname(__file__))
+
+    out_name = os.path.join(HERE, 'out.txt')
+    ref_name = os.path.join(HERE, 'ref.txt')
+
+    f = runtest.Filter()
+    f.add(from_string='does not exist', num_lines=4)
+    with pytest.raises(runtest.BadFilterError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: filter [4 lines from "does not exist"] did not extract anything from file %s\n' % out_name
+
+    f = runtest.Filter()
+    f.add(from_string='does not exist', to_string="either")
+    with pytest.raises(runtest.BadFilterError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: filter ["does not exist" ... "either"] did not extract anything from file %s\n' % out_name
