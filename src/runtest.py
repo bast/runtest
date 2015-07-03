@@ -30,7 +30,7 @@ from optparse import OptionParser
 
 
 # http://semver.org
-__version__ = '1.3.10'
+__version__ = '1.3.11'
 
 
 class FilterKeywordError(Exception):
@@ -286,58 +286,6 @@ def filter_file(f, file_name, output):
 # ------------------------------------------------------------------------------
 
 
-def check_for_unrecognized_kw(kwargs):
-
-    recognized_keywords = ['from_re',
-                           'to_re',
-                           're',
-                           'from_string',
-                           'to_string',
-                           'string',
-                           'ignore_below',
-                           'ignore_above',
-                           'ignore_sign',
-                           'mask',
-                           'num_lines',
-                           'rel_tolerance',
-                           'abs_tolerance']
-
-    # check for unrecognized keywords
-    for key in kwargs.keys():
-        if key not in recognized_keywords:
-            available_keywords = (', ').join(recognized_keywords)
-            message = 'ERROR: keyword "%s" not recognized\n       ' % key
-            message += 'available keywords: %s\n' % available_keywords
-            raise FilterKeywordError(message)
-
-# ------------------------------------------------------------------------------
-
-
-def check_for_incompatible_kw(kwargs):
-
-    incompatible_pairs = [('from_re', 'from_string'),
-                          ('to_re', 'to_string'),
-                          ('to_string', 'num_lines'),
-                          ('to_re', 'num_lines'),
-                          ('string', 'from_string'),
-                          ('string', 'to_string'),
-                          ('string', 'from_re'),
-                          ('string', 'to_re'),
-                          ('string', 'num_lines'),
-                          ('re', 'from_string'),
-                          ('re', 'to_string'),
-                          ('re', 'from_re'),
-                          ('re', 'to_re'),
-                          ('re', 'num_lines'),
-                          ('rel_tolerance', 'abs_tolerance')]
-
-    for (kw1, kw2) in incompatible_pairs:
-        if kw1 in kwargs.keys() and kw2 in kwargs.keys():
-            raise FilterKeywordError('ERROR: incompatible keywords: "%s" and "%s"\n' % (kw1, kw2))
-
-# ------------------------------------------------------------------------------
-
-
 def _check(filter_list, out_name, ref_name, verbose=False):
     """
     Compares output (work_dir/out_name) with reference (work_dir/ref_name)
@@ -497,8 +445,43 @@ class _SingleFilter:
 
     def __init__(self, **kwargs):
 
-        check_for_unrecognized_kw(kwargs)
-        check_for_incompatible_kw(kwargs)
+        recognized_kw = ['from_re',
+                         'to_re',
+                         're',
+                         'from_string',
+                         'to_string',
+                         'string',
+                         'ignore_below',
+                         'ignore_above',
+                         'ignore_sign',
+                         'mask',
+                         'num_lines',
+                         'rel_tolerance',
+                         'abs_tolerance']
+
+        unrecoginzed_kw = [kw for kw in kwargs.keys() if kw not in recognized_kw]
+        if unrecoginzed_kw != []:
+            raise FilterKeywordError('ERROR: keyword(s) (%s) not recognized\n       available keywords: (%s)\n' % ((', ').join(unrecoginzed_kw),
+                                                                                                                   (', ').join(recognized_kw)))
+        incompatible_pairs = [('from_re', 'from_string'),
+                              ('to_re', 'to_string'),
+                              ('to_string', 'num_lines'),
+                              ('to_re', 'num_lines'),
+                              ('string', 'from_string'),
+                              ('string', 'to_string'),
+                              ('string', 'from_re'),
+                              ('string', 'to_re'),
+                              ('string', 'num_lines'),
+                              ('re', 'from_string'),
+                              ('re', 'to_string'),
+                              ('re', 'from_re'),
+                              ('re', 'to_re'),
+                              ('re', 'num_lines'),
+                              ('rel_tolerance', 'abs_tolerance')]
+
+        incompatible_kw = [(kw1, kw2) for (kw1, kw2) in incompatible_pairs if kw1 in kwargs.keys() and kw2 in kwargs.keys()]
+        if incompatible_kw != []:
+            raise FilterKeywordError('ERROR: incompatible keyword pairs: %s\n' % incompatible_kw)
 
         # now continue with keywords
         self.from_string = kwargs.get('from_string', '')

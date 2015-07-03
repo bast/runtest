@@ -204,3 +204,19 @@ own gave 4 numbers:
 reference gave 3 numbers:
 1.0 2.0 3.05
 \n'''
+
+# ------------------------------------------------------------------------------
+
+
+def test_bad_keywords():
+
+    f = runtest.Filter()
+    with pytest.raises(runtest.FilterKeywordError) as e:
+        f.add(raboof=0, foo=1)
+    assert e.value.message == '''ERROR: keyword(s) (raboof, foo) not recognized
+       available keywords: (from_re, to_re, re, from_string, to_string, string, ignore_below, ignore_above, ignore_sign, mask, num_lines, rel_tolerance, abs_tolerance)\n'''
+
+    f = runtest.Filter()
+    with pytest.raises(runtest.FilterKeywordError) as e:
+        f.add(from_string='foo', from_re='foo', to_string='foo', to_re='foo')
+    assert e.value.message == "ERROR: incompatible keyword pairs: [('from_re', 'from_string'), ('to_re', 'to_string')]\n"
