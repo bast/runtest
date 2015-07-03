@@ -112,32 +112,6 @@ raboof 1.0 3.0 7.0
 # ------------------------------------------------------------------------------
 
 
-def test_unrecognized_kw():
-
-    kwargs = {'num_lines': 5, 'raboof': 137}
-
-    with pytest.raises(runtest.FilterKeywordError) as e:
-        res = runtest.check_for_unrecognized_kw(kwargs)
-
-    assert e.value.message == 'ERROR: keyword "raboof" not recognized\n' \
-        + '       available keywords: from_re, to_re, re, from_string, ' \
-        + 'to_string, string, ignore_below, ignore_above, ignore_sign, mask, num_lines, rel_tolerance, abs_tolerance\n'
-
-# ------------------------------------------------------------------------------
-
-
-def test_incompatible_kw():
-
-    kwargs = {'num_lines': 5, 'string': 'raboof'}
-
-    with pytest.raises(runtest.FilterKeywordError) as e:
-        res = runtest.check_for_incompatible_kw(kwargs)
-
-    assert e.value.message == 'ERROR: incompatible keywords: "string" and "num_lines"\n'
-
-# ------------------------------------------------------------------------------
-
-
 def test_check():
 
     HERE = os.path.abspath(os.path.dirname(__file__))
