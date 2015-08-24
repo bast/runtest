@@ -116,7 +116,8 @@ How to ignore very small or very large numbers
 ----------------------------------------------
 
 You can ignore very small numbers with ignore_below.
-Default is 1.0e-40. Ignore all floats that are smaller than this number.
+Default is 1.0e-40. Ignore all floats that are smaller than this number
+(this option ignores the sign).
 
 As an example consider the following result tensor::
 
@@ -138,7 +139,8 @@ at all.  In this case it is useful to set ignore_below to 1.0e-4.
 Alternatively one could use absolute tolerance to avoid checking the noisy
 zeros.
 
-You can ignore very large numbers with ignore_above.
+You can ignore very large numbers with ignore_above (also this option ignores
+the sign).
 
 
 
