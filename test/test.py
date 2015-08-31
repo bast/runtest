@@ -220,3 +220,23 @@ def test_bad_keywords():
     with pytest.raises(runtest.FilterKeywordError) as e:
         f.add(from_string='foo', from_re='foo', to_string='foo', to_re='foo')
     assert e.value.message == "ERROR: incompatible keyword pairs: [('from_re', 'from_string'), ('to_re', 'to_string')]\n"
+
+# ------------------------------------------------------------------------------
+
+
+def test_only_string():
+
+    HERE = os.path.abspath(os.path.dirname(__file__))
+
+    out_name = os.path.join(HERE, 'only_string_out.txt')
+    ref_name = os.path.join(HERE, 'only_string_ref.txt')
+
+    f = runtest.Filter()
+    f.add(string='raboof')
+    f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+
+    f = runtest.Filter()
+    f.add(string='foo')
+    with pytest.raises(runtest.BadFilterError) as e:
+        f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
+    assert e.value.message == 'ERROR: filter [1 lines from "foo"] did not extract anything from file %s\n' % out_name
