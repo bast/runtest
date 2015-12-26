@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/bast/runtest.svg?branch=master)](https://travis-ci.org/bast/runtest/builds)
 [![Coverage Status](https://coveralls.io/repos/bast/runtest/badge.png?branch=master)](https://coveralls.io/r/bast/runtest?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/runtest/badge/?version=latest)](http://runtest.readthedocs.org)
+[![License](https://img.shields.io/github/license/bast/runtest.svg)](../master/LICENSE)
 
 
 # runtest
