@@ -1,5 +1,3 @@
-sudo: false
-
 language:
   - python
 
@@ -20,10 +18,15 @@ before_script:
 script:
   - pep8 --ignore=E501 src/runtest.py
   - pep8 --ignore=E501 test/test.py
-  - py.test --cov src test/test.py
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]];
+    then py.test --cov src test/test.py;
+    else py.test test/test.py;
+    fi
 
 after_success:
-  - coveralls
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]];
+    then coveralls;
+    fi
 
 notifications:
   email: false
