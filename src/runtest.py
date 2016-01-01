@@ -1,22 +1,7 @@
+# Copyright 2015 Radovan Bast.
 
-"""
-    runtest - Numerically tolerant test library
-
-    Author:
-        Radovan Bast
-
-    License:
-        BSD-3
-        https://github.com/bast/runtest/blob/master/LICENSE
-
-    Documentation:
-        http://runtest.readthedocs.org
-
-    Source:
-        https://github.com/bast/runtest
-
-    Issue tracking:
-        https://github.com/bast/runtest/issues
+"""runtest - Numerically tolerant test library for scientific codes which
+produce and test numerical results.
 """
 
 import re
@@ -29,8 +14,9 @@ import string
 from optparse import OptionParser
 
 
-# http://semver.org
 __version__ = '1.3.11'
+
+__author__ = ('Radovan Bast <radovan.bast@uit.no>')
 
 
 class FilterKeywordError(Exception):
