@@ -47,7 +47,7 @@ def test_extract_numbers():
     f = runtest.Filter()
     f.add()
 
-    numbers, locations = runtest.extract_numbers(f.filter_list[0], text.splitlines())
+    numbers, locations = runtest._extract_numbers(f.filter_list[0], text.splitlines())
 
     assert numbers == [0.0, -1.901357604797, 3.04e-07, 1, 0.14818471, 1.9013576, 1.9013576, 1.9013576, 1.9013576, 0.0, 0.28175212, 0.28175212, 0.28175212, 0.28175212, 0.0]
     assert locations == [(7, 2, 10), (7, 20, 15), (7, 63, 8), (17, 1, 1), (17, 11, 10), (22, 18, 10), (23, 18, 10), (24, 18, 10), (26, 18, 10), (27, 18, 5), (29, 18, 10), (30, 18, 10), (31, 18, 10), (33, 18, 10), (34, 18, 5)]
@@ -64,7 +64,7 @@ def test_extract_numbers_mask():
     f = runtest.Filter()
     f.add(mask=[1, 4])
 
-    numbers, locations = runtest.extract_numbers(f.filter_list[0], text.splitlines())
+    numbers, locations = runtest._extract_numbers(f.filter_list[0], text.splitlines())
 
     assert numbers == [1.0, 4.0, 1.0, 4.0, 1.0, 4.0]
     assert locations == [(0, 0, 3), (0, 12, 3), (1, 0, 3), (1, 12, 3), (2, 0, 3), (2, 12, 3)]
@@ -77,7 +77,7 @@ def test_parse_args():
     input_dir = '/raboof/mytest'
     argv = ['./test', '-b', '/raboof/build/']
 
-    options = runtest.parse_args(input_dir, argv)
+    options = runtest._parse_args(input_dir, argv)
 
     assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False, 'log': None}
 
@@ -106,7 +106,7 @@ raboof 1.0 3.0 7.0
     f = runtest.Filter()
     f.add(rel_tolerance=1.0e-5, from_re='raboof', num_lines=5)
 
-    res = runtest.filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
+    res = runtest._filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
     assert res == ['raboof 1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0']
 
 # ------------------------------------------------------------------------------

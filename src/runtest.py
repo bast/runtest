@@ -14,9 +14,12 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.11'
+__version__ = '1.3.12'
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
+
+__all__ = ['Filter', 'testRun',
+           'FilterKeywordError', 'TestFailedError', 'BadFilterError', 'AcceptedError', 'SubprocessError']
 
 
 class FilterKeywordError(Exception):
@@ -41,19 +44,19 @@ class SubprocessError(Exception):
 # ------------------------------------------------------------------------------
 
 
-def is_float(x):
+def _is_float(x):
     return isinstance(x, float)
 
 # ------------------------------------------------------------------------------
 
 
-def is_int(n):
+def _is_int(n):
     return isinstance(n, int)
 
 # ------------------------------------------------------------------------------
 
 
-def tuple_matches(f, tup):
+def _tuple_matches(f, tup):
     """
     Checks if tuple matches based on f.
 
@@ -72,7 +75,7 @@ def tuple_matches(f, tup):
         x = abs(x)
         x_ref = abs(x_ref)
 
-    if is_int(x) and is_int(x_ref):
+    if _is_int(x) and _is_int(x_ref):
         if x == x_ref:
             return (True, None)
         else:
@@ -106,7 +109,7 @@ def tuple_matches(f, tup):
 # ------------------------------------------------------------------------------
 
 
-def extract_numbers(f, text):
+def _extract_numbers(f, text):
     """
     Input:
         - f -- filter task
@@ -164,7 +167,7 @@ def extract_numbers(f, text):
 # ------------------------------------------------------------------------------
 
 
-def parse_args(input_dir, argv):
+def _parse_args(input_dir, argv):
 
     parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
     parser.add_option('--binary-dir',
@@ -209,7 +212,7 @@ def parse_args(input_dir, argv):
 # ------------------------------------------------------------------------------
 
 
-def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
+def _copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
     for src_dir, dirs, files in os.walk(root_src_dir):
         dst_dir = src_dir.replace(root_src_dir, root_dst_dir)
         if not os.path.exists(dst_dir):
@@ -223,7 +226,7 @@ def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
 # ------------------------------------------------------------------------------
 
 
-def filter_file(f, file_name, output):
+def _filter_file(f, file_name, output):
     """
     Input:
         - f -- filter task
@@ -301,15 +304,15 @@ def _check(filter_list, out_name, ref_name, verbose=False):
 
     for f in filter_list:
 
-        out_filtered = filter_file(f, out_name, open(out_name).readlines())
+        out_filtered = _filter_file(f, out_name, open(out_name).readlines())
         log_out.write(''.join(out_filtered))
-        out_numbers, out_locations = extract_numbers(f, out_filtered)
+        out_numbers, out_locations = _extract_numbers(f, out_filtered)
         if f.use_mask and out_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
-        ref_filtered = filter_file(f, ref_name, open(ref_name).readlines())
+        ref_filtered = _filter_file(f, ref_name, open(ref_name).readlines())
         log_ref.write(''.join(ref_filtered))
-        ref_numbers, ref_locations = extract_numbers(f, ref_filtered)
+        ref_numbers, ref_locations = _extract_numbers(f, ref_filtered)
         if f.use_mask and ref_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
@@ -326,9 +329,9 @@ def _check(filter_list, out_name, ref_name, verbose=False):
         # for pure strings len(out_numbers) is 0
         # TODO need to consider what to do with pure strings in future versions
         if len(out_numbers) == len(ref_numbers) and len(out_numbers) > 0:
-            if not f.tolerance_is_set and (any(map(is_float, out_numbers)) or any(map(is_float, ref_numbers))):
+            if not f.tolerance_is_set and (any(map(_is_float, out_numbers)) or any(map(_is_float, ref_numbers))):
                 raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-            l = map(lambda t: tuple_matches(f, t), zip(out_numbers, ref_numbers))
+            l = map(lambda t: _tuple_matches(f, t), zip(out_numbers, ref_numbers))
             matching, errors = zip(*l)  # unzip tuples to two lists
             if not all(matching):
                 log_diff.write('\n')
@@ -371,7 +374,7 @@ class TestRun:
 
         self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
 
-        options = parse_args(input_dir, argv)
+        options = _parse_args(input_dir, argv)
         self.binary_dir = options.binary_dir
         self.work_dir = options.work_dir
         self.verbose = options.verbose
@@ -380,7 +383,7 @@ class TestRun:
         self.log = options.log
 
         if self.work_dir != self.input_dir:
-            copy_path(self.input_dir, self.work_dir)
+            _copy_path(self.input_dir, self.work_dir)
 
         os.chdir(self.work_dir)  # FIXME possibly problematic
 
