@@ -10,7 +10,11 @@ python:
   - "3.5"
 
 install:
-  - pip install -r requirements.txt
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]];
+    then pip install pytest-cov python-coveralls;
+    else pip install pytest;
+    fi
+  - pip install pep8
 
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)/src

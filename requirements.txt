@@ -1,3 +1,0 @@
-pytest-cov
-python-coveralls
-pep8
