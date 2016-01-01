@@ -1,16 +1,29 @@
 sudo: false
-language: python
+
+language:
+  - python
+
 python:
-  - 2.7
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+
 install:
-  - pip install pytest-cov
-  - pip install python-coveralls
-  - pip install pep8
+  - pip install -r requirements.txt
+
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+
 script:
   - pep8 --ignore=E501 src/runtest.py
   - pep8 --ignore=E501 test/test.py
   - py.test --cov src test/test.py
+
 after_success:
   - coveralls
+
+notifications:
+  email: false
