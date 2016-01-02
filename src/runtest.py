@@ -449,9 +449,8 @@ class _SingleFilter:
                          'abs_tolerance']
 
         unrecoginzed_kw = [kw for kw in kwargs.keys() if kw not in recognized_kw]
-        unrecoginzed_kw.sort()
         if unrecoginzed_kw != []:
-            raise FilterKeywordError('ERROR: keyword(s) (%s) not recognized\n       available keywords: (%s)\n' % ((', ').join(unrecoginzed_kw),
+            raise FilterKeywordError('ERROR: keyword(s) (%s) not recognized\n       available keywords: (%s)\n' % ((', ').join(sorted(unrecoginzed_kw)),
                                                                                                                    (', ').join(recognized_kw)))
         incompatible_pairs = [('from_re', 'from_string'),
                               ('to_re', 'to_string'),
