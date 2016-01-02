@@ -213,7 +213,7 @@ def test_bad_keywords():
     f = runtest.Filter()
     with pytest.raises(runtest.FilterKeywordError) as e:
         f.add(raboof=0, foo=1)
-    exception = '''ERROR: keyword(s) (raboof, foo) not recognized
+    exception = '''ERROR: keyword(s) (foo, raboof) not recognized
        available keywords: (from_re, to_re, re, from_string, to_string, string, ignore_below, ignore_above, ignore_sign, mask, num_lines, rel_tolerance, abs_tolerance)\n'''
     assert exception in str(e.value)
 
