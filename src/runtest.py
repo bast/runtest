@@ -103,38 +103,15 @@ def _check_for_incompatible_kw(kwargs):
 # ------------------------------------------------------------------------------
 
 
-class FilterKeywordError(Exception):
-    pass
-
-
-class TestFailedError(Exception):
-    pass
-
-
-class BadFilterError(Exception):
-    pass
-
-
-class AcceptedError(Exception):
-    pass
-
-
-class SubprocessError(Exception):
-    pass
-
-# ------------------------------------------------------------------------------
-
-
 def _tuple_matches(f, tup):
-    """
-    Checks if tuple matches based on f.
+    """Checks if tuple matches based on filter f.
 
-    Input:
-        f   -- filter task
-        tup -- tuple
+    Args:
+        f: filter
+        tup: tuple
 
     Returns:
-        (tuple_matches, error_message)
+        (tuple matches, error message) - error message is None if there is no error
     """
 
     x, x_ref = tup
@@ -174,6 +151,28 @@ def _tuple_matches(f, tup):
                 return (False, "expected: %s (abs diff: %6.2e ignoring signs)" % (x_ref, abs(abs(x) - abs(x_ref))))
             else:
                 return (False, "expected: %s (abs diff: %6.2e)" % (x_ref, abs(x - x_ref)))
+
+# ------------------------------------------------------------------------------
+
+
+class FilterKeywordError(Exception):
+    pass
+
+
+class TestFailedError(Exception):
+    pass
+
+
+class BadFilterError(Exception):
+    pass
+
+
+class AcceptedError(Exception):
+    pass
+
+
+class SubprocessError(Exception):
+    pass
 
 # ------------------------------------------------------------------------------
 
