@@ -14,7 +14,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.14'
+__version__ = '1.3.15'
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
 
@@ -98,7 +98,7 @@ def _check_for_incompatible_kw(kwargs):
     if incompatible_kw == []:
         return None
     else:
-        return 'ERROR: incompatible keyword pairs: {}\n'.format(incompatible_kw)
+        return 'ERROR: incompatible keyword pairs: {0}\n'.format(incompatible_kw)
 
 # ------------------------------------------------------------------------------
 
