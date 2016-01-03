@@ -14,12 +14,93 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.13'
+__version__ = '1.3.14'
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
 
 __all__ = ['Filter', 'testRun',
            'FilterKeywordError', 'TestFailedError', 'BadFilterError', 'AcceptedError', 'SubprocessError']
+
+# ------------------------------------------------------------------------------
+
+
+def _is_float(x):
+    return isinstance(x, float)
+
+# ------------------------------------------------------------------------------
+
+
+def _is_int(n):
+    return isinstance(n, int)
+
+# ------------------------------------------------------------------------------
+
+
+def _check_for_unknown_kw(kwargs):
+    """Checks whether there are any unknown keywords.
+
+    Args:
+        kwargs: keyword arguments
+
+    Returns:
+        Error message. None if all keywords are known.
+    """
+    recognized_kw = ['from_re',
+                     'to_re',
+                     're',
+                     'from_string',
+                     'to_string',
+                     'string',
+                     'ignore_below',
+                     'ignore_above',
+                     'ignore_sign',
+                     'mask',
+                     'num_lines',
+                     'rel_tolerance',
+                     'abs_tolerance']
+
+    unrecoginzed_kw = [kw for kw in kwargs.keys() if kw not in recognized_kw]
+    if unrecoginzed_kw == []:
+        return None
+    else:
+        return 'ERROR: keyword(s) ({unrecognized}) not recognized\n       available keywords: ({available})\n'.format(unrecognized=(', ').join(sorted(unrecoginzed_kw)),
+                                                                                                                      available=(', ').join(recognized_kw))
+
+# ------------------------------------------------------------------------------
+
+
+def _check_for_incompatible_kw(kwargs):
+    """Checks whether there are any incompatible keyword pairs.
+
+    Args:
+        kwargs: keyword arguments
+
+    Returns:
+        Error message. Empty if all keywords are compatible.
+    """
+    incompatible_pairs = [('from_re', 'from_string'),
+                          ('to_re', 'to_string'),
+                          ('to_string', 'num_lines'),
+                          ('to_re', 'num_lines'),
+                          ('string', 'from_string'),
+                          ('string', 'to_string'),
+                          ('string', 'from_re'),
+                          ('string', 'to_re'),
+                          ('string', 'num_lines'),
+                          ('re', 'from_string'),
+                          ('re', 'to_string'),
+                          ('re', 'from_re'),
+                          ('re', 'to_re'),
+                          ('re', 'num_lines'),
+                          ('rel_tolerance', 'abs_tolerance')]
+
+    incompatible_kw = [(kw1, kw2) for (kw1, kw2) in incompatible_pairs if kw1 in kwargs.keys() and kw2 in kwargs.keys()]
+    if incompatible_kw == []:
+        return None
+    else:
+        return 'ERROR: incompatible keyword pairs: {}\n'.format(incompatible_kw)
+
+# ------------------------------------------------------------------------------
 
 
 class FilterKeywordError(Exception):
@@ -40,18 +121,6 @@ class AcceptedError(Exception):
 
 class SubprocessError(Exception):
     pass
-
-# ------------------------------------------------------------------------------
-
-
-def _is_float(x):
-    return isinstance(x, float)
-
-# ------------------------------------------------------------------------------
-
-
-def _is_int(n):
-    return isinstance(n, int)
 
 # ------------------------------------------------------------------------------
 
@@ -434,43 +503,13 @@ class _SingleFilter:
 
     def __init__(self, **kwargs):
 
-        recognized_kw = ['from_re',
-                         'to_re',
-                         're',
-                         'from_string',
-                         'to_string',
-                         'string',
-                         'ignore_below',
-                         'ignore_above',
-                         'ignore_sign',
-                         'mask',
-                         'num_lines',
-                         'rel_tolerance',
-                         'abs_tolerance']
+        error = _check_for_unknown_kw(kwargs)
+        if error:
+            raise FilterKeywordError(error)
 
-        unrecoginzed_kw = [kw for kw in kwargs.keys() if kw not in recognized_kw]
-        if unrecoginzed_kw != []:
-            raise FilterKeywordError('ERROR: keyword(s) (%s) not recognized\n       available keywords: (%s)\n' % ((', ').join(sorted(unrecoginzed_kw)),
-                                                                                                                   (', ').join(recognized_kw)))
-        incompatible_pairs = [('from_re', 'from_string'),
-                              ('to_re', 'to_string'),
-                              ('to_string', 'num_lines'),
-                              ('to_re', 'num_lines'),
-                              ('string', 'from_string'),
-                              ('string', 'to_string'),
-                              ('string', 'from_re'),
-                              ('string', 'to_re'),
-                              ('string', 'num_lines'),
-                              ('re', 'from_string'),
-                              ('re', 'to_string'),
-                              ('re', 'from_re'),
-                              ('re', 'to_re'),
-                              ('re', 'num_lines'),
-                              ('rel_tolerance', 'abs_tolerance')]
-
-        incompatible_kw = [(kw1, kw2) for (kw1, kw2) in incompatible_pairs if kw1 in kwargs.keys() and kw2 in kwargs.keys()]
-        if incompatible_kw != []:
-            raise FilterKeywordError('ERROR: incompatible keyword pairs: %s\n' % incompatible_kw)
+        error = _check_for_incompatible_kw(kwargs)
+        if error:
+            raise FilterKeywordError(error)
 
         # now continue with keywords
         self.from_string = kwargs.get('from_string', '')
