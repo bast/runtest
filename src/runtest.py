@@ -270,11 +270,6 @@ def _parse_args(input_dir, argv):
                       help='log file [default: no logging]')
     (options, args) = parser.parse_args(args=argv[1:])
 
-    if sys.platform == "win32":
-        # on windows we flip possibly wrong slashes
-        options.binary_dir = string.replace(options.binary_dir, '/', '\\')
-        options.work_dir = string.replace(options.work_dir, '/', '\\')
-
     return options
 
 # ------------------------------------------------------------------------------
