@@ -74,12 +74,19 @@ def test_extract_numbers_mask():
 
 def test_parse_args():
 
-    input_dir = '/raboof/mytest'
-    argv = ['./test', '-b', '/raboof/build/']
+    if sys.platform == 'win32':
+        input_dir = '\raboof\mytest'
+        argv = ['test', '-b', '\raboof\build']
+    else:
+        input_dir = '/raboof/mytest'
+        argv = ['./test', '-b', '/raboof/build/']
 
     options = runtest._parse_args(input_dir, argv)
 
-    assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False, 'log': None}
+    if sys.platform == 'win32':
+        assert options == {'verbose': False, 'work_dir': '\raboof\mytest', 'binary_dir': '\raboof\build', 'skip_run': False, 'debug': False, 'log': None}
+    else:
+        assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False, 'log': None}
 
 # ------------------------------------------------------------------------------
 
