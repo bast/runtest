@@ -14,7 +14,7 @@ import string
 from optparse import OptionParser
 
 
-__version__ = '1.3.15'
+__version__ = '1.3.16'
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
 
