@@ -78,8 +78,8 @@ Example:
 
   f = Filter()
   f.add(from_string  = 'Electronic energy',
-        num_lines    = 8,                        # here we compare 8 lines
-        tolerance    = 1.0e-10)
+        num_lines = 8,                        # here we compare 8 lines
+        rel_tolerance = 1.0e-10)
 
 The start string can be a string (from_string) or a regular expression
 (from_re).  In the above example we extract and compare all lines that start
@@ -94,8 +94,8 @@ This example will compare all lines which contain 'Electronic energy':
 .. code-block:: python
 
   f = Filter()
-  f.add(string    = 'Electronic energy',
-        tolerance = 1.0e-10)
+  f.add(string = 'Electronic energy',
+        rel_tolerance = 1.0e-10)
 
 Instead of single string we can give a single regular expression (re).
 
@@ -156,8 +156,8 @@ Example:
 
   f = Filter()
   f.add(from_string = 'no.    eigenvalue (eV)   mean-res.',
-        num_lines   = 4,
-        tolerance   = 1.0e-4,
-        mask        = [1, 2, 3])
+        num_lines = 4,
+        rel_tolerance = 1.0e-4,
+        mask = [1, 2, 3])
 
 Here we use only the first 3 floats in each line.

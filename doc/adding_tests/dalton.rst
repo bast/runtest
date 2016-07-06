@@ -36,13 +36,13 @@ filter for "stdout", which we pass as a dictionary (curly brackets):
 
    f_out = Filter()
    f_out.add(from_string = 'Final results from SIRIUS',
-             num_lines   = 11,
-             tolerance   = 1.0e-7)
+             num_lines = 11,
+             rel_tolerance = 1.0e-7)
 
    f_stdout = Filter()
    f_stdout.add(from_string  = 'beta = -Efff',
-                num_lines    = 10,
-                tolerance    = 1.0e-7,
+                num_lines = 10,
+                rel_tolerance = 1.0e-7,
                 ignore_below = 1.0e-7)
 
    test.run(['hf.dal', 'hf_2np1.dal'], ['h2o2.mol'], {'out': f_out, 'stdout': f_stdout})

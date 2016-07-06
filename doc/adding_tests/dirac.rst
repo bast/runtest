@@ -138,8 +138,8 @@ Note how only every second run is actually verified by passing the filter object
 
     f = Filter()
     f.add(from_string = 'Energy at final geometry is',
-          num_lines   = 3,
-          tolerance   = 1.0e-4)
+          num_lines = 3,
+          rel_tolerance= 1.0e-4)
 
     test.run(['O.inp'], ['O.mol'], args='--get=DFCOEF')
     shutil.copy('DFCOEF', 'DFPROJ')
@@ -177,8 +177,8 @@ The other runs only serve to prepare files and are not checked (no filter passed
 
     f = Filter()
     f.add(from_string = 'Energy at final geometry is',
-          num_lines   = 3,
-          tolerance   = 1.0e-4)
+          num_lines = 3,
+          rel_tolerance = 1.0e-4)
 
     test.run(['O.inp'], ['O.mol'], args='--get=DFCOEF')
     shutil.copy('DFCOEF', 'DFPROJ')
