@@ -21,7 +21,7 @@ numerical tolerance to compensate for numerical noise due to machine precision.
 Design decisions
 ----------------
 
-The library is desinged to play well with CTest, to be convenient when used
+The library is designed to play well with CTest, to be convenient when used
 interactively, and to work without trouble on Linux, Mac, and Windows. It
 offers test scripts a basic argument parsing. All host program independent code
 has been collected into the core library. The aim is to keep host program
