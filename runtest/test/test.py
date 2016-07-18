@@ -1,7 +1,7 @@
 import os
 import sys
 import pytest
-import runtest
+from ..src import *
 
 # ------------------------------------------------------------------------------
 
@@ -44,10 +44,10 @@ def test_extract_numbers():
 @   average       0.28175212 angstrom**3
 @   anisotropy    0.000      angstrom**3'''
 
-    f = runtest.Filter()
+    f = Filter()
     f.add()
 
-    numbers, locations = runtest._extract_numbers(f.filter_list[0], text.splitlines())
+    numbers, locations = _extract_numbers(f.filter_list[0], text.splitlines())
 
     assert numbers == [0.0, -1.901357604797, 3.04e-07, 1, 0.14818471, 1.9013576, 1.9013576, 1.9013576, 1.9013576, 0.0, 0.28175212, 0.28175212, 0.28175212, 0.28175212, 0.0]
     assert locations == [(7, 2, 10), (7, 20, 15), (7, 63, 8), (17, 1, 1), (17, 11, 10), (22, 18, 10), (23, 18, 10), (24, 18, 10), (26, 18, 10), (27, 18, 5), (29, 18, 10), (30, 18, 10), (31, 18, 10), (33, 18, 10), (34, 18, 5)]
@@ -61,10 +61,10 @@ def test_extract_numbers_mask():
 1.0 2.0 3.0 4.0
 1.0 2.0 3.0 4.0'''
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(mask=[1, 4])
 
-    numbers, locations = runtest._extract_numbers(f.filter_list[0], text.splitlines())
+    numbers, locations = _extract_numbers(f.filter_list[0], text.splitlines())
 
     assert numbers == [1.0, 4.0, 1.0, 4.0, 1.0, 4.0]
     assert locations == [(0, 0, 3), (0, 12, 3), (1, 0, 3), (1, 12, 3), (2, 0, 3), (2, 12, 3)]
@@ -81,7 +81,7 @@ def test_parse_args():
         input_dir = '/raboof/mytest'
         argv = ['./test', '-b', '/raboof/build/']
 
-    options = runtest._parse_args(input_dir, argv)
+    options = _parse_args(input_dir, argv)
 
     if sys.platform == 'win32':
         assert options == {'verbose': False, 'work_dir': '\raboof\mytest', 'binary_dir': '\raboof\build', 'skip_run': False, 'debug': False, 'log': None}
@@ -110,10 +110,10 @@ raboof 1.0 3.0 7.0
        1.0 3.0 7.0
        1.0 3.0 7.0'''
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(rel_tolerance=1.0e-5, from_re='raboof', num_lines=5)
 
-    res = runtest._filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
+    res = _filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
     assert res == ['raboof 1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0']
 
 # ------------------------------------------------------------------------------
@@ -126,19 +126,19 @@ def test_check():
     out_name = os.path.join(HERE, 'out.txt')
     ref_name = os.path.join(HERE, 'ref.txt')
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(abs_tolerance=0.1)
     f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
 
-    f = runtest.Filter()
+    f = Filter()
     f.add()
-    with pytest.raises(runtest.FilterKeywordError) as e:
+    with pytest.raises(FilterKeywordError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n' in str(e.value)
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(rel_tolerance=0.01)
-    with pytest.raises(runtest.TestFailedError) as e:
+    with pytest.raises(TestFailedError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
     with open(os.path.join(HERE, 'out.txt.diff'), 'r') as f:
@@ -146,9 +146,9 @@ def test_check():
 .       1.0 2.0 3.0
 ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n'''
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(abs_tolerance=0.01)
-    with pytest.raises(runtest.TestFailedError) as e:
+    with pytest.raises(TestFailedError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
     with open(os.path.join(HERE, 'out.txt.diff'), 'r') as f:
@@ -156,9 +156,9 @@ ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n'''
 .       1.0 2.0 3.0
 ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n'''
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(abs_tolerance=0.01, ignore_sign=True)
-    with pytest.raises(runtest.TestFailedError) as e:
+    with pytest.raises(TestFailedError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
     with open(os.path.join(HERE, 'out.txt.diff'), 'r') as f:
@@ -176,15 +176,15 @@ def test_check_bad_filter():
     out_name = os.path.join(HERE, 'out.txt')
     ref_name = os.path.join(HERE, 'ref.txt')
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(from_string='does not exist', num_lines=4)
-    with pytest.raises(runtest.BadFilterError) as e:
+    with pytest.raises(BadFilterError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: filter [4 lines from "does not exist"] did not extract anything from file %s\n' % out_name in str(e.value)
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(from_string='does not exist', to_string="either")
-    with pytest.raises(runtest.BadFilterError) as e:
+    with pytest.raises(BadFilterError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: filter ["does not exist" ... "either"] did not extract anything from file %s\n' % out_name in str(e.value)
 
@@ -198,9 +198,9 @@ def test_check_different_length():
     out_name = os.path.join(HERE, 'out2.txt')
     ref_name = os.path.join(HERE, 'ref.txt')
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(abs_tolerance=0.1)
-    with pytest.raises(runtest.TestFailedError) as e:
+    with pytest.raises(TestFailedError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
     with open(os.path.join(HERE, 'out2.txt.diff'), 'r') as f:
@@ -217,15 +217,15 @@ reference gave 3 numbers:
 
 def test_bad_keywords():
 
-    f = runtest.Filter()
-    with pytest.raises(runtest.FilterKeywordError) as e:
+    f = Filter()
+    with pytest.raises(FilterKeywordError) as e:
         f.add(raboof=0, foo=1)
     exception = '''ERROR: keyword(s) (foo, raboof) not recognized
        available keywords: (from_re, to_re, re, from_string, to_string, string, ignore_below, ignore_above, ignore_sign, mask, num_lines, rel_tolerance, abs_tolerance)\n'''
     assert exception in str(e.value)
 
-    f = runtest.Filter()
-    with pytest.raises(runtest.FilterKeywordError) as e:
+    f = Filter()
+    with pytest.raises(FilterKeywordError) as e:
         f.add(from_string='foo', from_re='foo', to_string='foo', to_re='foo')
     assert "ERROR: incompatible keyword pairs: [('from_re', 'from_string'), ('to_re', 'to_string')]\n" in str(e.value)
 
@@ -239,12 +239,12 @@ def test_only_string():
     out_name = os.path.join(HERE, 'only_string_out.txt')
     ref_name = os.path.join(HERE, 'only_string_ref.txt')
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(string='raboof')
     f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
 
-    f = runtest.Filter()
+    f = Filter()
     f.add(string='foo')
-    with pytest.raises(runtest.BadFilterError) as e:
+    with pytest.raises(BadFilterError) as e:
         f.check(work_dir='not used', out_name=out_name, ref_name=ref_name, verbose=False)
     assert 'ERROR: filter [1 lines from "foo"] did not extract anything from file %s\n' % out_name in str(e.value)

@@ -18,8 +18,9 @@ __version__ = '1.3.16'
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
 
-__all__ = ['Filter', 'testRun',
-           'FilterKeywordError', 'TestFailedError', 'BadFilterError', 'AcceptedError', 'SubprocessError']
+__all__ = ['Filter', 'TestRun',
+           'FilterKeywordError', 'TestFailedError', 'BadFilterError', 'AcceptedError', 'SubprocessError',
+           '_extract_numbers', '_parse_args', '_filter_file']  # FIXME
 
 # ------------------------------------------------------------------------------
 

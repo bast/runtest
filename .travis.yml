@@ -10,21 +10,13 @@ python:
   - "3.5"
 
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]];
-    then pip install pytest-cov python-coveralls;
-    else pip install pytest;
-    fi
-  - pip install pep8
-
-before_script:
-  - export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+  - pip install -r requirements.txt
 
 script:
   - pep8 --ignore=E501 runtest
-  - pep8 --ignore=E501 test/test.py
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]];
-    then py.test --cov runtest/* test/test.py;
-    else py.test runtest/*;
+    then py.test --cov runtest runtest/test/test.py;
+    else py.test -vv           runtest/test/test.py;
     fi
 
 after_success:

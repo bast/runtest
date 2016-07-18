@@ -13,4 +13,4 @@ build_script:
 - pip install pytest
 
 test_script:
-- py.test -vv test/test.py
+- py.test -vv runtest/test/test.py
