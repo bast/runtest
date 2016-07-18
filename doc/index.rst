@@ -8,9 +8,9 @@ Documentation of runtest
 .. toctree::
    :maxdepth: 1
 
-   doc/main
-   doc/filter_options
-   doc/contributing
+   main
+   filter_options
+   contributing
 
 
 **Running a test script:**
@@ -18,8 +18,8 @@ Documentation of runtest
 .. toctree::
    :maxdepth: 1
 
-   doc/command_line_arguments
-   doc/generated_files
+   command_line_arguments
+   generated_files
 
 
 **Documentation for people who add new tests:**
@@ -27,9 +27,9 @@ Documentation of runtest
 .. toctree::
    :maxdepth: 1
 
-   doc/adding_tests/general
-   doc/adding_tests/dirac
-   doc/adding_tests/dalton
+   adding_tests/general
+   adding_tests/dirac
+   adding_tests/dalton
 
 
 **Documentation for people who implement host-code specific adapters:**
@@ -37,6 +37,6 @@ Documentation of runtest
 .. toctree::
    :maxdepth: 1
 
-   doc/adapters/dirac
-   doc/adapters/dalton
-   doc/adapters/gpunch
+   adapters/dirac
+   adapters/dalton
+   adapters/gpunch
