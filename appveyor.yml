@@ -22,6 +22,6 @@ test_script:
 - echo %path%
 - py.test --version
 # run tests
-- pep8 --ignore=E501 src/runtest.py
+- pep8 --ignore=E501 runtest/runtest.py
 - pep8 --ignore=E501 test/test.py
 - py.test -vv test/test.py
