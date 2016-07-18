@@ -15,13 +15,11 @@ build_script:
 - ps: wget https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
 - python get-pip.py
 # install py.test
-- pip install pytest pep8
+- pip install pytest
 
 test_script:
 # show environment
 - echo %path%
 - py.test --version
 # run tests
-- pep8 --ignore=E501 runtest/runtest.py
-- pep8 --ignore=E501 test/test.py
 - py.test -vv test/test.py
