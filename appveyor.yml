@@ -1,5 +1,3 @@
-
-# prepare environment
 environment:
     matrix:
     - python: C:\Python27;C:\Python27\Scripts
@@ -8,18 +6,11 @@ environment:
     - python: C:\Python34-x64;C:\Python34-x64\Scripts
 
 build_script:
-# add location of used Python to path
 - set path=%path%;%python%
 - set PYTHONPATH=%PYTHONPATH%;%CD%\src
-# download and upgrade pip
 - ps: wget https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
 - python get-pip.py
-# install py.test
 - pip install pytest
 
 test_script:
-# show environment
-- echo %path%
-- py.test --version
-# run tests
 - py.test -vv test/test.py
