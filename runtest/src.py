@@ -1,5 +1,6 @@
+from .exceptions import FilterKeywordError, TestFailedError, BadFilterError, AcceptedError, SubprocessError
+
 __all__ = ['Filter', 'TestRun',
-           'FilterKeywordError', 'TestFailedError', 'BadFilterError', 'AcceptedError', 'SubprocessError',
            '_extract_numbers', '_parse_args', '_filter_file']
 
 # ------------------------------------------------------------------------------
@@ -132,28 +133,6 @@ def _tuple_matches(f, tup):
                 return (False, "expected: %s (abs diff: %6.2e ignoring signs)" % (x_ref, abs(abs(x) - abs(x_ref))))
             else:
                 return (False, "expected: %s (abs diff: %6.2e)" % (x_ref, abs(x - x_ref)))
-
-# ------------------------------------------------------------------------------
-
-
-class FilterKeywordError(Exception):
-    pass
-
-
-class TestFailedError(Exception):
-    pass
-
-
-class BadFilterError(Exception):
-    pass
-
-
-class AcceptedError(Exception):
-    pass
-
-
-class SubprocessError(Exception):
-    pass
 
 # ------------------------------------------------------------------------------
 
