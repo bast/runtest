@@ -151,6 +151,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
     """
     import os
     from .tuple_comparison import tuple_matches
+
     def _tuple_matches(t):
         if f.tolerance_is_relative:
             error_definition = 'relative'
