@@ -78,7 +78,6 @@ class TestRun:
         self.work_dir = options.work_dir
         self.verbose = options.verbose
         self.skip_run = options.skip_run
-        self.debug = options.debug
 
         if self.work_dir != self.input_dir:
             copy_path(self.input_dir, self.work_dir)
@@ -106,19 +105,11 @@ class TestRun:
         if sys.platform != "win32":
             command = shlex.split(command)
 
-        if self.debug:
-            print('\nlaunching command: %s' % ' '.join(command))
-
         process = subprocess.Popen(command,
                                    stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
-
-        if self.debug:
-            print('\nstdout:\n%s' % stdout)
-            if stderr != '':
-                print('\nstderr:\n%s' % stderr)
 
         for error in accepted_errors:
             if error in stderr:

@@ -25,11 +25,6 @@ def parse_args(input_dir, argv):
                       action='store_true',
                       default=False,
                       help='skip actual calculation(s) [default: %default]')
-    parser.add_option('--debug',
-                      '-d',
-                      action='store_true',
-                      default=False,
-                      help='print verbose debug information [default: %default]')
 
     (options, args) = parser.parse_args(args=argv[1:])
 
@@ -42,4 +37,4 @@ def test_parse_args():
     argv = ['./test', '-b', '/raboof/build/']
 
     options = parse_args(input_dir, argv)
-    assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False}
+    assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False}
