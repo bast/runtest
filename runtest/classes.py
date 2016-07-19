@@ -69,6 +69,7 @@ class TestRun:
     def __init__(self, _file, argv):
         import os
         from .cli import parse_args
+        from .copy import copy_path
 
         self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
 
@@ -80,7 +81,7 @@ class TestRun:
         self.debug = options.debug
 
         if self.work_dir != self.input_dir:
-            _copy_path(self.input_dir, self.work_dir)
+            copy_path(self.input_dir, self.work_dir)
 
         os.chdir(self.work_dir)  # FIXME possibly problematic
 
