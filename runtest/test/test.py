@@ -1,7 +1,9 @@
 import os
 import sys
 import pytest
+
 from ..src import *
+from ..exceptions import *
 
 # ------------------------------------------------------------------------------
 
