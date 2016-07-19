@@ -1,4 +1,4 @@
-from .src import Filter, TestRun
+from .main import Filter, TestRun
 
 from .exceptions import FilterKeywordError, TestFailedError, BadFilterError, AcceptedError, SubprocessError
 

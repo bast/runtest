@@ -2,7 +2,7 @@ import os
 import sys
 import pytest
 
-from ..src import *
+from ..main import *
 from ..exceptions import *
 
 # ------------------------------------------------------------------------------
