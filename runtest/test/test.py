@@ -9,7 +9,7 @@ from ..exceptions import *
 
 
 def test_extract_numbers():
-    from ..main import _extract_numbers
+    from ..extract import extract_numbers
 
     text = '''<<A( 3),B( 3)>> - linear response function (real):
 -----------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ def test_extract_numbers():
     f = Filter()
     f.add()
 
-    numbers, locations = _extract_numbers(f.filter_list[0], text.splitlines())
+    numbers, locations = extract_numbers(f.filter_list[0], text.splitlines())
 
     assert numbers == [0.0, -1.901357604797, 3.04e-07, 1, 0.14818471, 1.9013576, 1.9013576, 1.9013576, 1.9013576, 0.0, 0.28175212, 0.28175212, 0.28175212, 0.28175212, 0.0]
     assert locations == [(7, 2, 10), (7, 20, 15), (7, 63, 8), (17, 1, 1), (17, 11, 10), (22, 18, 10), (23, 18, 10), (24, 18, 10), (26, 18, 10), (27, 18, 5), (29, 18, 10), (30, 18, 10), (31, 18, 10), (33, 18, 10), (34, 18, 5)]
@@ -59,7 +59,7 @@ def test_extract_numbers():
 
 
 def test_extract_numbers_mask():
-    from ..main import _extract_numbers
+    from ..extract import extract_numbers
 
     text = '''1.0 2.0 3.0 4.0
 1.0 2.0 3.0 4.0
@@ -68,7 +68,7 @@ def test_extract_numbers_mask():
     f = Filter()
     f.add(mask=[1, 4])
 
-    numbers, locations = _extract_numbers(f.filter_list[0], text.splitlines())
+    numbers, locations = extract_numbers(f.filter_list[0], text.splitlines())
 
     assert numbers == [1.0, 4.0, 1.0, 4.0, 1.0, 4.0]
     assert locations == [(0, 0, 3), (0, 12, 3), (1, 0, 3), (1, 12, 3), (2, 0, 3), (2, 12, 3)]
