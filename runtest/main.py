@@ -151,6 +151,17 @@ def _check(filter_list, out_name, ref_name, verbose=False):
     """
     import os
     from .tuple_comparison import tuple_matches
+    def _tuple_matches(t):
+        if f.tolerance_is_relative:
+            error_definition = 'relative'
+        else:
+            error_definition = 'absolute'
+        return tuple_matches(t,
+                             tolerance=f.tolerance,
+                             error_definition=error_definition,
+                             ignore_sign=f.ignore_sign,
+                             skip_below=f.ignore_below,
+                             skip_above=f.ignore_above)
 
     log_out = open('%s.filtered' % out_name, 'w')
     log_ref = open('%s.reference' % out_name, 'w')
@@ -185,7 +196,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
         if len(out_numbers) == len(ref_numbers) and len(out_numbers) > 0:
             if not f.tolerance_is_set and (any(map(lambda x: isinstance(x, float), out_numbers)) or any(map(lambda x: isinstance(x, float), ref_numbers))):
                 raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-            l = map(lambda t: tuple_matches(t, f), zip(out_numbers, ref_numbers))
+            l = map(_tuple_matches, zip(out_numbers, ref_numbers))
             matching, errors = zip(*l)  # unzip tuples to two lists
             if not all(matching):
                 log_diff.write('\n')
