@@ -1,75 +1,6 @@
 from .exceptions import FilterKeywordError, TestFailedError, BadFilterError
 
 
-def _filter_file(f, file_name, output):
-    """
-    Input:
-        - f -- filter task
-        - file_name -- the output file to filter
-
-    Returns:
-        - output_filtered -- the filtered output
-    """
-    import re
-
-    output_filtered = []
-
-    for i in range(len(output)):
-
-        start_line_matches = False
-        if f.from_is_re:
-            start_line_matches = re.match(r'.*%s' % f.from_string, output[i])
-        else:
-            start_line_matches = (f.from_string in output[i])
-
-        if start_line_matches:
-            if f.num_lines > 0:
-                for n in range(i, i + f.num_lines):
-                    output_filtered.append(output[n])
-            else:
-                for j in range(i, len(output)):
-
-                    end_line_matches = False
-                    if f.to_is_re:
-                        end_line_matches = re.match(r'.*%s' % f.to_string, output[j])
-                    else:
-                        end_line_matches = (f.to_string in output[j])
-
-                    if end_line_matches:
-                        for n in range(i, j + 1):
-                            output_filtered.append(output[n])
-                        break
-
-    return output_filtered
-
-
-def test_filter_file():
-    from .classes import Filter
-
-    text = '''
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-raboof 1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0'''
-
-    f = Filter()
-    f.add(rel_tolerance=1.0e-5, from_re='raboof', num_lines=5)
-
-    res = _filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
-    assert res == ['raboof 1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0']
-
-
 def _check(filter_list, out_name, ref_name, verbose=False):
     """
     Compares output (work_dir/out_name) with reference (work_dir/ref_name)
@@ -95,6 +26,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
     import os
     from .tuple_comparison import tuple_matches
     from .extract import extract_numbers
+    from .scissors import cut_sections
 
     def _tuple_matches(t):
         if f.tolerance_is_relative:
@@ -114,7 +46,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
 
     for f in filter_list:
 
-        out_filtered = _filter_file(f, out_name, open(out_name).readlines())
+        out_filtered = cut_sections(f, open(out_name).readlines())
         if out_filtered == []:
             if f.num_lines > 0:
                 r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
@@ -128,7 +60,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
         if f.mask is not None and out_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
-        ref_filtered = _filter_file(f, ref_name, open(ref_name).readlines())
+        ref_filtered = cut_sections(f, open(ref_name).readlines())
         if ref_filtered == []:
             if f.num_lines > 0:
                 r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
