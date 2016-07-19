@@ -1,4 +1,4 @@
-from .exceptions import FilterKeywordError
+from .exceptions import FilterKeywordError, SubprocessError
 
 
 def _check_for_unknown_kw(kwargs):
@@ -66,14 +66,15 @@ def _check_for_incompatible_kw(kwargs):
 
 class TestRun:
 
-    def __init__(self, _file, argv):
+    def __init__(self, _file):
         import os
+        import sys
         from .cli import parse_args
         from .copy import copy_path
 
         self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
 
-        options = parse_args(input_dir, argv)
+        options = parse_args(input_dir, sys.argv)
         self.binary_dir = options.binary_dir
         self.work_dir = options.work_dir
         self.verbose = options.verbose
