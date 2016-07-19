@@ -1,6 +1,6 @@
 from .ugly import get_filter, execute, copy_and_chdir, check
 from .cli import cli
-from .exceptions import FilterKeywordError, TestFailedError, BadFilterError, AcceptedError, SubprocessError
+from .exceptions import FilterKeywordError, TestFailedError, BadFilterError
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
 
@@ -14,6 +14,4 @@ __all__ = [
     'FilterKeywordError',
     'TestFailedError',
     'BadFilterError',
-    'AcceptedError',
-    'SubprocessError',
 ]

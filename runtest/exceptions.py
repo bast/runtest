@@ -8,11 +8,3 @@ class TestFailedError(Exception):
 
 class BadFilterError(Exception):
     pass
-
-
-class AcceptedError(Exception):
-    pass
-
-
-class SubprocessError(Exception):
-    pass

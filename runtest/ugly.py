@@ -1,16 +1,8 @@
-from .exceptions import FilterKeywordError, SubprocessError
+from .exceptions import FilterKeywordError
 
 
-def execute(command,
-            stdout_file_name='',
-            accepted_errors=[]):
-    """
-    Runs the command.
+def execute(command):
 
-    Raises:
-        - AcceptedError
-        - SubprocessError
-    """
     import shlex
     import subprocess
     import sys
@@ -24,16 +16,7 @@ def execute(command,
                                stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
 
-    for error in accepted_errors:
-        if error in stderr:
-            # we found an error that we expect/accept
-            raise AcceptedError('found error which is expected/accepted: %s\n' % error)
-    if process.returncode != 0:
-        raise SubprocessError('ERROR: crash during %s\n%s' % (command, stderr))
-    if stdout_file_name != '':
-        f = open(stdout_file_name, 'w')
-        f.write(stdout)
-        f.close()
+    return stdout, stderr, process.returncode
 
 
 def _check_for_unknown_kw(kwargs):
