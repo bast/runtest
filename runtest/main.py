@@ -9,43 +9,36 @@ def _filter_file(f, file_name, output):
 
     Returns:
         - output_filtered -- the filtered output
-
-    Raises:
-        - BadFilterError
     """
     import re
 
     output_filtered = []
 
     for i in range(len(output)):
+
         start_line_matches = False
         if f.from_is_re:
             start_line_matches = re.match(r'.*%s' % f.from_string, output[i])
         else:
             start_line_matches = (f.from_string in output[i])
+
         if start_line_matches:
             if f.num_lines > 0:
                 for n in range(i, i + f.num_lines):
                     output_filtered.append(output[n])
             else:
                 for j in range(i, len(output)):
-                    f.end_line_matches = False
+
+                    end_line_matches = False
                     if f.to_is_re:
-                        f.end_line_matches = re.match(r'.*%s' % f.to_string, output[j])
+                        end_line_matches = re.match(r'.*%s' % f.to_string, output[j])
                     else:
-                        f.end_line_matches = (f.to_string in output[j])
-                    if f.end_line_matches:
+                        end_line_matches = (f.to_string in output[j])
+
+                    if end_line_matches:
                         for n in range(i, j + 1):
                             output_filtered.append(output[n])
                         break
-
-    if output_filtered == []:
-        if f.num_lines > 0:
-            r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
-        else:
-            r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
-        message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, file_name)
-        raise BadFilterError(message)
 
     return output_filtered
 
@@ -122,14 +115,30 @@ def _check(filter_list, out_name, ref_name, verbose=False):
     for f in filter_list:
 
         out_filtered = _filter_file(f, out_name, open(out_name).readlines())
+        if out_filtered == []:
+            if f.num_lines > 0:
+                r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
+            else:
+                r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
+            message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, out_name)
+            raise BadFilterError(message)
+
         log_out.write(''.join(out_filtered))
         out_numbers, out_locations = extract_numbers(out_filtered, f.mask)
-        if f.mask is not None and ref_numbers == []:
+        if f.mask is not None and out_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
         ref_filtered = _filter_file(f, ref_name, open(ref_name).readlines())
+        if ref_filtered == []:
+            if f.num_lines > 0:
+                r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
+            else:
+                r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
+            message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, ref_name)
+            raise BadFilterError(message)
+
         log_ref.write(''.join(ref_filtered))
-        ref_numbers, ref_locations = extract_numbers(ref_filtered, f.mask)
+        ref_numbers, _ = extract_numbers(ref_filtered, f.mask)
         if f.mask is not None and ref_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
