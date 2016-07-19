@@ -37,18 +37,9 @@ def parse_args(input_dir, argv):
 
 
 def test_parse_args():
-    from sys import platform
 
-    if platform == 'win32':
-        input_dir = '\raboof\mytest'
-        argv = ['test', '-b', '\raboof\build']
-    else:
-        input_dir = '/raboof/mytest'
-        argv = ['./test', '-b', '/raboof/build/']
+    input_dir = '/raboof/mytest'
+    argv = ['./test', '-b', '/raboof/build/']
 
     options = parse_args(input_dir, argv)
-
-    if platform == 'win32':
-        assert options == {'verbose': False, 'work_dir': '\raboof\mytest', 'binary_dir': '\raboof\build', 'skip_run': False, 'debug': False}
-    else:
-        assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False}
+    assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False}
