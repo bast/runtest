@@ -1,6 +1,6 @@
 
 
-def _check(filter_list, out_name, ref_name, verbose=False):
+def check(filter_list, out_name, ref_name, verbose=False):
     """
     Compares output (work_dir/out_name) with reference (work_dir/ref_name)
     applying all filters tasks from the list of filters.

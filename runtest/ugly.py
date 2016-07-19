@@ -116,79 +116,74 @@ def copy_and_chdir(work_dir):
     os.chdir(work_dir)  # FIXME possibly problematic
 
 
-class _SingleFilter:
+def get_filter(**kwargs):
+    import sys
+    from collections import namedtuple
 
-    def __init__(self, **kwargs):
-        import sys
+    foo = namedtuple('foo',
+                     ['from_is_re',
+                      'from_string',
+                      'ignore_above',
+                      'ignore_below',
+                      'ignore_sign',
+                      'mask',
+                      'num_lines',
+                      'to_is_re',
+                      'to_string',
+                      'tolerance',
+                      'tolerance_is_relative',
+                      'tolerance_is_set'])
 
-        error = _check_for_unknown_kw(kwargs)
-        if error:
-            raise FilterKeywordError(error)
+    error = _check_for_unknown_kw(kwargs)
+    if error:
+        raise FilterKeywordError(error)
 
-        error = _check_for_incompatible_kw(kwargs)
-        if error:
-            raise FilterKeywordError(error)
+    error = _check_for_incompatible_kw(kwargs)
+    if error:
+        raise FilterKeywordError(error)
 
-        # now continue with keywords
-        self.from_string = kwargs.get('from_string', '')
-        self.to_string = kwargs.get('to_string', '')
-        self.ignore_sign = kwargs.get('ignore_sign', False)
-        self.ignore_below = kwargs.get('ignore_below', sys.float_info.min)
-        self.ignore_above = kwargs.get('ignore_above', sys.float_info.max)
-        self.num_lines = kwargs.get('num_lines', 0)
+    # now continue with keywords
+    foo.from_string = kwargs.get('from_string', '')
+    foo.to_string = kwargs.get('to_string', '')
+    foo.ignore_sign = kwargs.get('ignore_sign', False)
+    foo.ignore_below = kwargs.get('ignore_below', sys.float_info.min)
+    foo.ignore_above = kwargs.get('ignore_above', sys.float_info.max)
+    foo.num_lines = kwargs.get('num_lines', 0)
 
-        if 'rel_tolerance' in kwargs.keys():
-            self.tolerance = kwargs.get('rel_tolerance')
-            self.tolerance_is_relative = True
-            self.tolerance_is_set = True
-        elif 'abs_tolerance' in kwargs.keys():
-            self.tolerance = kwargs.get('abs_tolerance')
-            self.tolerance_is_relative = False
-            self.tolerance_is_set = True
-        else:
-            self.tolerance_is_set = False
+    if 'rel_tolerance' in kwargs.keys():
+        foo.tolerance = kwargs.get('rel_tolerance')
+        foo.tolerance_is_relative = True
+        foo.tolerance_is_set = True
+    elif 'abs_tolerance' in kwargs.keys():
+        foo.tolerance = kwargs.get('abs_tolerance')
+        foo.tolerance_is_relative = False
+        foo.tolerance_is_set = True
+    else:
+        foo.tolerance_is_set = False
 
-        self.mask = kwargs.get('mask', None)
+    foo.mask = kwargs.get('mask', None)
 
-        self.from_is_re = False
-        from_re = kwargs.get('from_re', '')
-        if from_re != '':
-            self.from_string = from_re
-            self.from_is_re = True
+    foo.from_is_re = False
+    from_re = kwargs.get('from_re', '')
+    if from_re != '':
+        foo.from_string = from_re
+        foo.from_is_re = True
 
-        self.to_is_re = False
-        to_re = kwargs.get('to_re', '')
-        if to_re != '':
-            self.to_string = to_re
-            self.to_is_re = True
+    foo.to_is_re = False
+    to_re = kwargs.get('to_re', '')
+    if to_re != '':
+        foo.to_string = to_re
+        foo.to_is_re = True
 
-        only_string = kwargs.get('string', '')
-        if only_string != '':
-            self.from_string = only_string
-            self.num_lines = 1
+    only_string = kwargs.get('string', '')
+    if only_string != '':
+        foo.from_string = only_string
+        foo.num_lines = 1
 
-        only_re = kwargs.get('re', '')
-        if only_re != '':
-            self.from_string = only_re
-            self.num_lines = 1
-            self.from_is_re = True
+    only_re = kwargs.get('re', '')
+    if only_re != '':
+        foo.from_string = only_re
+        foo.num_lines = 1
+        foo.from_is_re = True
 
-
-class Filter:
-
-    def __init__(self):
-        self.filter_list = []
-
-    def add(self, *args, **kwargs):
-        """
-        Adds filter task to list of filters.
-
-        Raises:
-            - FilterKeywordError
-        """
-        self.filter_list.append(_SingleFilter(*args, **kwargs))
-
-    # FIXME work_dir is not used
-    def check(self, work_dir, out_name, ref_name, verbose=False):
-        from .main import _check
-        _check(self.filter_list, out_name, ref_name, verbose)
+    return foo
