@@ -46,7 +46,12 @@ def _check(filter_list, out_name, ref_name, verbose=False):
 
     for f in filter_list:
 
-        out_filtered = cut_sections(f, open(out_name).readlines())
+        out_filtered = cut_sections(open(out_name).readlines(),
+                                    from_string=f.from_string,
+                                    from_is_re=f.from_is_re,
+                                    to_string=f.to_string,
+                                    to_is_re=f.to_is_re,
+                                    num_lines=f.num_lines)
         if out_filtered == []:
             if f.num_lines > 0:
                 r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
@@ -60,7 +65,12 @@ def _check(filter_list, out_name, ref_name, verbose=False):
         if f.mask is not None and out_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
-        ref_filtered = cut_sections(f, open(ref_name).readlines())
+        ref_filtered = cut_sections(open(ref_name).readlines(),
+                                    from_string=f.from_string,
+                                    from_is_re=f.from_is_re,
+                                    to_string=f.to_string,
+                                    to_is_re=f.to_is_re,
+                                    num_lines=f.num_lines)
         if ref_filtered == []:
             if f.num_lines > 0:
                 r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
