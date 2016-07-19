@@ -76,26 +76,6 @@ def test_extract_numbers_mask():
 # ------------------------------------------------------------------------------
 
 
-def test_parse_args():
-    from ..cli import parse_args
-
-    if sys.platform == 'win32':
-        input_dir = '\raboof\mytest'
-        argv = ['test', '-b', '\raboof\build']
-    else:
-        input_dir = '/raboof/mytest'
-        argv = ['./test', '-b', '/raboof/build/']
-
-    options = parse_args(input_dir, argv)
-
-    if sys.platform == 'win32':
-        assert options == {'verbose': False, 'work_dir': '\raboof\mytest', 'binary_dir': '\raboof\build', 'skip_run': False, 'debug': False}
-    else:
-        assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False}
-
-# ------------------------------------------------------------------------------
-
-
 def test_filter_file():
     from ..main import _filter_file
 
