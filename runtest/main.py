@@ -3,18 +3,6 @@ from .exceptions import FilterKeywordError, TestFailedError, BadFilterError, Acc
 # ------------------------------------------------------------------------------
 
 
-def _is_float(x):
-    return isinstance(x, float)
-
-# ------------------------------------------------------------------------------
-
-
-def _is_int(n):
-    return isinstance(n, int)
-
-# ------------------------------------------------------------------------------
-
-
 def _check_for_unknown_kw(kwargs):
     """Checks whether there are any unknown keywords.
 
@@ -100,7 +88,7 @@ def _tuple_matches(f, tup):
         x = abs(x)
         x_ref = abs(x_ref)
 
-    if _is_int(x) and _is_int(x_ref):
+    if isinstance(x, int) and isinstance(x_ref, int):
         if x == x_ref:
             return (True, None)
         else:
@@ -315,7 +303,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
         # for pure strings len(out_numbers) is 0
         # TODO need to consider what to do with pure strings in future versions
         if len(out_numbers) == len(ref_numbers) and len(out_numbers) > 0:
-            if not f.tolerance_is_set and (any(map(_is_float, out_numbers)) or any(map(_is_float, ref_numbers))):
+            if not f.tolerance_is_set and (any(map(lambda x: isinstance(x, float), out_numbers)) or any(map(lambda x: isinstance(x, float), ref_numbers))):
                 raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
             l = map(lambda t: _tuple_matches(f, t), zip(out_numbers, ref_numbers))
             matching, errors = zip(*l)  # unzip tuples to two lists
