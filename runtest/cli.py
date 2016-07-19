@@ -3,7 +3,7 @@ def parse_args(input_dir, argv):
     from optparse import OptionParser
     from runtest import __version__
 
-    parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
+    parser = OptionParser(description='runtest {0} - Numerically tolerant test library.'.format(__version__))
 
     parser.add_option('--binary-dir',
                       '-b',
