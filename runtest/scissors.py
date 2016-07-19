@@ -1,3 +1,5 @@
+
+
 def cut_sections(text,
                  from_string=None,
                  from_is_re=False,
