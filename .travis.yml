@@ -14,8 +14,8 @@ install:
 script:
   - pep8 --ignore=E501 runtest
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]];
-    then py.test --cov runtest runtest/test/test.py;
-    else py.test -vv           runtest/test/test.py;
+    then py.test -vv --cov runtest runtest/*.py runtest/test/*.py;
+    else py.test -vv               runtest/*.py runtest/test/*.py;
     fi
 
 after_success:

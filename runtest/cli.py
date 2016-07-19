@@ -34,3 +34,7 @@ def parse_args(input_dir, argv):
     (options, args) = parser.parse_args(args=argv[1:])
 
     return options
+
+
+def test_me():
+    assert 1 == 1
