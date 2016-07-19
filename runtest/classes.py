@@ -99,28 +99,21 @@ def _check_for_incompatible_kw(kwargs):
         return 'ERROR: incompatible keyword pairs: {0}\n'.format(incompatible_kw)
 
 
-class TestRun:
+def copy_and_chdir(work_dir):
 
-    def __init__(self, options):
-        import os
-        from .copy import copy_path
+    import os
+    from .copy import copy_path
+    import inspect
 
-        import inspect
+    frame = inspect.stack()[-1]
+    module = inspect.getmodule(frame[0])
+    caller_file = module.__file__
+    caller_dir = os.path.dirname(os.path.realpath(caller_file))
 
-        frame = inspect.stack()[-1]
-        module = inspect.getmodule(frame[0])
-        caller_file = module.__file__
-        caller_dir = os.path.dirname(os.path.realpath(caller_file))
+    if work_dir != caller_dir:
+        copy_path(caller_dir, work_dir)
 
-        self.binary_dir = options.binary_dir
-        self.work_dir = options.work_dir
-        self.verbose = options.verbose
-        self.skip_run = options.skip_run
-
-        if self.work_dir != caller_dir:
-            copy_path(caller_dir, self.work_dir)
-
-        os.chdir(self.work_dir)  # FIXME possibly problematic
+    os.chdir(work_dir)  # FIXME possibly problematic
 
 
 class _SingleFilter:

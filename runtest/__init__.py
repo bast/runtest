@@ -1,4 +1,4 @@
-from .classes import Filter, TestRun, execute
+from .classes import Filter, execute, copy_and_chdir
 from .cli import cli
 from .exceptions import FilterKeywordError, TestFailedError, BadFilterError, AcceptedError, SubprocessError
 
