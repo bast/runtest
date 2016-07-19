@@ -1,26 +1,6 @@
-# Copyright 2015 Radovan Bast.
-
-"""runtest - Numerically tolerant test library for scientific codes which
-produce and test numerical results.
-"""
-
-import re
-import os
-import sys
-import subprocess
-import shlex
-import shutil
-import string
-from optparse import OptionParser
-
-
-__version__ = '1.3.16'
-
-__author__ = ('Radovan Bast <radovan.bast@uit.no>')
-
 __all__ = ['Filter', 'TestRun',
            'FilterKeywordError', 'TestFailedError', 'BadFilterError', 'AcceptedError', 'SubprocessError',
-           '_extract_numbers', '_parse_args', '_filter_file']  # FIXME
+           '_extract_numbers', '_parse_args', '_filter_file']
 
 # ------------------------------------------------------------------------------
 
@@ -189,6 +169,7 @@ def _extract_numbers(f, text):
         - locations -- locations of each number, list of triples
                       (line, start position, length)
     """
+    import re
 
     numeric_const_pattern = r"""
     [-+]? # optional sign
@@ -237,6 +218,8 @@ def _extract_numbers(f, text):
 
 
 def _parse_args(input_dir, argv):
+    from optparse import OptionParser
+    from runtest import __version__
 
     parser = OptionParser(description='runtest %s - Numerically tolerant test library.' % __version__)
     parser.add_option('--binary-dir',
@@ -277,6 +260,8 @@ def _parse_args(input_dir, argv):
 
 
 def _copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
+    from shutil import copy
+    import os
     for src_dir, dirs, files in os.walk(root_src_dir):
         dst_dir = src_dir.replace(root_src_dir, root_dst_dir)
         if not os.path.exists(dst_dir):
@@ -285,7 +270,7 @@ def _copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
             if f not in exclude_files:
                 src_file = os.path.join(src_dir, f)
                 dst_file = os.path.join(dst_dir, f)
-                shutil.copy(src_file, dst_file)
+                copy(src_file, dst_file)
 
 # ------------------------------------------------------------------------------
 
@@ -302,6 +287,8 @@ def _filter_file(f, file_name, output):
     Raises:
         - BadFilterError
     """
+    import re
+
     output_filtered = []
 
     for i in range(len(output)):
@@ -361,6 +348,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
     Raises:
         - TestFailedError
     """
+    import os
 
     log_out = open('%s.filtered' % out_name, 'w')
     log_ref = open('%s.reference' % out_name, 'w')
@@ -435,6 +423,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
 class TestRun:
 
     def __init__(self, _file, argv):
+        import os
 
         self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
 
@@ -462,6 +451,10 @@ class TestRun:
             - AcceptedError
             - SubprocessError
         """
+        import shlex
+        import subprocess
+        import sys
+
         if self.skip_run:
             return
 
@@ -497,6 +490,7 @@ class TestRun:
 class _SingleFilter:
 
     def __init__(self, **kwargs):
+        import sys
 
         error = _check_for_unknown_kw(kwargs)
         if error:
