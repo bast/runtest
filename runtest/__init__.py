@@ -1,4 +1,4 @@
-from .classes import Filter, TestRun
+from .classes import Filter, TestRun, execute
 from .cli import cli
 from .exceptions import FilterKeywordError, TestFailedError, BadFilterError, AcceptedError, SubprocessError
 
@@ -9,6 +9,7 @@ __version__ = '2.0.0-alpha-x'
 __all__ = [
     'Filter',
     'TestRun',
+    'execute',
     'cli',
     'FilterKeywordError',
     'TestFailedError',
