@@ -66,22 +66,24 @@ def _check_for_incompatible_kw(kwargs):
 
 class TestRun:
 
-    def __init__(self, _file):
+    def __init__(self, options):
         import os
-        import sys
-        from .cli import parse_args
         from .copy import copy_path
 
-        self.input_dir = input_dir = os.path.dirname(os.path.realpath(_file))
+        import inspect
 
-        options = parse_args(input_dir, sys.argv)
+        frame = inspect.stack()[-1]
+        module = inspect.getmodule(frame[0])
+        caller_file = module.__file__
+        caller_dir = os.path.dirname(os.path.realpath(caller_file))
+
         self.binary_dir = options.binary_dir
         self.work_dir = options.work_dir
         self.verbose = options.verbose
         self.skip_run = options.skip_run
 
-        if self.work_dir != self.input_dir:
-            copy_path(self.input_dir, self.work_dir)
+        if self.work_dir != caller_dir:
+            copy_path(caller_dir, self.work_dir)
 
         os.chdir(self.work_dir)  # FIXME possibly problematic
 
