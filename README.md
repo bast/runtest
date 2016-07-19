@@ -8,8 +8,9 @@
 # runtest
 
 Numerically tolerant test library for scientific
-codes which produce and test numerical results.
-See http://runtest.readthedocs.io.
+codes which produce numerical results in plain text.
+
+- Documentation: http://runtest.readthedocs.io
 
 ![alt text](https://github.com/bast/runtest/raw/master/img/xanathar.jpg "Xanathar")
 
