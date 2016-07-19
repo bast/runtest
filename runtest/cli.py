@@ -30,11 +30,6 @@ def parse_args(input_dir, argv):
                       action='store_true',
                       default=False,
                       help='print verbose debug information [default: %default]')
-    parser.add_option('--log',
-                      '-l',
-                      action='store',
-                      default=None,
-                      help='log file [default: no logging]')
 
     (options, args) = parser.parse_args(args=argv[1:])
 

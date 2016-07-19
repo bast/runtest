@@ -78,7 +78,6 @@ class TestRun:
         self.verbose = options.verbose
         self.skip_run = options.skip_run
         self.debug = options.debug
-        self.log = options.log
 
         if self.work_dir != self.input_dir:
             _copy_path(self.input_dir, self.work_dir)

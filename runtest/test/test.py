@@ -89,9 +89,9 @@ def test_parse_args():
     options = parse_args(input_dir, argv)
 
     if sys.platform == 'win32':
-        assert options == {'verbose': False, 'work_dir': '\raboof\mytest', 'binary_dir': '\raboof\build', 'skip_run': False, 'debug': False, 'log': None}
+        assert options == {'verbose': False, 'work_dir': '\raboof\mytest', 'binary_dir': '\raboof\build', 'skip_run': False, 'debug': False}
     else:
-        assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False, 'log': None}
+        assert options == {'verbose': False, 'work_dir': '/raboof/mytest', 'binary_dir': '/raboof/build/', 'skip_run': False, 'debug': False}
 
 # ------------------------------------------------------------------------------
 
