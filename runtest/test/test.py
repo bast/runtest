@@ -9,6 +9,7 @@ from ..exceptions import *
 
 
 def test_extract_numbers():
+    from ..main import _extract_numbers
 
     text = '''<<A( 3),B( 3)>> - linear response function (real):
 -----------------------------------------------------------------------------------------------
@@ -58,6 +59,7 @@ def test_extract_numbers():
 
 
 def test_extract_numbers_mask():
+    from ..main import _extract_numbers
 
     text = '''1.0 2.0 3.0 4.0
 1.0 2.0 3.0 4.0
@@ -95,6 +97,7 @@ def test_parse_args():
 
 
 def test_filter_file():
+    from ..main import _filter_file
 
     text = '''
 1.0 2.0 3.0
