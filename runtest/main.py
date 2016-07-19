@@ -114,14 +114,14 @@ def _check(filter_list, out_name, ref_name, verbose=False):
 
         out_filtered = _filter_file(f, out_name, open(out_name).readlines())
         log_out.write(''.join(out_filtered))
-        out_numbers, out_locations = extract_numbers(f, out_filtered)
-        if f.use_mask and out_numbers == []:
+        out_numbers, out_locations = extract_numbers(out_filtered, f.mask)
+        if f.mask is not None and ref_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
         ref_filtered = _filter_file(f, ref_name, open(ref_name).readlines())
         log_ref.write(''.join(ref_filtered))
-        ref_numbers, ref_locations = extract_numbers(f, ref_filtered)
-        if f.use_mask and ref_numbers == []:
+        ref_numbers, ref_locations = extract_numbers(ref_filtered, f.mask)
+        if f.mask is not None and ref_numbers == []:
             raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
         if out_numbers == [] and ref_numbers == []:

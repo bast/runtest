@@ -163,14 +163,7 @@ class _SingleFilter:
         else:
             self.tolerance_is_set = False
 
-        self.mask = kwargs.get('mask', [])
-        if self.mask == []:
-            self.use_mask = False
-        else:
-            self.use_mask = True
-            for i in self.mask:
-                if i < 1:
-                    raise FilterKeywordError('ERROR: mask starts counting from 1 (first word)\n')
+        self.mask = kwargs.get('mask', None)
 
         self.from_is_re = False
         from_re = kwargs.get('from_re', '')
