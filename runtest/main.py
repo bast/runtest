@@ -1,4 +1,3 @@
-from .exceptions import FilterKeywordError, TestFailedError, BadFilterError
 
 
 def _check(filter_list, out_name, ref_name, verbose=False):
@@ -27,6 +26,7 @@ def _check(filter_list, out_name, ref_name, verbose=False):
     from .tuple_comparison import tuple_matches
     from .extract import extract_numbers
     from .scissors import cut_sections
+    from .exceptions import FilterKeywordError, TestFailedError, BadFilterError
 
     def _tuple_matches(t):
         if f.tolerance_is_relative:
