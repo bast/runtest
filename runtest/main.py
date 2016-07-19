@@ -49,7 +49,32 @@ def _filter_file(f, file_name, output):
 
     return output_filtered
 
-# ------------------------------------------------------------------------------
+
+def test_filter_file():
+    from .classes import Filter
+
+    text = '''
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+raboof 1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0
+       1.0 3.0 7.0'''
+
+    f = Filter()
+    f.add(rel_tolerance=1.0e-5, from_re='raboof', num_lines=5)
+
+    res = _filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
+    assert res == ['raboof 1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0']
 
 
 def _check(filter_list, out_name, ref_name, verbose=False):

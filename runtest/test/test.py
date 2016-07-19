@@ -6,33 +6,6 @@ from ..classes import Filter
 from ..exceptions import *
 
 
-def test_filter_file():
-    from ..main import _filter_file
-
-    text = '''
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-1.0 2.0 3.0
-raboof 1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0
-       1.0 3.0 7.0'''
-
-    f = Filter()
-    f.add(rel_tolerance=1.0e-5, from_re='raboof', num_lines=5)
-
-    res = _filter_file(f=f.filter_list[0], file_name='raboof', output=text.splitlines())
-    assert res == ['raboof 1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0', '       1.0 3.0 7.0']
-
-
 def test_check():
 
     HERE = os.path.abspath(os.path.dirname(__file__))
