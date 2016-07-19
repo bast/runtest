@@ -2,7 +2,7 @@ import os
 import sys
 import pytest
 
-from ..main import *
+from ..classes import Filter
 from ..exceptions import *
 
 # ------------------------------------------------------------------------------
