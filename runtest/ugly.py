@@ -1,4 +1,3 @@
-from .exceptions import FilterKeywordError
 
 
 def execute(command):
@@ -102,6 +101,7 @@ def copy_and_chdir(work_dir):
 def get_filter(**kwargs):
     import sys
     from collections import namedtuple
+    from .exceptions import FilterKeywordError
 
     foo = namedtuple('foo',
                      ['from_is_re',
@@ -304,3 +304,63 @@ def check(filter_list, out_name, ref_name, verbose=False):
         if verbose:
             message += diff
         raise TestFailedError(message)
+
+
+def run(options, get_command, t, f=None, accepted_errors=None):
+    import os
+    import sys
+    from .exceptions import TestFailedError, BadFilterError, FilterKeywordError
+
+    launcher, command, outputs = get_command(options, t)
+
+    launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
+
+    if options.skip_run:
+        sys.stdout.write('\nskipping run: %s\n' % t)
+    else:
+        if not os.path.exists(launch_script_path):
+            sys.stderr.write('ERROR: launch script %s not found\n' % launcher)
+            sys.stderr.write('       have you set the correct --binary-dir (or -b)?\n')
+            sys.stderr.write('       try also --help\n')
+            sys.exit(-1)
+
+        sys.stdout.write('\nrunning test: %s\n' % t)
+
+        stdout, stderr, process_returncode = execute(command)
+
+        if accepted_errors is not None:
+            for error in accepted_errors:
+                if error in stderr:
+                    # we found an error that we expect/accept
+                    sys.stdout.write('found error which is expected/accepted: %s\n' % error)
+
+        if process_returncode != 0:
+            sys.stdout.write('ERROR: crash during %s\n%s' % (command, stderr))
+            sys.exit(1)
+
+        # for dalton?
+        # if stdout_file_name != '':
+        #     f = open(stdout_file_name, 'w')
+        #     f.write(stdout)
+        #     f.close()
+
+    if f is None:
+        sys.stdout.write('finished (no reference)\n')
+    else:
+        try:
+            for i, output in enumerate(outputs):
+                check(f[i], '%s' % output, 'result/%s' % output, options.verbose)
+            sys.stdout.write('passed\n')
+        except IOError as e:
+            sys.stderr.write('ERROR: could not open file %s\n' % e.filename)
+            sys.exit(1)
+        except TestFailedError as e:
+            sys.stderr.write(str(e))
+            return 1
+        except BadFilterError as e:
+            sys.stderr.write(str(e))
+            sys.exit(1)
+        except FilterKeywordError as e:
+            sys.stderr.write(str(e))
+            sys.exit(1)
+    return 0

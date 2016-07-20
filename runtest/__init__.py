@@ -1,4 +1,4 @@
-from .ugly import get_filter, execute, copy_and_chdir, check
+from .ugly import get_filter, execute, copy_and_chdir, check, run
 from .cli import cli
 from .exceptions import FilterKeywordError, TestFailedError, BadFilterError
 
@@ -11,7 +11,5 @@ __all__ = [
     'check',
     'execute',
     'cli',
-    'FilterKeywordError',
-    'TestFailedError',
-    'BadFilterError',
+    'run',
 ]
