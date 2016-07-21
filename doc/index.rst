@@ -38,5 +38,3 @@ Documentation of runtest
    :maxdepth: 1
 
    adapters/dirac
-   adapters/dalton
-   adapters/gpunch
