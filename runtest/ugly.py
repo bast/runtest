@@ -19,73 +19,11 @@ def execute(command, work_dir):
     return stdout, stderr, process.returncode
 
 
-def _check_for_unknown_kw(kwargs):
-    """Checks whether there are any unknown keywords.
-
-    Args:
-        kwargs: keyword arguments
-
-    Returns:
-        Error message. None if all keywords are known.
-    """
-    recognized_kw = ['from_re',
-                     'to_re',
-                     're',
-                     'from_string',
-                     'to_string',
-                     'string',
-                     'ignore_below',
-                     'ignore_above',
-                     'ignore_sign',
-                     'mask',
-                     'num_lines',
-                     'rel_tolerance',
-                     'abs_tolerance']
-
-    unrecoginzed_kw = [kw for kw in kwargs.keys() if kw not in recognized_kw]
-    if unrecoginzed_kw == []:
-        return None
-    else:
-        return 'ERROR: keyword(s) ({unrecognized}) not recognized\n       available keywords: ({available})\n'.format(unrecognized=(', ').join(sorted(unrecoginzed_kw)),
-                                                                                                                      available=(', ').join(recognized_kw))
-
-
-def _check_for_incompatible_kw(kwargs):
-    """Checks whether there are any incompatible keyword pairs.
-
-    Args:
-        kwargs: keyword arguments
-
-    Returns:
-        Error message. Empty if all keywords are compatible.
-    """
-    incompatible_pairs = [('from_re', 'from_string'),
-                          ('to_re', 'to_string'),
-                          ('to_string', 'num_lines'),
-                          ('to_re', 'num_lines'),
-                          ('string', 'from_string'),
-                          ('string', 'to_string'),
-                          ('string', 'from_re'),
-                          ('string', 'to_re'),
-                          ('string', 'num_lines'),
-                          ('re', 'from_string'),
-                          ('re', 'to_string'),
-                          ('re', 'from_re'),
-                          ('re', 'to_re'),
-                          ('re', 'num_lines'),
-                          ('rel_tolerance', 'abs_tolerance')]
-
-    incompatible_kw = [(kw1, kw2) for (kw1, kw2) in incompatible_pairs if kw1 in kwargs.keys() and kw2 in kwargs.keys()]
-    if incompatible_kw == []:
-        return None
-    else:
-        return 'ERROR: incompatible keyword pairs: {0}\n'.format(incompatible_kw)
-
-
 def get_filter(**kwargs):
     import sys
     from collections import namedtuple
     from .exceptions import FilterKeywordError
+    from .filter_api import recognized_kw, incompatible_pairs
 
     _filter = namedtuple('_filter',
                          ['from_is_re',
@@ -101,12 +39,16 @@ def get_filter(**kwargs):
                           'tolerance_is_relative',
                           'tolerance_is_set'])
 
-    error = _check_for_unknown_kw(kwargs)
-    if error:
+    unrecoginzed_kw = [kw for kw in kwargs.keys() if kw not in recognized_kw]
+    if unrecoginzed_kw != []:
+        error = '''ERROR: keyword(s) ({unrecognized}) not recognized
+       available keywords: ({available})\n'''.format(unrecognized=(', ').join(sorted(unrecoginzed_kw)),
+                                                     available=(', ').join(recognized_kw))
         raise FilterKeywordError(error)
 
-    error = _check_for_incompatible_kw(kwargs)
-    if error:
+    incompatible_kw = [(kw1, kw2) for (kw1, kw2) in incompatible_pairs if kw1 in kwargs.keys() and kw2 in kwargs.keys()]
+    if incompatible_kw != []:
+        error = 'ERROR: incompatible keyword pairs: {0}\n'.format(incompatible_kw)
         raise FilterKeywordError(error)
 
     # now continue with keywords
