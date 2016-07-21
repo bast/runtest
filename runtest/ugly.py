@@ -1,6 +1,6 @@
 
 
-def execute(command):
+def execute(command, work_dir):
 
     import shlex
     import subprocess
@@ -10,6 +10,7 @@ def execute(command):
         command = shlex.split(command)
 
     process = subprocess.Popen(command,
+                               cwd=work_dir,
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
@@ -79,23 +80,6 @@ def _check_for_incompatible_kw(kwargs):
         return None
     else:
         return 'ERROR: incompatible keyword pairs: {0}\n'.format(incompatible_kw)
-
-
-def copy_and_chdir(work_dir):
-
-    import os
-    from .copy import copy_path
-    import inspect
-
-    frame = inspect.stack()[-1]
-    module = inspect.getmodule(frame[0])
-    caller_file = module.__file__
-    caller_dir = os.path.dirname(os.path.realpath(caller_file))
-
-    if work_dir != caller_dir:
-        copy_path(caller_dir, work_dir)
-
-    os.chdir(work_dir)  # FIXME possibly problematic
 
 
 def get_filter(**kwargs):
@@ -310,39 +294,51 @@ def run(options, get_command, t, f=None, accepted_errors=None):
     import os
     import sys
     from .exceptions import TestFailedError, BadFilterError, FilterKeywordError
+    from .copy import copy_path
+    import inspect
+
+    # here we find out where the test script sits
+    frame = inspect.stack()[-1]
+    module = inspect.getmodule(frame[0])
+    caller_file = module.__file__
+    caller_dir = os.path.dirname(os.path.realpath(caller_file))
+
+    # if the work_dir is different from caller_dir
+    # we copy all files under caller_dir to work_dir
+    if options.work_dir != caller_dir:
+        copy_path(caller_dir, options.work_dir)
 
     launcher, command, outputs = get_command(options, t)
 
     launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
 
+    if not options.skip_run and not os.path.exists(launch_script_path):
+        sys.stderr.write('ERROR: launch script {0} not found in {1}\n'.format(launcher, options.binary_dir))
+        sys.stderr.write('       have you set the correct --binary-dir (or -b)?\n')
+        sys.stderr.write('       try also --help\n')
+        sys.exit(-1)
+
+    sys.stdout.write('\nrunning test with input tuple %s\n' % t)
+
     if options.skip_run:
-        sys.stdout.write('\nskipping run: %s\n' % t)
+        sys.stdout.write('(skipped run with -s|--skip-run)\n')
     else:
-        if not os.path.exists(launch_script_path):
-            sys.stderr.write('ERROR: launch script %s not found\n' % launcher)
-            sys.stderr.write('       have you set the correct --binary-dir (or -b)?\n')
-            sys.stderr.write('       try also --help\n')
-            sys.exit(-1)
-
-        sys.stdout.write('\nrunning test: %s\n' % t)
-
-        stdout, stderr, process_returncode = execute(command)
-
-        if accepted_errors is not None:
-            for error in accepted_errors:
-                if error in stderr:
-                    # we found an error that we expect/accept
-                    sys.stdout.write('found error which is expected/accepted: %s\n' % error)
-
+        stdout, stderr, process_returncode = execute(command, options.work_dir)
         if process_returncode != 0:
             sys.stdout.write('ERROR: crash during %s\n%s' % (command, stderr))
             sys.exit(1)
 
-        # for dalton?
-        # if stdout_file_name != '':
-        #     f = open(stdout_file_name, 'w')
-        #     f.write(stdout)
-        #     f.close()
+    if accepted_errors is not None:
+        for error in accepted_errors:
+            if error in stderr:
+                # we found an error that we expect/accept
+                sys.stdout.write('found error which is expected/accepted: %s\n' % error)
+
+    # for dalton?
+    # if stdout_file_name != '':
+    #     f = open(stdout_file_name, 'w')
+    #     f.write(stdout)
+    #     f.close()
 
     if f is None:
         sys.stdout.write('finished (no reference)\n')
