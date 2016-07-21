@@ -4,14 +4,14 @@ def cli():
     import sys
     import os
     import inspect
-    from .version import __version__ as _version
+    from .version import version
 
     frame = inspect.stack()[-1]
     module = inspect.getmodule(frame[0])
     caller_file = module.__file__
     caller_dir = os.path.dirname(os.path.realpath(caller_file))
 
-    parser = OptionParser(description='runtest {0} - Numerically tolerant test library.'.format(_version))
+    parser = OptionParser(description='runtest {0} - Numerically tolerant test library.'.format(version))
 
     parser.add_option('--binary-dir',
                       '-b',
