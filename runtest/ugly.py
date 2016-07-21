@@ -87,19 +87,19 @@ def get_filter(**kwargs):
     from collections import namedtuple
     from .exceptions import FilterKeywordError
 
-    foo = namedtuple('foo',
-                     ['from_is_re',
-                      'from_string',
-                      'ignore_above',
-                      'ignore_below',
-                      'ignore_sign',
-                      'mask',
-                      'num_lines',
-                      'to_is_re',
-                      'to_string',
-                      'tolerance',
-                      'tolerance_is_relative',
-                      'tolerance_is_set'])
+    _filter = namedtuple('_filter',
+                         ['from_is_re',
+                          'from_string',
+                          'ignore_above',
+                          'ignore_below',
+                          'ignore_sign',
+                          'mask',
+                          'num_lines',
+                          'to_is_re',
+                          'to_string',
+                          'tolerance',
+                          'tolerance_is_relative',
+                          'tolerance_is_set'])
 
     error = _check_for_unknown_kw(kwargs)
     if error:
@@ -110,50 +110,50 @@ def get_filter(**kwargs):
         raise FilterKeywordError(error)
 
     # now continue with keywords
-    foo.from_string = kwargs.get('from_string', '')
-    foo.to_string = kwargs.get('to_string', '')
-    foo.ignore_sign = kwargs.get('ignore_sign', False)
-    foo.ignore_below = kwargs.get('ignore_below', sys.float_info.min)
-    foo.ignore_above = kwargs.get('ignore_above', sys.float_info.max)
-    foo.num_lines = kwargs.get('num_lines', 0)
+    _filter.from_string = kwargs.get('from_string', '')
+    _filter.to_string = kwargs.get('to_string', '')
+    _filter.ignore_sign = kwargs.get('ignore_sign', False)
+    _filter.ignore_below = kwargs.get('ignore_below', sys.float_info.min)
+    _filter.ignore_above = kwargs.get('ignore_above', sys.float_info.max)
+    _filter.num_lines = kwargs.get('num_lines', 0)
 
     if 'rel_tolerance' in kwargs.keys():
-        foo.tolerance = kwargs.get('rel_tolerance')
-        foo.tolerance_is_relative = True
-        foo.tolerance_is_set = True
+        _filter.tolerance = kwargs.get('rel_tolerance')
+        _filter.tolerance_is_relative = True
+        _filter.tolerance_is_set = True
     elif 'abs_tolerance' in kwargs.keys():
-        foo.tolerance = kwargs.get('abs_tolerance')
-        foo.tolerance_is_relative = False
-        foo.tolerance_is_set = True
+        _filter.tolerance = kwargs.get('abs_tolerance')
+        _filter.tolerance_is_relative = False
+        _filter.tolerance_is_set = True
     else:
-        foo.tolerance_is_set = False
+        _filter.tolerance_is_set = False
 
-    foo.mask = kwargs.get('mask', None)
+    _filter.mask = kwargs.get('mask', None)
 
-    foo.from_is_re = False
+    _filter.from_is_re = False
     from_re = kwargs.get('from_re', '')
     if from_re != '':
-        foo.from_string = from_re
-        foo.from_is_re = True
+        _filter.from_string = from_re
+        _filter.from_is_re = True
 
-    foo.to_is_re = False
+    _filter.to_is_re = False
     to_re = kwargs.get('to_re', '')
     if to_re != '':
-        foo.to_string = to_re
-        foo.to_is_re = True
+        _filter.to_string = to_re
+        _filter.to_is_re = True
 
     only_string = kwargs.get('string', '')
     if only_string != '':
-        foo.from_string = only_string
-        foo.num_lines = 1
+        _filter.from_string = only_string
+        _filter.num_lines = 1
 
     only_re = kwargs.get('re', '')
     if only_re != '':
-        foo.from_string = only_re
-        foo.num_lines = 1
-        foo.from_is_re = True
+        _filter.from_string = only_re
+        _filter.num_lines = 1
+        _filter.from_is_re = True
 
-    return foo
+    return _filter
 
 
 def check(filter_list, out_name, ref_name, verbose=False):
