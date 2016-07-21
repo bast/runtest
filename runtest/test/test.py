@@ -89,11 +89,12 @@ reference gave 3 numbers:
 
 
 def test_bad_keywords():
+    from ..filter_api import recognized_kw
 
     with pytest.raises(FilterKeywordError) as e:
         _ = get_filter(raboof=0, foo=1)
     exception = '''ERROR: keyword(s) (foo, raboof) not recognized
-       available keywords: (from_re, to_re, re, from_string, to_string, string, ignore_below, ignore_above, ignore_sign, mask, num_lines, rel_tolerance, abs_tolerance)\n'''
+       available keywords: ({0})\n'''.format(', '.join(recognized_kw))
     assert exception in str(e.value)
 
     with pytest.raises(FilterKeywordError) as e:

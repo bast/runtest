@@ -28,8 +28,8 @@ def get_filter(**kwargs):
     _filter = namedtuple('_filter',
                          ['from_is_re',
                           'from_string',
-                          'ignore_above',
-                          'ignore_below',
+                          'skip_above',
+                          'skip_below',
                           'ignore_sign',
                           'mask',
                           'num_lines',
@@ -55,8 +55,8 @@ def get_filter(**kwargs):
     _filter.from_string = kwargs.get('from_string', '')
     _filter.to_string = kwargs.get('to_string', '')
     _filter.ignore_sign = kwargs.get('ignore_sign', False)
-    _filter.ignore_below = kwargs.get('ignore_below', sys.float_info.min)
-    _filter.ignore_above = kwargs.get('ignore_above', sys.float_info.max)
+    _filter.skip_below = kwargs.get('skip_below', sys.float_info.min)
+    _filter.skip_above = kwargs.get('skip_above', sys.float_info.max)
     _filter.num_lines = kwargs.get('num_lines', 0)
 
     if 'rel_tolerance' in kwargs.keys():
@@ -135,8 +135,8 @@ def check(filter_list, out_name, ref_name, verbose=False):
                              tolerance=f.tolerance,
                              error_definition=error_definition,
                              ignore_sign=f.ignore_sign,
-                             skip_below=f.ignore_below,
-                             skip_above=f.ignore_above)
+                             skip_below=f.skip_below,
+                             skip_above=f.skip_above)
 
     log_out = open('%s.filtered' % out_name, 'w')
     log_ref = open('%s.reference' % out_name, 'w')
