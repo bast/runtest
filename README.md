@@ -19,7 +19,7 @@ codes which produce numerical results in plain text.
 ### Projects using runtest
 
 - [DIRAC](http://diracprogram.org)
-- [Dalton](http://daltonprogram.org)
+- [Dalton](http://daltonprogram.org) and [LSDalton](http://daltonprogram.org)
 - [GPUnCH](http://gpunch.org)
 - [OpenRSP](http://openrsp.org)
 
