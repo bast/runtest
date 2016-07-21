@@ -12,4 +12,4 @@ version_info.major = int(s[0])
 version_info.minor = int(s[1])
 version_info.micro = int(s[2])
 
-version_info.releaselevel = __version__[len(major_minor_micro)+1:]
+version_info.releaselevel = __version__[len(major_minor_micro) + 1:]
