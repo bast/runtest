@@ -20,7 +20,7 @@ def cut_sections(text,
 
         start_line_matches = False
         if from_is_re:
-            start_line_matches = re.match(r'.*%s' % from_string, text[i])
+            start_line_matches = re.match(r'.*{0}'.format(from_string), text[i])
         else:
             start_line_matches = (from_string in text[i])
 
@@ -33,7 +33,7 @@ def cut_sections(text,
 
                     end_line_matches = False
                     if to_is_re:
-                        end_line_matches = re.match(r'.*%s' % to_string, text[j])
+                        end_line_matches = re.match(r'.*{0}'.format(to_string), text[j])
                     else:
                         end_line_matches = (to_string in text[j])
 

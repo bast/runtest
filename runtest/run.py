@@ -30,7 +30,7 @@ def run(options, get_command, t, f=None, accepted_errors=None):
         sys.stderr.write('       try also --help\n')
         sys.exit(-1)
 
-    sys.stdout.write('\nrunning test with input tuple %s\n' % t)
+    sys.stdout.write('\nrunning test with input tuple {0}\n'.format(t))
 
     if options.skip_run:
         sys.stdout.write('(skipped run with -s|--skip-run)\n')
@@ -46,14 +46,14 @@ def run(options, get_command, t, f=None, accepted_errors=None):
         stdout, stderr = process.communicate()
 
         if process.returncode != 0:
-            sys.stdout.write('ERROR: crash during %s\n%s' % (command, stderr))
+            sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
             sys.exit(1)
 
     if accepted_errors is not None:
         for error in accepted_errors:
             if error in stderr:
                 # we found an error that we expect/accept
-                sys.stdout.write('found error which is expected/accepted: %s\n' % error)
+                sys.stdout.write('found error which is expected/accepted: {0}\n'.format(error))
 
     # for dalton?
     # if stdout_file_name != '':
@@ -66,10 +66,10 @@ def run(options, get_command, t, f=None, accepted_errors=None):
     else:
         try:
             for i, output in enumerate(outputs):
-                check(f[i], '%s' % output, 'result/%s' % output, options.verbose)
+                check(f[i], output, 'result/{0}'.format(output), options.verbose)
             sys.stdout.write('passed\n')
         except IOError as e:
-            sys.stderr.write('ERROR: could not open file %s\n' % e.filename)
+            sys.stderr.write('ERROR: could not open file {0}\n'.format(e.filename))
             sys.exit(1)
         except TestFailedError as e:
             sys.stderr.write(str(e))
