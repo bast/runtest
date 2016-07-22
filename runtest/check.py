@@ -38,87 +38,83 @@ def check(filter_list, out_name, ref_name, verbose=False):
                              skip_below=f.skip_below,
                              skip_above=f.skip_above)
 
-    log_out = open('%s.filtered' % out_name, 'w')
-    log_ref = open('%s.reference' % out_name, 'w')
-    log_diff = open('%s.diff' % out_name, 'w')
+    with open('{0}.filtered'.format(out_name), 'w') as log_out, \
+         open('{0}.reference'.format(out_name), 'w') as log_ref, \
+         open('{0}.diff'.format(out_name), 'w') as log_diff:
 
-    for f in filter_list:
+        for f in filter_list:
 
-        out_filtered = cut_sections(open(out_name).readlines(),
-                                    from_string=f.from_string,
-                                    from_is_re=f.from_is_re,
-                                    to_string=f.to_string,
-                                    to_is_re=f.to_is_re,
-                                    num_lines=f.num_lines)
-        if out_filtered == []:
-            if f.num_lines > 0:
-                r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
-            else:
-                r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
-            message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, out_name)
-            raise BadFilterError(message)
+            out_filtered = cut_sections(open(out_name).readlines(),
+                                        from_string=f.from_string,
+                                        from_is_re=f.from_is_re,
+                                        to_string=f.to_string,
+                                        to_is_re=f.to_is_re,
+                                        num_lines=f.num_lines)
+            if out_filtered == []:
+                if f.num_lines > 0:
+                    r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
+                else:
+                    r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
+                message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, out_name)
+                raise BadFilterError(message)
 
-        log_out.write(''.join(out_filtered))
-        out_numbers, out_locations = extract_numbers(out_filtered, f.mask)
-        if f.mask is not None and out_numbers == []:
-            raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
+            log_out.write(''.join(out_filtered))
+            out_numbers, out_locations = extract_numbers(out_filtered, f.mask)
+            if f.mask is not None and out_numbers == []:
+                raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
-        ref_filtered = cut_sections(open(ref_name).readlines(),
-                                    from_string=f.from_string,
-                                    from_is_re=f.from_is_re,
-                                    to_string=f.to_string,
-                                    to_is_re=f.to_is_re,
-                                    num_lines=f.num_lines)
-        if ref_filtered == []:
-            if f.num_lines > 0:
-                r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
-            else:
-                r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
-            message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, ref_name)
-            raise BadFilterError(message)
+            ref_filtered = cut_sections(open(ref_name).readlines(),
+                                        from_string=f.from_string,
+                                        from_is_re=f.from_is_re,
+                                        to_string=f.to_string,
+                                        to_is_re=f.to_is_re,
+                                        num_lines=f.num_lines)
+            if ref_filtered == []:
+                if f.num_lines > 0:
+                    r = '[%i lines from "%s"]' % (f.num_lines, f.from_string)
+                else:
+                    r = '["%s" ... "%s"]' % (f.from_string, f.to_string)
+                message = 'ERROR: filter %s did not extract anything from file %s\n' % (r, ref_name)
+                raise BadFilterError(message)
 
-        log_ref.write(''.join(ref_filtered))
-        ref_numbers, _ = extract_numbers(ref_filtered, f.mask)
-        if f.mask is not None and ref_numbers == []:
-            raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
+            log_ref.write(''.join(ref_filtered))
+            ref_numbers, _ = extract_numbers(ref_filtered, f.mask)
+            if f.mask is not None and ref_numbers == []:
+                raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
-        if out_numbers == [] and ref_numbers == []:
-            # no numbers are extracted
-            if out_filtered != ref_filtered:
-                log_diff.write('ERROR: extracted strings do not match\n')
-                log_diff.write('own gave:\n')
+            if out_numbers == [] and ref_numbers == []:
+                # no numbers are extracted
+                if out_filtered != ref_filtered:
+                    log_diff.write('ERROR: extracted strings do not match\n')
+                    log_diff.write('own gave:\n')
+                    log_diff.write(''.join(out_filtered) + '\n')
+                    log_diff.write('reference gave:\n')
+                    log_diff.write(''.join(ref_filtered) + '\n')
+
+            # we need to check for len(out_numbers) > 0
+            # for pure strings len(out_numbers) is 0
+            # TODO need to consider what to do with pure strings in future versions
+            if len(out_numbers) == len(ref_numbers) and len(out_numbers) > 0:
+                if not f.tolerance_is_set and (any(map(lambda x: isinstance(x, float), out_numbers)) or any(map(lambda x: isinstance(x, float), ref_numbers))):
+                    raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
+                l = map(_tuple_matches, zip(out_numbers, ref_numbers))
+                matching, errors = zip(*l)  # unzip tuples to two lists
+                if not all(matching):
+                    log_diff.write('\n')
+                    for k, line in enumerate(out_filtered):
+                        log_diff.write('.       %s' % line)
+                        for i, num in enumerate(out_numbers):
+                            (line_num, start_char, length) = out_locations[i]
+                            if line_num == k:
+                                if errors[i]:
+                                    log_diff.write('ERROR   %s%s %s\n' % (' ' * start_char, '#' * length, errors[i]))
+
+            if len(out_numbers) != len(ref_numbers):
+                log_diff.write('ERROR: extracted sizes do not match\n')
+                log_diff.write('own gave %i numbers:\n' % len(out_numbers))
                 log_diff.write(''.join(out_filtered) + '\n')
-                log_diff.write('reference gave:\n')
+                log_diff.write('reference gave %i numbers:\n' % len(ref_numbers))
                 log_diff.write(''.join(ref_filtered) + '\n')
-
-        # we need to check for len(out_numbers) > 0
-        # for pure strings len(out_numbers) is 0
-        # TODO need to consider what to do with pure strings in future versions
-        if len(out_numbers) == len(ref_numbers) and len(out_numbers) > 0:
-            if not f.tolerance_is_set and (any(map(lambda x: isinstance(x, float), out_numbers)) or any(map(lambda x: isinstance(x, float), ref_numbers))):
-                raise FilterKeywordError('ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n')
-            l = map(_tuple_matches, zip(out_numbers, ref_numbers))
-            matching, errors = zip(*l)  # unzip tuples to two lists
-            if not all(matching):
-                log_diff.write('\n')
-                for k, line in enumerate(out_filtered):
-                    log_diff.write('.       %s' % line)
-                    for i, num in enumerate(out_numbers):
-                        (line_num, start_char, length) = out_locations[i]
-                        if line_num == k:
-                            if errors[i]:
-                                log_diff.write('ERROR   %s%s %s\n' % (' ' * start_char, '#' * length, errors[i]))
-
-        if len(out_numbers) != len(ref_numbers):
-            log_diff.write('ERROR: extracted sizes do not match\n')
-            log_diff.write('own gave %i numbers:\n' % len(out_numbers))
-            log_diff.write(''.join(out_filtered) + '\n')
-            log_diff.write('reference gave %i numbers:\n' % len(ref_numbers))
-            log_diff.write(''.join(ref_filtered) + '\n')
-
-    log_out.close()
-    log_ref.close()
-    log_diff.close()
 
     if os.path.getsize('%s.diff' % out_name) > 0:
         log_diff = open('%s.diff' % out_name, 'r')
