@@ -1,24 +1,5 @@
 
 
-def execute(command, work_dir):
-
-    import shlex
-    import subprocess
-    import sys
-
-    if sys.platform != "win32":
-        command = shlex.split(command)
-
-    process = subprocess.Popen(command,
-                               cwd=work_dir,
-                               stdin=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-
-    return stdout, stderr, process.returncode
-
-
 def check(filter_list, out_name, ref_name, verbose=False):
     """
     Compares output (work_dir/out_name) with reference (work_dir/ref_name)
@@ -154,11 +135,14 @@ def check(filter_list, out_name, ref_name, verbose=False):
 
 
 def run(options, get_command, t, f=None, accepted_errors=None):
+
     import os
     import sys
+    import inspect
+    import shlex
+    import subprocess
     from .exceptions import TestFailedError, BadFilterError, FilterKeywordError
     from .copy import copy_path
-    import inspect
 
     # here we find out where the test script sits
     frame = inspect.stack()[-1]
@@ -186,8 +170,17 @@ def run(options, get_command, t, f=None, accepted_errors=None):
     if options.skip_run:
         sys.stdout.write('(skipped run with -s|--skip-run)\n')
     else:
-        stdout, stderr, process_returncode = execute(command, options.work_dir)
-        if process_returncode != 0:
+        if sys.platform != "win32":
+            command = shlex.split(command)
+
+        process = subprocess.Popen(command,
+                                   cwd=options.work_dir,
+                                   stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        if process.returncode != 0:
             sys.stdout.write('ERROR: crash during %s\n%s' % (command, stderr))
             sys.exit(1)
 
