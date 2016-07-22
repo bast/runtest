@@ -32,4 +32,4 @@ by the appropriate version):
 - [GPUnCH](http://gpunch.org)
 - [OpenRSP](http://openrsp.org)
 
-If you use runtest, please a link to your project via a pull request.
+If you use runtest, please add a link to your project via a pull request.
