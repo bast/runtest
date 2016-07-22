@@ -3,7 +3,8 @@ import sys
 import pytest
 
 from ..exceptions import *
-from ..ugly import get_filter, check
+from ..filter_constructor import get_filter
+from ..ugly import check
 
 
 def test_check():
