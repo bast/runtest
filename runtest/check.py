@@ -38,9 +38,11 @@ def check(filter_list, out_name, ref_name, verbose=False):
                              skip_below=f.skip_below,
                              skip_above=f.skip_above)
 
-    with open('{0}.filtered'.format(out_name), 'w') as log_out, \
-         open('{0}.reference'.format(out_name), 'w') as log_ref, \
-         open('{0}.diff'.format(out_name), 'w') as log_diff:
+    name_out = out_name + '.filtered'
+    name_ref = out_name + '.reference'
+    name_diff = out_name + '.diff'
+
+    with open(name_out, 'w') as log_out, open(name_ref, 'w') as log_ref, open(name_diff, 'w') as log_diff:
 
         for f in filter_list:
 
