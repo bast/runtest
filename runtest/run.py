@@ -1,4 +1,4 @@
-def run(options, get_command, t, f=None, accepted_errors=None):
+def run(options, configure, t, f=None, accepted_errors=None):
 
     import os
     import sys
@@ -20,7 +20,7 @@ def run(options, get_command, t, f=None, accepted_errors=None):
     if options.work_dir != caller_dir:
         copy_path(caller_dir, options.work_dir)
 
-    launcher, command, outputs = get_command(options, t)
+    launcher, command, outputs, relative_reference_path = configure(options, t)
 
     launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
 
@@ -66,7 +66,7 @@ def run(options, get_command, t, f=None, accepted_errors=None):
     else:
         try:
             for i, output in enumerate(outputs):
-                check(f[i], output, 'result/{0}'.format(output), options.verbose)
+                check(f[i], output, os.path.join(relative_reference_path, output), options.verbose)
             sys.stdout.write('passed\n')
         except IOError as e:
             sys.stderr.write('ERROR: could not open file {0}\n'.format(e.filename))
