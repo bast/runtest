@@ -16,7 +16,16 @@ codes which produce numerical results in plain text.
 ![alt text](https://github.com/bast/runtest/raw/master/img/xanathar.jpg "Xanathar")
 
 
-### Projects using runtest
+## Citation
+
+If you use this tool in a program or publication, please acknowledge its
+author(s) by adding the following reference (please replace vX.Y.Z
+by the appropriate version):
+
+- Radovan Bast, runtest vX.Y.Z, 2016, GitHub repository, https://github.com/bast/runtest.
+
+
+## Projects using runtest
 
 - [DIRAC](http://diracprogram.org)
 - [Dalton](http://daltonprogram.org) and [LSDalton](http://daltonprogram.org)
