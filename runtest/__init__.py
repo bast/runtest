@@ -1,5 +1,5 @@
 from .filter_constructor import get_filter
-from .ugly import run
+from .run import run
 from .version import version_info, version
 from .cli import cli
 
