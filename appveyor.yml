@@ -13,4 +13,7 @@ build_script:
 - pip install pytest
 
 test_script:
-- py.test -vv runtest/test/test.py
+- py.test -vv runtest/check.py
+- py.test -vv runtest/extract.py
+- py.test -vv runtest/scissors.py
+- py.test -vv runtest/tuple_comparison.py
