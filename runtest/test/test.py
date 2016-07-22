@@ -4,7 +4,7 @@ import pytest
 
 from ..exceptions import *
 from ..filter_constructor import get_filter
-from ..ugly import check
+from ..check import check
 
 
 def test_check():

@@ -7,6 +7,7 @@ def run(options, get_command, t, f=None, accepted_errors=None):
     import subprocess
     from .exceptions import TestFailedError, BadFilterError, FilterKeywordError
     from .copy import copy_path
+    from .check import check
 
     # here we find out where the test script sits
     frame = inspect.stack()[-1]
