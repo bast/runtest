@@ -1,4 +1,4 @@
-def run(options, configure, t, f=None, accepted_errors=None):
+def run(options, configure, input_files, extra_args=None, filters=None, accepted_errors=None):
 
     import os
     import sys
@@ -20,17 +20,17 @@ def run(options, configure, t, f=None, accepted_errors=None):
     if options.work_dir != caller_dir:
         copy_path(caller_dir, options.work_dir)
 
-    launcher, command, outputs, relative_reference_path = configure(options, t)
+    launcher, command, output_prefix, relative_reference_path = configure(options, input_files, extra_args)
 
     launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
 
     if not options.skip_run and not os.path.exists(launch_script_path):
-        sys.stderr.write('ERROR: launch script {0} not found in {1}\n'.format(launcher, options.binary_dir))
+        sys.stderr.write('ERROR: launch script/binary {0} not found in {1}\n'.format(launcher, options.binary_dir))
         sys.stderr.write('       have you set the correct --binary-dir (or -b)?\n')
         sys.stderr.write('       try also --help\n')
         sys.exit(-1)
 
-    sys.stdout.write('\nrunning test with input tuple {0}\n'.format(t))
+    sys.stdout.write('\nrunning test with input files {0} and args {1}\n'.format(input_files, extra_args))
 
     if options.skip_run:
         sys.stdout.write('(skipped run with -s|--skip-run)\n')
@@ -45,6 +45,12 @@ def run(options, configure, t, f=None, accepted_errors=None):
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
 
+        with open('{0}.{1}'.format(output_prefix, 'stdout'), 'w') as f:
+             f.write(stdout)
+
+        with open('{0}.{1}'.format(output_prefix, 'stderr'), 'w') as f:
+             f.write(stderr)
+
         if process.returncode != 0:
             sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
             sys.exit(1)
@@ -55,18 +61,13 @@ def run(options, configure, t, f=None, accepted_errors=None):
                 # we found an error that we expect/accept
                 sys.stdout.write('found error which is expected/accepted: {0}\n'.format(error))
 
-    # for dalton?
-    # if stdout_file_name != '':
-    #     f = open(stdout_file_name, 'w')
-    #     f.write(stdout)
-    #     f.close()
-
-    if f is None:
+    if filters is None:
         sys.stdout.write('finished (no reference)\n')
     else:
         try:
-            for i, output in enumerate(outputs):
-                check(f[i], output, os.path.join(relative_reference_path, output), options.verbose)
+            for suffix in filters:
+                output = '{0}.{1}'.format(output_prefix, suffix)
+                check(filters[suffix], output, os.path.join(relative_reference_path, output), options.verbose)
             sys.stdout.write('passed\n')
         except IOError as e:
             sys.stderr.write('ERROR: could not open file {0}\n'.format(e.filename))
