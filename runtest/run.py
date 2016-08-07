@@ -46,10 +46,10 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
         stdout, stderr = process.communicate()
 
         with open('{0}.{1}'.format(output_prefix, 'stdout'), 'w') as f:
-            f.write(stdout)
+            f.write(stdout.decode('UTF-8'))
 
         with open('{0}.{1}'.format(output_prefix, 'stderr'), 'w') as f:
-            f.write(stderr)
+            f.write(stderr.decode('UTF-8'))
 
         if process.returncode != 0:
             sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
