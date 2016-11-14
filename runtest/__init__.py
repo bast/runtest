@@ -1,11 +1,9 @@
 from .filter_constructor import get_filter
 from .run import run
-from .version import version_info, version
+from .version import version_info, version as __version__
 from .cli import cli
 
 __author__ = ('Radovan Bast <radovan.bast@uit.no>')
-
-__version__ = version
 
 __all__ = [
     'get_filter',
