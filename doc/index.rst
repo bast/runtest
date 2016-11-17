@@ -30,10 +30,3 @@ Numerically tolerant test library for scientific codes which produce numerical r
    adding_tests/general
    adding_tests/dirac
    adding_tests/dalton
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Documentation for people who implement host-code specific adapters
-
-   adapters/dirac
