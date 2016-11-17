@@ -8,11 +8,11 @@ Numerically tolerant test library for scientific codes which produce numerical r
 
 .. toctree::
    :maxdepth: 1
-   :caption: Core library
+   :caption: Runtest library
 
-   core/about.rst
-   core/filter_options.rst
-   core/contributing.rst
+   library/about.rst
+   library/filter_options.rst
+   library/contributing.rst
 
 
 .. toctree::
