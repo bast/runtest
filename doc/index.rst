@@ -25,8 +25,7 @@ Numerically tolerant test library for scientific codes which produce numerical r
 
 .. toctree::
    :maxdepth: 1
-   :caption: Documentation for people who add new tests
+   :caption: Adding new tests
 
    adding_tests/general.rst
    adding_tests/dirac.rst
-   adding_tests/dalton.rst
