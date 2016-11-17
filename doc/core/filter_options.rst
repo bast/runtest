@@ -14,10 +14,9 @@ In this example we set the relative tolerance to 1.0e-10:
 
 .. code-block:: python
 
-  f = Filter()
-  f.add(from_string   = 'Electronic energy',
-        num_lines     = 8,
-        rel_tolerance = 1.0e-10)
+  get_filter(from_string='Electronic energy',
+             num_lines=8,
+             rel_tolerance=1.0e-10)
 
 
 Absolute tolerance
@@ -30,10 +29,9 @@ In this example we set the absolute tolerance to 1.0e-10:
 
 .. code-block:: python
 
-  f = Filter()
-  f.add(from_string   = 'Electronic energy',
-        num_lines     = 8,
-        abs_tolerance = 1.0e-10)
+  get_filter(from_string='Electronic energy',
+             num_lines=8,
+             abs_tolerance=1.0e-10)
 
 
 How to check entire file
@@ -46,8 +44,7 @@ Example:
 
 .. code-block:: python
 
-  f = Filter()
-  f.add() # filter all lines
+  get_filter(rel_tolerance=1.0e-10)
 
 
 Filtering between two anchor strings
@@ -57,9 +54,9 @@ Example:
 
 .. code-block:: python
 
-  f = Filter()
-  f.add(from_string = '@   Elements of the electric dipole',
-        to_string   = '@   anisotropy')
+  get_filter(from_string='@   Elements of the electric dipole',
+             to_string='@   anisotropy',
+             rel_tolerance=1.0e-10)
 
 This will extract all floats between these strings including the lines of the
 strings.
@@ -76,10 +73,9 @@ Example:
 
 .. code-block:: python
 
-  f = Filter()
-  f.add(from_string  = 'Electronic energy',
-        num_lines = 8,                        # here we compare 8 lines
-        rel_tolerance = 1.0e-10)
+  get_filter(from_string='Electronic energy',
+             num_lines=8,  # here we compare 8 lines
+             abs_tolerance=1.0e-10)
 
 The start string can be a string (from_string) or a regular expression
 (from_re).  In the above example we extract and compare all lines that start
@@ -93,9 +89,8 @@ This example will compare all lines which contain 'Electronic energy':
 
 .. code-block:: python
 
-  f = Filter()
-  f.add(string = 'Electronic energy',
-        rel_tolerance = 1.0e-10)
+  get_filter(string='Electronic energy',
+             abs_tolerance=1.0e-10)
 
 Instead of single string we can give a single regular expression (re).
 
@@ -105,17 +100,11 @@ How to ignore sign
 
 Sometimes the sign does is not predictable. For this set ignore_sign to True:
 
-.. code-block:: python
-
-  f = Filter()
-  f.add(string      = 'Something',
-        ignore_sign = True)
-
 
 How to ignore very small or very large numbers
 ----------------------------------------------
 
-You can ignore very small numbers with ignore_below.
+You can ignore very small numbers with skip_below.
 Default is 1.0e-40. Ignore all floats that are smaller than this number
 (this option ignores the sign).
 
@@ -134,12 +123,12 @@ As an example consider the following result tensor::
           90142.70952022          0.00000056          0.00000696
 
 The small numbers are clearly numerical noise and we do not want to test them
-at all.  In this case it is useful to set ignore_below to 1.0e-4.
+at all.  In this case it is useful to set skip_below to 1.0e-4.
 
 Alternatively one could use absolute tolerance to avoid checking the noisy
 zeros.
 
-You can ignore very large numbers with ignore_above (also this option ignores
+You can ignore very large numbers with skip_above (also this option ignores
 the sign).
 
 
@@ -154,10 +143,9 @@ Example:
 
 .. code-block:: python
 
-  f = Filter()
-  f.add(from_string = 'no.    eigenvalue (eV)   mean-res.',
-        num_lines = 4,
-        rel_tolerance = 1.0e-4,
-        mask = [1, 2, 3])
+  get_filter(from_string='no.    eigenvalue (eV)   mean-res.',
+             num_lines=4,
+             rel_tolerance=1.0e-4,
+             mask=[1, 2, 3])
 
 Here we use only the first 3 floats in each line.
