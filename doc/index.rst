@@ -19,8 +19,8 @@ Numerically tolerant test library for scientific codes which produce numerical r
    :maxdepth: 1
    :caption: Running a test script
 
-   command_line_arguments
-   generated_files
+   running_tests/command_line_arguments.rst
+   running_tests/generated_files.rst
 
 
 .. toctree::
