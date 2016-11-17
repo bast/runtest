@@ -11,9 +11,14 @@ Numerically tolerant test library for scientific
 codes which produce numerical results in plain text.
 
 - Tested with Python 2.7, 3.3, 3.4, and 3.5
-- Documentation: http://runtest.readthedocs.io
 
 ![alt text](https://github.com/bast/runtest/raw/master/img/xanathar.jpg "Xanathar")
+
+
+## Documentation
+
+- [Latest stable code](http://runtest.readthedocs.io/en/stable-1.x/) (stable-1.x branch)
+- [Bleeding edge code](http://runtest.readthedocs.io/en/latest/) (master branch)
 
 
 ## Citation
