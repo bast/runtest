@@ -28,4 +28,4 @@ Numerically tolerant test library for scientific codes which produce numerical r
    :caption: Adding new tests
 
    adding_tests/general.rst
-   adding_tests/dirac.rst
+   adding_tests/example.rst
