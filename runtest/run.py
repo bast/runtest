@@ -53,7 +53,7 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
 
         if process.returncode != 0:
             sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
-            sys.exit(1)
+            return 1
 
     if accepted_errors is not None:
         for error in accepted_errors:
