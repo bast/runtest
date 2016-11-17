@@ -10,9 +10,9 @@ Numerically tolerant test library for scientific codes which produce numerical r
    :maxdepth: 1
    :caption: Core library
 
-   main
-   filter_options
-   contributing
+   core/about.rst
+   core/filter_options.rst
+   core/contributing.rst
 
 
 .. toctree::
