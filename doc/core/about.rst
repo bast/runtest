@@ -23,7 +23,4 @@ Design decisions
 
 The library is designed to play well with CTest, to be convenient when used
 interactively, and to work without trouble on Linux, Mac, and Windows. It
-offers test scripts a basic argument parsing. All host program independent code
-has been collected into the core library. The aim is to keep host program
-specifics minimal and to specify and keep them in adapter scripts outside the
-core library.
+offers test scripts a basic argument parsing.
