@@ -66,12 +66,13 @@ Let us look at an easy example.
 First we import modules that we need (highlighted lines):
 
 .. code-block:: python
-  :emphasize-lines: 3-7
+  :emphasize-lines: 3-8
 
   #!/usr/bin/env python
 
+  import os
   import sys
-  sys.path.insert(0, '..')
+  sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
   from runtest import version_info, get_filter, cli, run
   from runtest_config import configure
@@ -102,12 +103,13 @@ First we import modules that we need (highlighted lines):
 Then we construct a list of filters. We can construct as many lists as we like and they can contain as many filters as we like.
 
 .. code-block:: python
-  :emphasize-lines: 11-18
+  :emphasize-lines: 12-19
 
   #!/usr/bin/env python
 
+  import os
   import sys
-  sys.path.insert(0, '..')
+  sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
   from runtest import version_info, get_filter, cli, run
   from runtest_config import configure
@@ -139,12 +141,13 @@ After we use the command line interface to generate options, we really run the t
 Note how we pass the configure option to the run function:
 
 .. code-block:: python
-  :emphasize-lines: 25-28
+  :emphasize-lines: 26-29
 
   #!/usr/bin/env python
 
+  import os
   import sys
-  sys.path.insert(0, '..')
+  sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
   from runtest import version_info, get_filter, cli, run
   from runtest_config import configure
