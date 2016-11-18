@@ -1,10 +1,14 @@
 
 
-Notes for contributors
-======================
+Contributing
+============
 
-Please communicate bugfixes and new features.
+Yes please! Please follow this excellent guide:
+http://www.contribution-guide.org. We do not require any formal copyright
+assignment or contributor license agreement. Any contributions intentionally
+sent upstream are presumed to be offered under terms of the OSI-approved BSD
+3-clause License.
 
 Methods, and variables that start with underscore are private.
 
-Please keep the output as silent as possible.
+Please keep the default output as silent as possible.
