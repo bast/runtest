@@ -20,15 +20,15 @@ The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/sta
 
 .. toctree::
    :maxdepth: 1
-   :caption: Running a test script
+   :caption: Creating new tests
 
-   running_tests/command_line_arguments.rst
-   running_tests/generated_files.rst
+   creating/general.rst
+   creating/example.rst
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Adding new tests
+   :caption: Running a test script
 
-   adding_tests/general.rst
-   adding_tests/example.rst
+   running/command_line_arguments.rst
+   running/generated_files.rst
