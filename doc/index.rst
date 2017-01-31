@@ -23,6 +23,7 @@ The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/sta
    :caption: Creating tests
 
    creating/general.rst
+   creating/configuration.rst
    creating/example.rst
 
 
