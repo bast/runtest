@@ -7,8 +7,8 @@ Filter options
 Relative tolerance
 ------------------
 
-There is no default. You have to select either relative or absolute
-tolerance for each test when testing floats. You cannot select both.
+There is no default. You have to select either relative or absolute tolerance
+for each test when testing floats. You cannot select both at the same time.
 
 In this example we set the relative tolerance to 1.0e-10:
 
@@ -22,8 +22,8 @@ In this example we set the relative tolerance to 1.0e-10:
 Absolute tolerance
 ------------------
 
-There is no default. You have to select either relative or absolute
-tolerance for each test when testing floats. You cannot select both.
+There is no default. You have to select either relative or absolute tolerance
+for each test when testing floats. You cannot select both at the same time.
 
 In this example we set the absolute tolerance to 1.0e-10:
 
@@ -98,7 +98,7 @@ Instead of single string we can give a single regular expression (re).
 How to ignore sign
 ------------------
 
-Sometimes the sign does is not predictable. For this set ignore_sign to True:
+Sometimes the sign does is not predictable. For this set ``ignore_sign=True``.
 
 
 How to ignore very small or very large numbers
@@ -122,15 +122,14 @@ As an example consider the following result tensor::
              -0.00005667          0.00000015         -0.00000022
           90142.70952022          0.00000056          0.00000696
 
-The small numbers are clearly numerical noise and we do not want to test them
-at all.  In this case it is useful to set skip_below to 1.0e-4.
+The small numbers are actually numerical noise and we do not want to test them
+at all. In this case it is useful to set ``skip_below=1.0e-4``.
 
 Alternatively one could use absolute tolerance to avoid checking the noisy
 zeros.
 
 You can ignore very large numbers with skip_above (also this option ignores
 the sign).
-
 
 
 How to ignore certain numbers
@@ -148,4 +147,4 @@ Example:
              rel_tolerance=1.0e-4,
              mask=[1, 2, 3])
 
-Here we use only the first 3 floats in each line.
+Here we use only the first 3 floats in each line. Counting starts with 1.

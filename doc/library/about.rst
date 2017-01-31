@@ -23,4 +23,4 @@ Design decisions
 
 The library is designed to play well with CTest, to be convenient when used
 interactively, and to work without trouble on Linux, Mac, and Windows. It
-offers test scripts a basic argument parsing.
+offers a basic argument parsing for test scripts.
