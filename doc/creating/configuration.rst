@@ -1,7 +1,7 @@
 
 
-How to configure the link between runtest and your code
-=======================================================
+How to hook up runtest with your code
+=====================================
 
 The runtest library is a low-level program-independent library that provides
 infrastructure for running calculations and extracting and comparing numbers
