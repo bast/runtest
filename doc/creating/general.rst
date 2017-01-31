@@ -16,8 +16,8 @@ Strive for portability
 ----------------------
 
 Avoid shell programming or symlinks in test scripts otherwise the tests are not
-portable to Windows. Therefore do not use os.system() or os.symlink(). Do not
-use explicit forward slashes for paths, instead use os.path.join().
+portable to Windows. Therefore do not use ``os.system()`` or ``os.symlink()``. Do not
+use explicit forward slashes for paths, instead use ``os.path.join()``.
 
 
 Always test that the test really works
@@ -41,4 +41,4 @@ Never add inputs to the test directories which are never run
 
 We want all inputs and outputs to be accessile by the default test
 suite. Otherwise we have no automatic way to detect that some inputs or outputs
-have degraded. And degraded inputs and outputs are useless and confusing.
+have degraded. Degraded inputs and outputs are useless and confusing.
