@@ -8,7 +8,7 @@ Let us consider a relatively simple annotated example.
 First we import modules that we need (highlighted lines):
 
 .. code-block:: python
-  :emphasize-lines: 4-16
+  :emphasize-lines: 3-16
 
   #!/usr/bin/env python
 
@@ -56,10 +56,10 @@ First we import modules that we need (highlighted lines):
 
 Then we construct a list of filters. We can construct as many lists as we like
 and they can contain as many filters as we like.  The list does not have to be
-called "f" - give it a name that is meaningful to you.
+called "f". Give it a name that is meaningful to you.
 
 .. code-block:: python
-  :emphasize-lines: 22-29
+  :emphasize-lines: 21-29
 
   #!/usr/bin/env python
 
