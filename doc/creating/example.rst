@@ -106,7 +106,7 @@ called "f". Give it a name that is meaningful to you.
   sys.exit(ierr)
 
 After we use the command line interface to generate options, we really run the
-test.  Note how we pass the configure option to the run function: Also note how
+test.  Note how we pass the configure function to the run function. Also note how
 we pass the filter list as a dictionary. If we omit to pass it, then the
 calculations will be run but not verified. This is useful for multi-step jobs.
 From the dictionary, the library knows that it should execute the filter list
