@@ -5,6 +5,9 @@ runtest
 
 Numerically tolerant test library for scientific codes which produce numerical results in plain text.
 
+This documents the latest code on the ``master`` branch.
+The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/stable-1.x/.
+
 
 .. toctree::
    :maxdepth: 1
