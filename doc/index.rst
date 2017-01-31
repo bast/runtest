@@ -11,7 +11,7 @@ The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/sta
 
 .. toctree::
    :maxdepth: 1
-   :caption: Library documentation
+   :caption: Library
 
    library/about.rst
    library/filter_options.rst
@@ -20,7 +20,7 @@ The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/sta
 
 .. toctree::
    :maxdepth: 1
-   :caption: Creating new tests
+   :caption: Creating tests
 
    creating/general.rst
    creating/example.rst
@@ -28,7 +28,7 @@ The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/sta
 
 .. toctree::
    :maxdepth: 1
-   :caption: Running a test script
+   :caption: Running tests
 
    running/command_line_arguments.rst
    running/generated_files.rst
