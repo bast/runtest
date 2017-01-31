@@ -11,7 +11,7 @@ The ``stable-1.x`` code is documented here: http://runtest.readthedocs.io/en/sta
 
 .. toctree::
    :maxdepth: 1
-   :caption: Runtest library
+   :caption: Library documentation
 
    library/about.rst
    library/filter_options.rst
