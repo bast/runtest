@@ -22,9 +22,3 @@ Here are some ideas:
 - Fix typos
 - Make it possible to install this package using pip
 - Make this package distributable via PyPI
-
-
-Which branch?
--------------
-
-We follow the Semantic branching model: https://dev-cafe.github.io/branching-model/

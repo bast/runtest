@@ -39,3 +39,4 @@ The ``release-1.3.z`` code is documented here: http://runtest.readthedocs.io/en/
    :caption: Developers
 
    developers/contributing.rst
+   developers/branches.rst
