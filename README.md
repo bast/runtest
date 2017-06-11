@@ -27,7 +27,7 @@ If you use this tool in a program or publication, please acknowledge its
 author(s) by adding the following reference (please replace vX.Y.Z
 by the appropriate version):
 
-- Radovan Bast, runtest vX.Y.Z, 2016, GitHub repository, https://github.com/bast/runtest.
+- Radovan Bast, runtest vX.Y.Z, 2017, GitHub repository, https://github.com/bast/runtest.
 
 
 ## Projects using runtest
