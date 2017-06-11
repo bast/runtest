@@ -17,8 +17,12 @@ codes which produce numerical results in plain text.
 
 ## Documentation
 
-- [Latest stable code](http://runtest.readthedocs.io/en/stable-1.x/) (stable-1.x branch)
-- [Bleeding edge code](http://runtest.readthedocs.io/en/latest/) (master branch)
+- [Latest code](http://runtest.readthedocs.io/en/latest/) (master branch)
+
+
+### Past versions
+
+- [1.3.z](http://runtest.readthedocs.io/en/release-1.3.z/) (release-1.3.z branch)
 
 
 ## Citation
