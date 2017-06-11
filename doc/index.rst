@@ -15,6 +15,7 @@ The ``release-1.3.z`` code is documented here: http://runtest.readthedocs.io/en/
 
    about/motivation.rst
    about/audience.rst
+   about/related.rst
 
 
 .. toctree::
