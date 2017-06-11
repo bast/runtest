@@ -45,5 +45,5 @@ If you use runtest, please add a link to your project via a pull request.
 
 ## Related projects
 
-- [testcode](https://github.com/jsspencer/testcode) is a python module for
+- [testcode](http://testcode.readthedocs.io) is a python module for
   testing for regression errors in numerical (principally scientific) software.
