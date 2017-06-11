@@ -10,7 +10,7 @@
 Numerically tolerant test library for scientific
 codes which produce numerical results in plain text.
 
-- Tested with Python 2.7, 3.3, 3.4, and 3.5
+- Tested with Python 2.7 and 3.6
 
 ![alt text](https://github.com/bast/runtest/raw/master/img/xanathar.jpg "Xanathar")
 
