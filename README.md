@@ -22,7 +22,7 @@ codes which produce numerical results in plain text.
 
 ### Past versions
 
-- [1.3.z](http://runtest.readthedocs.io/en/release-1.3.z/) (release-1.3.z branch)
+- [1.3.z](http://runtest.readthedocs.io/en/release-1.3.z/) ([release-1.3.z branch](https://github.com/bast/runtest/tree/release-1.3.z))
 
 
 ## Citation
