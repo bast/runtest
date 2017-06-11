@@ -11,7 +11,7 @@ def cli():
     caller_file = module.__file__
     caller_dir = os.path.dirname(os.path.realpath(caller_file))
 
-    parser = OptionParser(description='runtest {0} - Numerically tolerant test library.'.format(version))
+    parser = OptionParser(description='runtest {0} - Numerically tolerant end-to-end test library for scientific codes.'.format(version))
 
     parser.add_option('--binary-dir',
                       '-b',
