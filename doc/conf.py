@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'runtest'
-copyright = u'2014-2016, Radovan Bast'
+copyright = u'2014-2017, Radovan Bast'
 author = u'Radovan Bast'
 
 # The version info for the project you're documenting, acts as replacement for
