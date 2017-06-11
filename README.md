@@ -7,7 +7,7 @@
 
 # runtest
 
-Numerically tolerant end-to-end test library for scientific codes which uses reference outputs.
+Numerically tolerant end-to-end test library for scientific codes.
 
 - Tested with Python 2.7 and 3.6
 
