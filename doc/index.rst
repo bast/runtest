@@ -11,9 +11,10 @@ The ``release-1.3.z`` code is documented here: http://runtest.readthedocs.io/en/
 
 .. toctree::
    :maxdepth: 1
-   :caption: Why
+   :caption: About
 
-   why/about.rst
+   about/motivation.rst
+   about/audience.rst
 
 
 .. toctree::

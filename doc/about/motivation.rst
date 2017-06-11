@@ -1,7 +1,7 @@
 
 
-About the runtest library
-=========================
+Motivation
+==========
 
 
 Scope
