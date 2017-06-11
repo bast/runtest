@@ -1,6 +1,6 @@
 
 
-Related projects
+Similar projects
 ================
 
 - http://testcode.readthedocs.io: testcode is a python module for
