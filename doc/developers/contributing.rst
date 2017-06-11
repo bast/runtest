@@ -11,3 +11,20 @@ sent upstream are presumed to be offered under terms of the Mozilla Public Licen
 Methods, and variables that start with underscore are private.
 
 Please keep the default output as silent as possible.
+
+
+Where to contribute
+-------------------
+
+Here are some ideas:
+
+- Improve documentation
+- Fix typos
+- Make it possible to install this package using pip
+- Make this package distributable via PyPI
+
+
+Which branch?
+-------------
+
+We follow the Semantic branching model: https://dev-cafe.github.io/branching-model/
