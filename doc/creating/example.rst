@@ -1,4 +1,5 @@
 
+.. _example-test-script:
 
 Example test script
 ===================

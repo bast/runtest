@@ -25,6 +25,7 @@ The ``release-1.3.z`` code is documented here: http://runtest.readthedocs.io/en/
    creating/general.rst
    creating/configuration.rst
    creating/example.rst
+   creating/run_function.rst
    creating/filter_options.rst
 
 
