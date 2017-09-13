@@ -33,6 +33,11 @@ def cli():
                       action='store_true',
                       default=False,
                       help='skip actual calculation(s) [default: %default]')
+    parser.add_option('--skip-verification',
+                      '-n',
+                      action='store_true',
+                      default=False,
+                      help='run calculation(s) but do not verify results [default: %default]')
 
     (options, args) = parser.parse_args(args=sys.argv[1:])
 
