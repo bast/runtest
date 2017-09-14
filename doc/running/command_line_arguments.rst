@@ -37,7 +37,7 @@ Skip actual calculation(s), only compare numbers. This is useful
 to adjust the test script for long calculations.
 
 
--n, --skip-verification
+-n, --no-verification
 -----------------------
 
 Run calculation(s) but do not verify results. This is useful to

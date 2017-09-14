@@ -64,7 +64,7 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
 
     if filters is None:
         sys.stdout.write('finished (no reference)\n')
-    elif options.skip_verification:
+    elif options.no_verification:
         sys.stdout.write('finished (verification skipped)\n')
     else:
         try:

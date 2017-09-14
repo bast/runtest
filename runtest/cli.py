@@ -33,7 +33,7 @@ def cli():
                       action='store_true',
                       default=False,
                       help='skip actual calculation(s) [default: %default]')
-    parser.add_option('--skip-verification',
+    parser.add_option('--no-verification',
                       '-n',
                       action='store_true',
                       default=False,
