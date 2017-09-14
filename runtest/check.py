@@ -87,6 +87,10 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
                     if f.mask is not None and ref_numbers == []:
                         raise FilterKeywordError('ERROR: mask %s did not extract any numbers\n' % f.mask)
 
+                    if f.ignore_order:
+                        out_numbers = sorted(out_numbers)
+                        ref_numbers = sorted(ref_numbers)
+
                     if out_numbers == [] and ref_numbers == []:
                         # no numbers are extracted
                         if out_filtered != ref_filtered:
@@ -263,6 +267,36 @@ own gave 4 numbers:
 reference gave 3 numbers:
 1.0 2.0 3.05
 \n'''
+
+
+def test_check_ignore_order():
+    import os
+    import pytest
+    from .exceptions import FailedTestError
+    from .check import check
+    from .filter_constructor import get_filter
+
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, 'test', 'ignore_order')
+    out_name = os.path.join(test_dir, 'out.txt')
+    ref_name = os.path.join(test_dir, 'ref.txt')
+    log_dir = test_dir
+
+    filters = [get_filter(abs_tolerance=0.1)]
+    with pytest.raises(FailedTestError) as e:
+        check(filter_list=filters,
+              out_name=out_name,
+              ref_name=ref_name,
+              log_dir=log_dir,
+              verbose=False)
+    assert 'ERROR: test %s failed\n' % out_name in str(e.value)
+
+    filters = [get_filter(abs_tolerance=0.1, ignore_order=True)]
+    check(filter_list=filters,
+          out_name=out_name,
+          ref_name=ref_name,
+          log_dir=log_dir,
+          verbose=False)
 
 
 def test_bad_keywords():

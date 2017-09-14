@@ -8,6 +8,7 @@ recognized_kw = [
     'skip_below',
     'skip_above',
     'ignore_sign',
+    'ignore_order',
     'mask',
     'num_lines',
     'rel_tolerance',

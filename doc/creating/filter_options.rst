@@ -101,6 +101,13 @@ How to ignore sign
 Sometimes the sign does is not predictable. For this set ``ignore_sign=True``.
 
 
+How to ignore the order of numbers
+----------------------------------
+
+Setting ``ignore_order=True`` will sort the numbers before comparing them.
+This is useful for tests where some numbers can change place.
+
+
 How to ignore very small or very large numbers
 ----------------------------------------------
 

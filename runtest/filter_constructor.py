@@ -10,6 +10,7 @@ def get_filter(**kwargs):
                           'skip_above',
                           'skip_below',
                           'ignore_sign',
+                          'ignore_order',
                           'mask',
                           'num_lines',
                           'to_is_re',
@@ -34,6 +35,7 @@ def get_filter(**kwargs):
     _filter.from_string = kwargs.get('from_string', '')
     _filter.to_string = kwargs.get('to_string', '')
     _filter.ignore_sign = kwargs.get('ignore_sign', False)
+    _filter.ignore_order = kwargs.get('ignore_order', False)
     _filter.skip_below = kwargs.get('skip_below', sys.float_info.min)
     _filter.skip_above = kwargs.get('skip_above', sys.float_info.max)
     _filter.num_lines = kwargs.get('num_lines', 0)
