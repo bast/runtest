@@ -19,13 +19,13 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
         - out_name.diff      -- difference between the two above
 
     Raises:
-        - TestFailedError
+        - FailedTestError
     """
     import os
     from .tuple_comparison import tuple_matches
     from .extract import extract_numbers
     from .scissors import cut_sections
-    from .exceptions import FilterKeywordError, TestFailedError, BadFilterError
+    from .exceptions import FilterKeywordError, FailedTestError, BadFilterError
 
     def _tuple_matches(t):
         if f.tolerance_is_relative:
@@ -130,13 +130,13 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
         message = "ERROR: test %s failed\n" % out_name
         if verbose:
             message += diff
-        raise TestFailedError(message)
+        raise FailedTestError(message)
 
 
 def test_check():
     import os
     import pytest
-    from .exceptions import FilterKeywordError, TestFailedError
+    from .exceptions import FilterKeywordError, FailedTestError
     from .check import check
     from .filter_constructor import get_filter
 
@@ -163,7 +163,7 @@ def test_check():
     assert 'ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n' in str(e.value)
 
     filters = [get_filter(rel_tolerance=0.01)]
-    with pytest.raises(TestFailedError) as e:
+    with pytest.raises(FailedTestError) as e:
         check(filter_list=filters,
               out_name=out_name,
               ref_name=ref_name,
@@ -176,7 +176,7 @@ def test_check():
 ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n'''
 
     filters = [get_filter(abs_tolerance=0.01)]
-    with pytest.raises(TestFailedError) as e:
+    with pytest.raises(FailedTestError) as e:
         check(filter_list=filters,
               out_name=out_name,
               ref_name=ref_name,
@@ -189,7 +189,7 @@ ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n'''
 ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n'''
 
     filters = [get_filter(abs_tolerance=0.01, ignore_sign=True)]
-    with pytest.raises(TestFailedError) as e:
+    with pytest.raises(FailedTestError) as e:
         check(filter_list=filters,
               out_name=out_name,
               ref_name=ref_name,
@@ -237,7 +237,7 @@ def test_check_bad_filter():
 def test_check_different_length():
     import os
     import pytest
-    from .exceptions import TestFailedError
+    from .exceptions import FailedTestError
     from .check import check
     from .filter_constructor import get_filter
 
@@ -248,7 +248,7 @@ def test_check_different_length():
     log_dir = test_dir
 
     filters = [get_filter(abs_tolerance=0.1)]
-    with pytest.raises(TestFailedError) as e:
+    with pytest.raises(FailedTestError) as e:
         check(filter_list=filters,
               out_name=out_name,
               ref_name=ref_name,

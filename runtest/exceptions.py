@@ -2,7 +2,7 @@ class FilterKeywordError(Exception):
     pass
 
 
-class TestFailedError(Exception):
+class FailedTestError(Exception):
     pass
 
 

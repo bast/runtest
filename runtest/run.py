@@ -5,7 +5,7 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
     import inspect
     import shlex
     import subprocess
-    from .exceptions import TestFailedError, BadFilterError, FilterKeywordError
+    from .exceptions import FailedTestError, BadFilterError, FilterKeywordError
     from .copy import copy_path
     from .check import check
 
@@ -79,7 +79,7 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
         except IOError as e:
             sys.stderr.write('ERROR: could not open file {0}\n'.format(e.filename))
             sys.exit(1)
-        except TestFailedError as e:
+        except FailedTestError as e:
             sys.stderr.write(str(e))
             return 1
         except BadFilterError as e:
