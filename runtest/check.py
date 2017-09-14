@@ -140,11 +140,11 @@ def test_check():
     from .check import check
     from .filter_constructor import get_filter
 
-    HERE = os.path.abspath(os.path.dirname(__file__))
-
-    out_name = os.path.join(HERE, 'test', 'out.txt')
-    ref_name = os.path.join(HERE, 'test', 'ref.txt')
-    log_dir = os.path.join(HERE, 'test')
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, 'test', 'generic')
+    out_name = os.path.join(test_dir, 'out.txt')
+    ref_name = os.path.join(test_dir, 'ref.txt')
+    log_dir = test_dir
 
     filters = [get_filter(abs_tolerance=0.1)]
     check(filter_list=filters,
@@ -170,7 +170,7 @@ def test_check():
               log_dir=log_dir,
               verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
-    with open(os.path.join(HERE, 'test', 'out.txt.diff'), 'r') as f:
+    with open(os.path.join(test_dir, 'out.txt.diff'), 'r') as f:
         assert f.read() == '''
 .       1.0 2.0 3.0
 ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n'''
@@ -183,7 +183,7 @@ ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n'''
               log_dir=log_dir,
               verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
-    with open(os.path.join(HERE, 'test', 'out.txt.diff'), 'r') as f:
+    with open(os.path.join(test_dir, 'out.txt.diff'), 'r') as f:
         assert f.read() == '''
 .       1.0 2.0 3.0
 ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n'''
@@ -196,7 +196,7 @@ ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n'''
               log_dir=log_dir,
               verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
-    with open(os.path.join(HERE, 'test', 'out.txt.diff'), 'r') as f:
+    with open(os.path.join(test_dir, 'out.txt.diff'), 'r') as f:
         assert f.read() == '''
 .       1.0 2.0 3.0
 ERROR           ### expected: 3.05 (abs diff: 5.00e-02 ignoring signs)\n'''
@@ -209,11 +209,11 @@ def test_check_bad_filter():
     from .check import check
     from .filter_constructor import get_filter
 
-    HERE = os.path.abspath(os.path.dirname(__file__))
-
-    out_name = os.path.join(HERE, 'test', 'out.txt')
-    ref_name = os.path.join(HERE, 'test', 'ref.txt')
-    log_dir = os.path.join(HERE, 'test')
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, 'test', 'generic')
+    out_name = os.path.join(test_dir, 'out.txt')
+    ref_name = os.path.join(test_dir, 'ref.txt')
+    log_dir = test_dir
 
     filters = [get_filter(from_string='does not exist', num_lines=4)]
     with pytest.raises(BadFilterError) as e:
@@ -241,11 +241,11 @@ def test_check_different_length():
     from .check import check
     from .filter_constructor import get_filter
 
-    HERE = os.path.abspath(os.path.dirname(__file__))
-
-    out_name = os.path.join(HERE, 'test', 'out2.txt')
-    ref_name = os.path.join(HERE, 'test', 'ref.txt')
-    log_dir = os.path.join(HERE, 'test')
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, 'test', 'different_length')
+    out_name = os.path.join(test_dir, 'out.txt')
+    ref_name = os.path.join(test_dir, 'ref.txt')
+    log_dir = test_dir
 
     filters = [get_filter(abs_tolerance=0.1)]
     with pytest.raises(TestFailedError) as e:
@@ -255,7 +255,7 @@ def test_check_different_length():
               log_dir=log_dir,
               verbose=False)
     assert 'ERROR: test %s failed\n' % out_name in str(e.value)
-    with open(os.path.join(HERE, 'test', 'out2.txt.diff'), 'r') as f:
+    with open(os.path.join(test_dir, 'out.txt.diff'), 'r') as f:
         assert f.read() == '''ERROR: extracted sizes do not match
 own gave 4 numbers:
 1.0 2.0 3.0 4.0
@@ -290,11 +290,11 @@ def test_only_string():
     from .check import check
     from .filter_constructor import get_filter
 
-    HERE = os.path.abspath(os.path.dirname(__file__))
-
-    out_name = os.path.join(HERE, 'test', 'only_string_out.txt')
-    ref_name = os.path.join(HERE, 'test', 'only_string_ref.txt')
-    log_dir = os.path.join(HERE, 'test')
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, 'test', 'only_string')
+    out_name = os.path.join(test_dir, 'out.txt')
+    ref_name = os.path.join(test_dir, 'ref.txt')
+    log_dir = test_dir
 
     filters = [get_filter(string='raboof')]
     check(filter_list=filters,
