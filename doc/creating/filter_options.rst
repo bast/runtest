@@ -98,7 +98,7 @@ Instead of single string we can give a single regular expression (re).
 How to ignore sign
 ------------------
 
-Sometimes the sign does is not predictable. For this set ``ignore_sign=True``.
+Sometimes the sign is not predictable. For this set ``ignore_sign=True``.
 
 
 How to ignore the order of numbers
