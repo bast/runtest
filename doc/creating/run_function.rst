@@ -28,6 +28,7 @@ There are three more optional arguments to the ``run`` function which by default
 is set by the ``configure`` function (in other words by the code using runtest).
 
 ``filters`` is a dictionary of suffix and filter list pairs and contains
-filters to apply to the results.  If we omit to pass it, then the calculations
+filters to apply to the results. If we omit to pass it, then the calculations
 will be run but not verified. This is useful for multi-step jobs. See also the
-:ref:`example-test-script`.
+:ref:`example-test-script`. If the ``output_prefix`` in the ``configure`` function is set to None,
+then the filters are applied to the file names literally.

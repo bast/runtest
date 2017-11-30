@@ -12,6 +12,7 @@ you define a configure function which defines how to handle a list of input
 files and extra arguments.  This configure function also defines the launcher
 script or binary for your code, the full launch command, the output prefix, and
 relative reference path where reference outputs are stored.
+The output prefix can also be ``None``.
 
 Here is an example module ``runtest_config.py`` which defines such a function:
 

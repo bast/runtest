@@ -21,7 +21,6 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
         copy_path(caller_dir, options.work_dir)
 
     launcher, command, output_prefix, relative_reference_path = configure(options, input_files, extra_args)
-    _output_prefix = os.path.join(options.work_dir, output_prefix)
 
     launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
 
@@ -46,10 +45,14 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
 
-        with open('{0}.{1}'.format(_output_prefix, 'stdout'), 'w') as f:
+        if output_prefix is None:
+            _output_prefix = ''
+        else:
+            _output_prefix = os.path.join(options.work_dir, output_prefix) + '.'
+        with open('{0}{1}'.format(_output_prefix, 'stdout'), 'w') as f:
             f.write(stdout.decode('UTF-8'))
 
-        with open('{0}.{1}'.format(_output_prefix, 'stderr'), 'w') as f:
+        with open('{0}{1}'.format(_output_prefix, 'stderr'), 'w') as f:
             f.write(stderr.decode('UTF-8'))
 
         if process.returncode != 0:
@@ -69,7 +72,10 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
     else:
         try:
             for suffix in filters:
-                output = '{0}.{1}'.format(output_prefix, suffix)
+                if output_prefix is None:
+                    output = suffix
+                else:
+                    output = '{0}.{1}'.format(output_prefix, suffix)
                 check(filter_list=filters[suffix],
                       out_name=os.path.join(options.work_dir, output),
                       ref_name=os.path.join(options.work_dir, relative_reference_path, output),
