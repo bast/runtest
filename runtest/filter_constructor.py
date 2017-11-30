@@ -32,8 +32,8 @@ def get_filter(**kwargs):
         raise FilterKeywordError(error)
 
     # now continue with keywords
-    _filter.from_string = kwargs.get('from_string', '')
-    _filter.to_string = kwargs.get('to_string', '')
+    _filter.from_string = kwargs.get('from_string', None)
+    _filter.to_string = kwargs.get('to_string', None)
     _filter.ignore_sign = kwargs.get('ignore_sign', False)
     _filter.ignore_order = kwargs.get('ignore_order', False)
     _filter.skip_below = kwargs.get('skip_below', sys.float_info.min)

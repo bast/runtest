@@ -22,7 +22,11 @@ def cut_sections(text,
         if from_is_re:
             start_line_matches = re.match(r'.*{0}'.format(from_string), text[i])
         else:
-            start_line_matches = (from_string in text[i])
+            if from_string is None:
+                # we are comparing entire file
+                return text
+            else:
+                start_line_matches = (from_string in text[i])
 
         if start_line_matches:
             if num_lines > 0:
@@ -90,3 +94,16 @@ def test_cut_sections_re():
                        to_is_re=True)
 
     assert res == ['    raboof', '2.0', '2.0', '    raboof2']
+
+
+def test_cut_sections_all():
+
+    text = '''first line
+1.0 2.0 3.0
+1.0 2.0 3.0
+1.0 2.0 3.0
+last line'''
+
+    res = cut_sections(text=text.splitlines())
+
+    assert res == ['first line', '1.0 2.0 3.0', '1.0 2.0 3.0', '1.0 2.0 3.0', 'last line']
