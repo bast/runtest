@@ -1,4 +1,4 @@
 pytest
-pep8
+pycodestyle
 pytest-cov
 python-coveralls

@@ -9,7 +9,7 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - pep8 --ignore=E501 runtest
+  - pycodestyle --ignore=E501,E741 runtest
   - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]];
     then py.test -vv --cov runtest runtest/*.py;
     else py.test -vv               runtest/*.py;
