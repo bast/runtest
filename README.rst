@@ -8,6 +8,8 @@
    :target: http://runtest.readthedocs.io
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
    :target: ../master/LICENSE
+.. image:: https://zenodo.org/badge/20333876.svg
+   :target: https://zenodo.org/badge/latestdoi/20333876
 
 
 runtest
