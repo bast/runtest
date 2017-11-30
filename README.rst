@@ -21,6 +21,14 @@ Tested with Python 2.7 and 3.6.
    :alt: Xanathar
 
 
+Installation
+------------
+
+::
+
+  $ pip install runtest
+
+
 Documentation
 -------------
 
