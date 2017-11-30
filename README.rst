@@ -50,11 +50,9 @@ Citation
 --------
 
 If you use this tool in a program or publication, please acknowledge its
-author(s) by adding the following reference (please replace vX.Y.Z by
-the appropriate version):
+author(s) by adding the following reference:
 
--  Radovan Bast, runtest vX.Y.Z, 2017, GitHub repository,
-   https://github.com/bast/runtest.
+- Runtest 2.0.0, November 2017, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1069005.
 
 
 Projects using runtest
