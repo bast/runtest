@@ -42,11 +42,12 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
                                    cwd=options.work_dir,
                                    stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
+                                   stderr=subprocess.PIPE,
+                                   universal_newlines=True)
         stdout, stderr = process.communicate()
 
         if output_prefix is None:
-            _output_prefix = ''
+            _output_prefix = os.path.join(options.work_dir, '')
         else:
             _output_prefix = os.path.join(options.work_dir, output_prefix) + '.'
         with open('{0}{1}'.format(_output_prefix, 'stdout'), 'w') as f:
