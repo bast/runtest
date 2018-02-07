@@ -104,7 +104,8 @@ Sometimes the sign is not predictable. For this set ``ignore_sign=True``.
 How to ignore the order of numbers
 ----------------------------------
 
-Setting ``ignore_order=True`` will sort the numbers before comparing them.
+Setting ``ignore_order=True`` will sort the numbers (as they appear consecutively
+between anchors, one after another) before comparing them.
 This is useful for tests where some numbers can change place.
 
 
