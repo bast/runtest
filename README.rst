@@ -61,7 +61,6 @@ Projects using runtest
 -  `DIRAC <http://diracprogram.org>`__
 -  `Dalton <http://daltonprogram.org>`__ and
    `LSDalton <http://daltonprogram.org>`__
--  `GPUnCH <http://gpunch.org>`__
 -  `GIMIC <https://github.com/qmcurrents/gimic>`__
 -  `OpenRSP <http://openrsp.org>`__
 
