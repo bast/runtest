@@ -51,10 +51,18 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
         else:
             _output_prefix = os.path.join(options.work_dir, output_prefix) + '.'
         with open('{0}{1}'.format(_output_prefix, 'stdout'), 'w') as f:
-            f.write(stdout.decode('UTF-8'))
+            try:
+                _s = stdout.decode('UTF-8')
+            except AttributeError:
+                _s = stdout
+            f.write(_s)
 
         with open('{0}{1}'.format(_output_prefix, 'stderr'), 'w') as f:
-            f.write(stderr.decode('UTF-8'))
+            try:
+                _s = stderr.decode('UTF-8')
+            except AttributeError:
+                _s = stderr
+            f.write(_s)
 
         if process.returncode != 0:
             sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
