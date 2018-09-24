@@ -22,6 +22,9 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
 
     launcher, command, output_prefix, relative_reference_path = configure(options, input_files, extra_args)
 
+    if options.launch_agent is not None:
+        command = '{0} {1}'.format(options.launch_agent, command)
+
     launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
 
     if not options.skip_run and not os.path.exists(launch_script_path):
