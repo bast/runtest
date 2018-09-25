@@ -17,12 +17,17 @@ def cli():
                       '-b',
                       action='store',
                       default=caller_dir,
-                      help='directory containing the binary/launcher [default: %default]')
+                      help='directory containing the binary/runscript [default: %default]')
     parser.add_option('--work-dir',
                       '-w',
                       action='store',
                       default=caller_dir,
                       help='working directory [default: %default]')
+    parser.add_option('--launch-agent',
+                      '-l',
+                      action='store',
+                      default=None,
+                      help='prepend a launch agent command (e.g. "mpirun -np 8" or "valgrind --leak-check=yes") [default: %default]')
     parser.add_option('--verbose',
                       '-v',
                       action='store_true',

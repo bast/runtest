@@ -24,6 +24,14 @@ Working directory where all generated files will be written to.
 By default it is the directory of the test script which is executed.
 
 
+-l LAUNCH_AGENT, --launch-agent=LAUNCH_AGENT
+--------------------------------------------
+
+Prepend a launch agent command (e.g. "mpirun -np 8" or
+"valgrind --leak-check=yes").
+By default no launch agent is prepended.
+
+
 -v, --verbose
 -------------
 
