@@ -8,8 +8,8 @@
    :target: http://runtest.readthedocs.io
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
    :target: ../master/LICENSE
-.. image:: https://zenodo.org/badge/20333876.svg
-   :target: https://zenodo.org/badge/latestdoi/20333876
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1069004.svg
+   :target: https://doi.org/10.5281/zenodo.1069004
 
 
 runtest
@@ -52,7 +52,7 @@ Citation
 If you use this tool in a program or publication, please acknowledge its
 author(s) by adding the following reference:
 
-- Runtest 2.1.0, November 2017, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1069085.
+- Runtest 2.2.0, September 2018, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1069004.
 
 
 Projects using runtest
