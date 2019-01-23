@@ -1,4 +1,4 @@
 pytest
 pycodestyle
-pytest-cov
+pytest-cov<2.6.0
 python-coveralls
