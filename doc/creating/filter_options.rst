@@ -92,7 +92,24 @@ This example will compare all lines which contain 'Electronic energy':
   get_filter(string='Electronic energy',
              abs_tolerance=1.0e-10)
 
+This will match the string in a *case-sensitive* fashion.
+
 Instead of single string we can give a single regular expression (re).
+
+.. code-block:: python
+
+  get_filter(re='Electronic energy',
+             abs_tolerance=1.0e-10)
+
+Regexes follow the `Python syntax <https://docs.python.org/3/library/re.html#regular-expression-syntax>`_.
+For example, to match in a *case-insensitive* fashion:
+
+.. code-block:: python
+
+  get_filter(re=r'(?i)Electronic energy',
+             abs_tolerance=1.0e-10)
+
+It is not possible to use Python regex objects directly.
 
 
 How to ignore sign
