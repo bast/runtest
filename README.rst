@@ -63,6 +63,7 @@ Projects using runtest
    `LSDalton <http://daltonprogram.org>`__
 -  `GIMIC <https://github.com/qmcurrents/gimic>`__
 -  `OpenRSP <http://openrsp.org>`__
+-  `MRChem <https://mrchem.readthedocs.io/en/latest/>`__
 
 If you use runtest, please add a link to your project via a pull
 request.
