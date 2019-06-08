@@ -18,7 +18,7 @@ with open(os.path.join(_here, 'runtest', 'version.py')) as f:
 setup(
     name='runtest',
     version=version['__version__'],
-    description=('Numerically tolerant end-to-end test library for scientific codes.'),
+    description=('Numerically tolerant end-to-end test library for research software.'),
     long_description=long_description,
     author='Radovan Bast',
     author_email='radovan.bast@uit.no',

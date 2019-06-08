@@ -3,7 +3,7 @@
 runtest
 =======
 
-Numerically tolerant end-to-end test library for scientific codes.
+Numerically tolerant end-to-end test library for research software.
 
 This documents the latest code on the ``master`` branch.
 The ``release-1.3.z`` code is documented here: http://runtest.readthedocs.io/en/release-1.3.z/.
