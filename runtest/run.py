@@ -67,15 +67,20 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
                 _s = stderr
             f.write(_s)
 
-        if process.returncode != 0:
-            sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
-            return 1
+        found_accepted_errors = False
+        if accepted_errors is not None:
+            for error in accepted_errors:
+                if error in stderr:
+                    # we found an error that we expect/accept
+                    sys.stdout.write('found error which is expected/accepted: {0}\n'.format(error))
+                    found_accepted_errors = True
 
-    if accepted_errors is not None:
-        for error in accepted_errors:
-            if error in stderr:
-                # we found an error that we expect/accept
-                sys.stdout.write('found error which is expected/accepted: {0}\n'.format(error))
+        if process.returncode != 0:
+            if found_accepted_errors:
+                return 0
+            else:
+                sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
+                return 1
 
     if filters is None:
         sys.stdout.write('finished (no reference)\n')
