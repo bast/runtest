@@ -1,7 +1,5 @@
-.. image:: https://travis-ci.org/bast/runtest.svg?branch=master
-   :target: https://travis-ci.org/bast/runtest/builds
-.. image:: https://ci.appveyor.com/api/projects/status/github/bast/runtest?branch=master&svg=true
-   :target: https://ci.appveyor.com/project/bast/runtest/history
+.. image:: https://github.com/bast/runtest/workflows/Test/badge.svg
+   :target: https://github.com/bast/runtest/actions
 .. image:: https://coveralls.io/repos/bast/runtest/badge.png?branch=master
    :target: https://coveralls.io/r/bast/runtest?branch=master
 .. image:: https://readthedocs.org/projects/runtest/badge/?version=latest
