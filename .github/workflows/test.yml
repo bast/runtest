@@ -26,7 +26,7 @@ jobs:
       run: pip install -r requirements.txt
     - name: Run tests
       run: |
-        pytest --vv runtest/check.py
-        pytest --vv runtest/extract.py
-        pytest --vv runtest/scissors.py
-        pytest --vv runtest/tuple_comparison.py
+        pytest -v runtest/check.py
+        pytest -v runtest/extract.py
+        pytest -v runtest/scissors.py
+        pytest -v runtest/tuple_comparison.py
