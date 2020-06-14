@@ -25,4 +25,8 @@ jobs:
     - name: Install Python dependencies
       run: pip install -r requirements.txt
     - name: Run tests
-      run: pytest -vv runtest/*.py
+      run: |
+        pytest --vv runtest/check.py
+        pytest --vv runtest/extract.py
+        pytest --vv runtest/scissors.py
+        pytest --vv runtest/tuple_comparison.py
