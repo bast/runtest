@@ -1,4 +1,5 @@
 pytest
 black
+coverage==4.5.4
 pytest-cov<2.6.0
 python-coveralls
