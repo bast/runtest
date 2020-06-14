@@ -50,7 +50,7 @@ Citation
 If you use this tool in a program or publication, please acknowledge its
 author(s) by adding the following reference:
 
-- Runtest 2.2.0, September 2018, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1069004.
+- Runtest 2.2.1, June 2020, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.1069004.
 
 
 Projects using runtest
