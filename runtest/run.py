@@ -1,4 +1,6 @@
-def run(options, configure, input_files, extra_args=None, filters=None, accepted_errors=None):
+def run(
+    options, configure, input_files, extra_args=None, filters=None, accepted_errors=None
+):
 
     import os
     import sys
@@ -20,49 +22,61 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
     if options.work_dir != caller_dir:
         copy_path(caller_dir, options.work_dir)
 
-    launcher, command, output_prefix, relative_reference_path = configure(options, input_files, extra_args)
+    launcher, command, output_prefix, relative_reference_path = configure(
+        options, input_files, extra_args
+    )
 
     if options.launch_agent is not None:
-        command = '{0} {1}'.format(options.launch_agent, command)
+        command = "{0} {1}".format(options.launch_agent, command)
 
     launch_script_path = os.path.normpath(os.path.join(options.binary_dir, launcher))
 
     if not options.skip_run and not os.path.exists(launch_script_path):
-        sys.stderr.write('ERROR: launch script/binary {0} not found in {1}\n'.format(launcher, options.binary_dir))
-        sys.stderr.write('       have you set the correct --binary-dir (or -b)?\n')
-        sys.stderr.write('       try also --help\n')
+        sys.stderr.write(
+            "ERROR: launch script/binary {0} not found in {1}\n".format(
+                launcher, options.binary_dir
+            )
+        )
+        sys.stderr.write("       have you set the correct --binary-dir (or -b)?\n")
+        sys.stderr.write("       try also --help\n")
         sys.exit(-1)
 
-    sys.stdout.write('\nrunning test with input files {0} and args {1}\n'.format(input_files, extra_args))
+    sys.stdout.write(
+        "\nrunning test with input files {0} and args {1}\n".format(
+            input_files, extra_args
+        )
+    )
 
     if options.skip_run:
-        sys.stdout.write('(skipped run with -s|--skip-run)\n')
+        sys.stdout.write("(skipped run with -s|--skip-run)\n")
     else:
         if sys.platform != "win32":
             command = shlex.split(command)
 
-        process = subprocess.Popen(command,
-                                   cwd=options.work_dir,
-                                   stdin=subprocess.PIPE,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE,
-                                   universal_newlines=True)
+        process = subprocess.Popen(
+            command,
+            cwd=options.work_dir,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+        )
         stdout, stderr = process.communicate()
 
         if output_prefix is None:
-            _output_prefix = os.path.join(options.work_dir, '')
+            _output_prefix = os.path.join(options.work_dir, "")
         else:
-            _output_prefix = os.path.join(options.work_dir, output_prefix) + '.'
-        with open('{0}{1}'.format(_output_prefix, 'stdout'), 'w') as f:
+            _output_prefix = os.path.join(options.work_dir, output_prefix) + "."
+        with open("{0}{1}".format(_output_prefix, "stdout"), "w") as f:
             try:
-                _s = stdout.decode('UTF-8')
+                _s = stdout.decode("UTF-8")
             except AttributeError:
                 _s = stdout
             f.write(_s)
 
-        with open('{0}{1}'.format(_output_prefix, 'stderr'), 'w') as f:
+        with open("{0}{1}".format(_output_prefix, "stderr"), "w") as f:
             try:
-                _s = stderr.decode('UTF-8')
+                _s = stderr.decode("UTF-8")
             except AttributeError:
                 _s = stderr
             f.write(_s)
@@ -72,35 +86,41 @@ def run(options, configure, input_files, extra_args=None, filters=None, accepted
             for error in accepted_errors:
                 if error in stderr:
                     # we found an error that we expect/accept
-                    sys.stdout.write('found error which is expected/accepted: {0}\n'.format(error))
+                    sys.stdout.write(
+                        "found error which is expected/accepted: {0}\n".format(error)
+                    )
                     found_accepted_errors = True
 
         if process.returncode != 0:
             if found_accepted_errors:
                 return 0
             else:
-                sys.stdout.write('ERROR: crash during {0}\n{1}'.format(command, stderr))
+                sys.stdout.write("ERROR: crash during {0}\n{1}".format(command, stderr))
                 return 1
 
     if filters is None:
-        sys.stdout.write('finished (no reference)\n')
+        sys.stdout.write("finished (no reference)\n")
     elif options.no_verification:
-        sys.stdout.write('finished (verification skipped)\n')
+        sys.stdout.write("finished (verification skipped)\n")
     else:
         try:
             for suffix in filters:
                 if output_prefix is None:
                     output = suffix
                 else:
-                    output = '{0}.{1}'.format(output_prefix, suffix)
-                check(filter_list=filters[suffix],
-                      out_name=os.path.join(options.work_dir, output),
-                      ref_name=os.path.join(options.work_dir, relative_reference_path, output),
-                      log_dir=options.work_dir,
-                      verbose=options.verbose)
-            sys.stdout.write('passed\n')
+                    output = "{0}.{1}".format(output_prefix, suffix)
+                check(
+                    filter_list=filters[suffix],
+                    out_name=os.path.join(options.work_dir, output),
+                    ref_name=os.path.join(
+                        options.work_dir, relative_reference_path, output
+                    ),
+                    log_dir=options.work_dir,
+                    verbose=options.verbose,
+                )
+            sys.stdout.write("passed\n")
         except IOError as e:
-            sys.stderr.write('ERROR: could not open file {0}\n'.format(e.filename))
+            sys.stderr.write("ERROR: could not open file {0}\n".format(e.filename))
             sys.exit(1)
         except FailedTestError as e:
             sys.stderr.write(str(e))

@@ -19,9 +19,9 @@ def extract_numbers(text, mask=None):
     (?: [EeDd] [+-]? \d+ ) ?
     """
 
-    pattern_int = re.compile('^-?[0-9]+$', re.VERBOSE)
+    pattern_int = re.compile("^-?[0-9]+$", re.VERBOSE)
     pattern_float = re.compile(numeric_const_pattern, re.VERBOSE)
-    pattern_d = re.compile(r'[dD]')
+    pattern_d = re.compile(r"[dD]")
 
     numbers = []
     locations = []
@@ -31,19 +31,19 @@ def extract_numbers(text, mask=None):
         for w in line.split():
             # do not consider words like TzB1g
             # otherwise we would extract 1 later
-            if re.match(r'^[0-9\.eEdD\+\-]*$', w):
+            if re.match(r"^[0-9\.eEdD\+\-]*$", w):
                 i += 1
                 if mask is not None:
                     if i not in mask:
                         continue
                 is_integer = False
                 if len(pattern_float.findall(w)) > 0:
-                    is_integer = (pattern_float.findall(w) == pattern_int.findall(w))
+                    is_integer = pattern_float.findall(w) == pattern_int.findall(w)
                 # apply floating point regex
                 for m in pattern_float.findall(w):
                     index = line.index(m)
                     # substitute dD by e
-                    m = pattern_d.sub('e', m)
+                    m = pattern_d.sub("e", m)
                     if is_integer:
                         numbers.append(int(m))
                     else:
@@ -55,7 +55,7 @@ def extract_numbers(text, mask=None):
 
 def test_extract_numbers():
 
-    text = '''<<A( 3),B( 3)>> - linear response function (real):
+    text = """<<A( 3),B( 3)>> - linear response function (real):
 -----------------------------------------------------------------------------------------------
    A - Z-Dipole length      B1u  T+
    B - Z-Dipole length      B1u  T+
@@ -89,21 +89,60 @@ def test_extract_numbers():
 @   zz            0.28175212 angstrom**3
 
 @   average       0.28175212 angstrom**3
-@   anisotropy    0.000      angstrom**3'''
+@   anisotropy    0.000      angstrom**3"""
 
     numbers, locations = extract_numbers(text.splitlines())
 
-    assert numbers == [0.0, -1.901357604797, 3.04e-07, 1, 0.14818471, 1.9013576, 1.9013576, 1.9013576, 1.9013576, 0.0, 0.28175212, 0.28175212, 0.28175212, 0.28175212, 0.0]
-    assert locations == [(7, 2, 10), (7, 20, 15), (7, 63, 8), (17, 1, 1), (17, 11, 10), (22, 18, 10), (23, 18, 10), (24, 18, 10), (26, 18, 10), (27, 18, 5), (29, 18, 10), (30, 18, 10), (31, 18, 10), (33, 18, 10), (34, 18, 5)]
+    assert numbers == [
+        0.0,
+        -1.901357604797,
+        3.04e-07,
+        1,
+        0.14818471,
+        1.9013576,
+        1.9013576,
+        1.9013576,
+        1.9013576,
+        0.0,
+        0.28175212,
+        0.28175212,
+        0.28175212,
+        0.28175212,
+        0.0,
+    ]
+    assert locations == [
+        (7, 2, 10),
+        (7, 20, 15),
+        (7, 63, 8),
+        (17, 1, 1),
+        (17, 11, 10),
+        (22, 18, 10),
+        (23, 18, 10),
+        (24, 18, 10),
+        (26, 18, 10),
+        (27, 18, 5),
+        (29, 18, 10),
+        (30, 18, 10),
+        (31, 18, 10),
+        (33, 18, 10),
+        (34, 18, 5),
+    ]
 
 
 def test_extract_numbers_mask():
 
-    text = '''1.0 2.0 3.0 4.0
+    text = """1.0 2.0 3.0 4.0
 1.0 2.0 3.0 4.0
-1.0 2.0 3.0 4.0'''
+1.0 2.0 3.0 4.0"""
 
     numbers, locations = extract_numbers(text.splitlines(), mask=[1, 4])
 
     assert numbers == [1.0, 4.0, 1.0, 4.0, 1.0, 4.0]
-    assert locations == [(0, 0, 3), (0, 12, 3), (1, 0, 3), (1, 12, 3), (2, 0, 3), (2, 12, 3)]
+    assert locations == [
+        (0, 0, 3),
+        (0, 12, 3),
+        (1, 0, 3),
+        (1, 12, 3),
+        (2, 0, 3),
+        (2, 12, 3),
+    ]
