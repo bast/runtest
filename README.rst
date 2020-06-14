@@ -15,7 +15,7 @@ runtest
 
 Numerically tolerant end-to-end test library for research software.
 
-Tested with Python 2.7 and 3.6.
+Tested with Python 3.6, 3.7, 3.8.
 
 .. figure:: https://github.com/bast/runtest/raw/master/img/xanathar.jpg
    :alt: Xanathar
