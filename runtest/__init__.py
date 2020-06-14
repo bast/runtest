@@ -1,3 +1,7 @@
+"""
+runtest: Numerically tolerant end-to-end test library for research software.
+"""
+
 from .filter_constructor import get_filter
 from .run import run
 from .version import version_info, __version__

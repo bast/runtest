@@ -1,0 +1,11 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "runtest"
+author = "Radovan Bast"
+author-email = "radovan.bast@uit.no"
+home-page = "https://github.com/bast/runtest"
+description-file="README.rst"
+classifiers = ["License :: MPL-2.0"]
