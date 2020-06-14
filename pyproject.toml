@@ -8,4 +8,4 @@ author = "Radovan Bast"
 author-email = "radovan.bast@uit.no"
 home-page = "https://github.com/bast/runtest"
 description-file="README.rst"
-classifiers = ["License :: MPL-2.0"]
+classifiers = ["License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"]
