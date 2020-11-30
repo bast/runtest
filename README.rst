@@ -63,6 +63,7 @@ Projects using runtest
 -  `OpenRSP <http://openrsp.org>`__
 -  `MRChem <https://mrchem.readthedocs.io/en/latest/>`__
 -  GRASP (General-purpose Relativistic Atomic Structure Program)
+-  `eT <https://etprogram.org>`__
 
 If you use runtest, please add a link to your project via a pull
 request.
