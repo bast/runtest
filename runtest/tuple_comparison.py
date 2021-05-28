@@ -20,11 +20,6 @@ def tuple_matches(
 
     x, x_ref = t
 
-    # if ignore sign take absolute values
-    if ignore_sign:
-        x = abs(x)
-        x_ref = abs(x_ref)
-
     if isinstance(x, int) and isinstance(x_ref, int):
         if x == x_ref:
             return (True, None)
@@ -78,7 +73,4 @@ def test_tuple_matches():
         False,
         "expected: -10.0 (abs diff: 2.00e+01)",
     )
-    assert tuple_matches(
-        (10.0 + 1.0e-9, -10.0), error_definition="absolute", ignore_sign=True
-    ) == (True, None)
     assert tuple_matches((13, 14)) == (False, "expected: 14")

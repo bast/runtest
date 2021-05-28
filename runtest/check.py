@@ -103,6 +103,10 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
                             "ERROR: mask %s did not extract any numbers\n" % f.mask
                         )
 
+                    if f.ignore_sign:
+                        out_numbers = list(map(abs, out_numbers))
+                        ref_numbers = list(map(abs, ref_numbers))
+
                     if f.ignore_order:
                         out_numbers = sorted(out_numbers)
                         ref_numbers = sorted(ref_numbers)
@@ -363,6 +367,40 @@ def test_check_ignore_order():
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
 
     filters = [get_filter(abs_tolerance=0.1, ignore_order=True)]
+    check(
+        filter_list=filters,
+        out_name=out_name,
+        ref_name=ref_name,
+        log_dir=log_dir,
+        verbose=False,
+    )
+
+
+def test_check_ignore_order_and_sign():
+    import os
+    import pytest
+    from .exceptions import FailedTestError
+    from .check import check
+    from .filter_constructor import get_filter
+
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, "test", "ignore_order_and_sign")
+    out_name = os.path.join(test_dir, "out.txt")
+    ref_name = os.path.join(test_dir, "ref.txt")
+    log_dir = test_dir
+
+    filters = [get_filter(abs_tolerance=0.1)]
+    with pytest.raises(FailedTestError) as e:
+        check(
+            filter_list=filters,
+            out_name=out_name,
+            ref_name=ref_name,
+            log_dir=log_dir,
+            verbose=False,
+        )
+    assert "ERROR: test %s failed\n" % out_name in str(e.value)
+
+    filters = [get_filter(abs_tolerance=0.1, ignore_order=True, ignore_sign=True)]
     check(
         filter_list=filters,
         out_name=out_name,
