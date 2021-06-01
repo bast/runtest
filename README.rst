@@ -8,6 +8,8 @@
    :target: LICENSE
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1069004.svg
    :target: https://doi.org/10.5281/zenodo.1069004
+.. image:: https://badge.fury.io/py/runtest.svg
+   :target: https://badge.fury.io/py/runtest
 
 
 runtest
