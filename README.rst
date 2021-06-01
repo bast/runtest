@@ -48,9 +48,18 @@ Citation
 --------
 
 If you use this tool in a program or publication, please acknowledge its
-author(s) by adding the following reference:
+author(s) by adding the following reference::
 
-- Runtest 2.2.1, June 2020, Radovan Bast, UiT The Arctic University of Norway, Norway, https://doi.org/10.5281/zenodo.3893712.
+  @misc{runtest,
+    author    = {Bast, Radovan},
+    title     = {runtest: Numerically tolerant end-to-end test library for research software},
+    month     = {6},
+    year      = {2020},
+    publisher = {Zenodo},
+    version   = {v2.2.1},
+    doi       = {10.5281/zenodo.3893712},
+    url       = {https://doi.org/10.5281/zenodo.3893712}
+  }
 
 
 Projects using runtest

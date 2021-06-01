@@ -1,0 +1,11 @@
+{
+    "creators": [
+        {
+            "name": "Bast, Radovan"
+        }
+    ],
+    "license": {
+        "id": "MPL-2.0"
+    },
+    "title": "runtest: Numerically tolerant end-to-end test library for research software"
+}
