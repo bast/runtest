@@ -5,7 +5,7 @@ runtest
 
 Numerically tolerant end-to-end test library for research software.
 
-This documents the latest code on the ``master`` branch.
+This documents the latest code on the ``main`` branch.
 The ``release-1.3.z`` code is documented here: http://runtest.readthedocs.io/en/release-1.3.z/.
 
 

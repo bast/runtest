@@ -1,11 +1,11 @@
 .. image:: https://github.com/bast/runtest/workflows/Test/badge.svg
    :target: https://github.com/bast/runtest/actions
-.. image:: https://coveralls.io/repos/bast/runtest/badge.png?branch=master
-   :target: https://coveralls.io/r/bast/runtest?branch=master
+.. image:: https://coveralls.io/repos/bast/runtest/badge.png?branch=main
+   :target: https://coveralls.io/r/bast/runtest?branch=main
 .. image:: https://readthedocs.org/projects/runtest/badge/?version=latest
    :target: http://runtest.readthedocs.io
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
-   :target: ../master/LICENSE
+   :target: LICENSE
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3893712.svg
    :target: https://doi.org/10.5281/zenodo.3893712
 
@@ -17,7 +17,7 @@ Numerically tolerant end-to-end test library for research software.
 
 Tested with Python 3.6, 3.7, 3.8, 3.9.
 
-.. figure:: https://github.com/bast/runtest/raw/master/img/xanathar.jpg
+.. figure:: https://github.com/bast/runtest/raw/main/img/xanathar.jpg
    :alt: Xanathar
 
 
@@ -32,7 +32,7 @@ Installation
 Documentation
 -------------
 
--  `Latest code <http://runtest.readthedocs.io/en/latest/>`__ (master
+-  `Latest code <http://runtest.readthedocs.io/en/latest/>`__ (main
    branch)
 
 
