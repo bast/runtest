@@ -6,8 +6,8 @@
    :target: http://runtest.readthedocs.io
 .. image:: https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg
    :target: LICENSE
-.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3893712.svg
-   :target: https://doi.org/10.5281/zenodo.3893712
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1069004.svg
+   :target: https://doi.org/10.5281/zenodo.1069004
 
 
 runtest
@@ -47,19 +47,7 @@ Past versions
 Citation
 --------
 
-If you use this tool in a program or publication, please acknowledge its
-author(s) by adding the following reference::
-
-  @misc{runtest,
-    author    = {Bast, Radovan},
-    title     = {runtest: Numerically tolerant end-to-end test library for research software},
-    month     = {6},
-    year      = {2020},
-    publisher = {Zenodo},
-    version   = {v2.2.1},
-    doi       = {10.5281/zenodo.3893712},
-    url       = {https://doi.org/10.5281/zenodo.3893712}
-  }
+For a recommended citation, please check the at the bottom-right of https://zenodo.org/record/3893712.
 
 
 Projects using runtest
