@@ -16,6 +16,9 @@ def tuple_matches(
         (tuple matches, error message) - error message is None if there is no error
     """
 
+    if isinstance(tolerance, int) and error_definition == "relative":
+        return (False, "relative tolerance cannot be integer")
+
     assert error_definition in ["relative", "absolute"]
 
     x, x_ref = t
@@ -56,6 +59,10 @@ def test_tuple_matches():
     assert tuple_matches((13, 13), tolerance=1.0e-10, error_definition="relative") == (
         True,
         None,
+    )
+    assert tuple_matches((13, 13), tolerance=1, error_definition="relative") == (
+        False,
+        "relative tolerance cannot be integer",
     )
     assert tuple_matches((13, 14), tolerance=1, error_definition="absolute") == (
         True,
