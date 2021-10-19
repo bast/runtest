@@ -469,3 +469,51 @@ def test_only_string():
         % out_name
         in str(e.value)
     )
+
+
+def test_check_integers():
+    import os
+    import pytest
+    from .exceptions import FailedTestError
+    from .check import check
+    from .filter_constructor import get_filter
+
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, "test", "integers")
+    out_name = os.path.join(test_dir, "out.txt")
+    ref_name = os.path.join(test_dir, "ref.txt")
+    log_dir = test_dir
+
+    # both integer and float input should work here
+    check(
+        filter_list=[get_filter(abs_tolerance=2)],
+        out_name=out_name,
+        ref_name=ref_name,
+        log_dir=log_dir,
+        verbose=False,
+    )
+    check(
+        filter_list=[get_filter(abs_tolerance=2.0)],
+        out_name=out_name,
+        ref_name=ref_name,
+        log_dir=log_dir,
+        verbose=False,
+    )
+
+    with pytest.raises(FailedTestError) as e:
+        check(
+            filter_list=[get_filter(abs_tolerance=1)],
+            out_name=out_name,
+            ref_name=ref_name,
+            log_dir=log_dir,
+            verbose=False,
+        )
+    assert "ERROR: test %s failed\n" % out_name in str(e.value)
+
+    check(
+        filter_list=[get_filter(rel_tolerance=1.0)],
+        out_name=out_name,
+        ref_name=ref_name,
+        log_dir=log_dir,
+        verbose=False,
+    )
