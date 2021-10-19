@@ -20,12 +20,6 @@ def tuple_matches(
 
     x, x_ref = t
 
-    if isinstance(x, int) and isinstance(x_ref, int):
-        if x == x_ref:
-            return (True, None)
-        else:
-            return (False, "expected: {0}".format(x_ref))
-
     if abs(x_ref) < skip_below:
         return (True, None)
 
@@ -39,9 +33,14 @@ def tuple_matches(
     if abs(error) <= tolerance:
         return (True, None)
     else:
-        error_message = "expected: {0} ({1} diff: {2:6.2e}".format(
-            x_ref, error_definition[:3], abs(error)
-        )
+        if isinstance(error, int):
+            error_message = "expected: {0} ({1} diff: {2:d}".format(
+                x_ref, error_definition[:3], abs(error)
+            )
+        else:
+            error_message = "expected: {0} ({1} diff: {2:6.2e}".format(
+                x_ref, error_definition[:3], abs(error)
+            )
         if ignore_sign:
             error_message += " ignoring signs"
         error_message += ")"
@@ -50,6 +49,18 @@ def tuple_matches(
 
 def test_tuple_matches():
     assert tuple_matches((13, 13)) == (True, None)
+    assert tuple_matches((13, 13), tolerance=1.0e-10, error_definition="absolute") == (
+        True,
+        None,
+    )
+    assert tuple_matches((13, 13), tolerance=1.0e-10, error_definition="relative") == (
+        True,
+        None,
+    )
+    assert tuple_matches((13, 14), tolerance=1, error_definition="absolute") == (
+        True,
+        None,
+    )
     assert tuple_matches((1.0 + 1.0e-9, 1.0)) == (True, None)
     assert tuple_matches((1.0 + 1.0e-9, 1.0), tolerance=1.0e-10) == (
         False,
@@ -73,4 +84,8 @@ def test_tuple_matches():
         False,
         "expected: -10.0 (abs diff: 2.00e+01)",
     )
-    assert tuple_matches((13, 14)) == (False, "expected: 14")
+    assert tuple_matches((17, 18)) == (False, "expected: 18 (rel diff: 5.56e-02)")
+    assert tuple_matches((17, 18), error_definition="absolute") == (
+        False,
+        "expected: 18 (abs diff: 1)",
+    )
