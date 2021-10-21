@@ -1,3 +1,6 @@
+import re
+
+
 def extract_numbers(text, mask=None):
     """
     Extracts floats and integers from string text.
@@ -6,8 +9,6 @@ def extract_numbers(text, mask=None):
         numbers - list of numbers
         locations - locations of each number as list of triples (line, start position, length)
     """
-    import re
-
     numeric_const_pattern = r"""
     [-+]? # optional sign
     (?:

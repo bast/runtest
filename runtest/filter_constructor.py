@@ -1,8 +1,10 @@
+import sys
+from collections import namedtuple
+from .exceptions import FilterKeywordError
+from .filter_api import recognized_kw, incompatible_pairs
+
+
 def get_filter(**kwargs):
-    import sys
-    from collections import namedtuple
-    from .exceptions import FilterKeywordError
-    from .filter_api import recognized_kw, incompatible_pairs
 
     _filter = namedtuple(
         "_filter",

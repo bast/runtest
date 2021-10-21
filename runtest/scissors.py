@@ -1,3 +1,6 @@
+import re
+
+
 def cut_sections(
     text,
     from_string=None,
@@ -12,8 +15,6 @@ def cut_sections(
     Returns:
         output - list of remaining lines
     """
-    import re
-
     output = []
 
     for i, _ in enumerate(text):

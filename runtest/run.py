@@ -1,16 +1,16 @@
+import os
+import sys
+import inspect
+import shlex
+import subprocess
+from .exceptions import FailedTestError, BadFilterError, FilterKeywordError
+from .copy import copy_path
+from .check import check
+
+
 def run(
     options, configure, input_files, extra_args=None, filters=None, accepted_errors=None
 ):
-
-    import os
-    import sys
-    import inspect
-    import shlex
-    import subprocess
-    from .exceptions import FailedTestError, BadFilterError, FilterKeywordError
-    from .copy import copy_path
-    from .check import check
-
     # here we find out where the test script sits
     frame = inspect.stack()[-1]
     module = inspect.getmodule(frame[0])

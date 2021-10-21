@@ -1,3 +1,13 @@
+from .exceptions import FilterKeywordError, FailedTestError, BadFilterError
+from .extract import extract_numbers
+from .filter_api import recognized_kw
+from .filter_constructor import get_filter
+from .scissors import cut_sections
+from .tuple_comparison import tuple_matches
+import os
+import pytest
+
+
 def check(filter_list, out_name, ref_name, log_dir, verbose=False):
     """
     Compares output with reference applying all filters tasks from the list of
@@ -21,11 +31,6 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
     Raises:
         - FailedTestError
     """
-    import os
-    from .tuple_comparison import tuple_matches
-    from .extract import extract_numbers
-    from .scissors import cut_sections
-    from .exceptions import FilterKeywordError, FailedTestError, BadFilterError
 
     def _tuple_matches(t):
         if f.tolerance_is_relative:
@@ -172,12 +177,6 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
 
 
 def test_check():
-    import os
-    import pytest
-    from .exceptions import FilterKeywordError, FailedTestError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "generic")
     out_name = os.path.join(test_dir, "out.txt")
@@ -263,12 +262,6 @@ ERROR           ### expected: 3.05 (abs diff: 5.00e-02 ignoring signs)\n"""
 
 
 def test_check_bad_filter():
-    import os
-    import pytest
-    from .exceptions import BadFilterError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "generic")
     out_name = os.path.join(test_dir, "out.txt")
@@ -307,12 +300,6 @@ def test_check_bad_filter():
 
 
 def test_check_different_length():
-    import os
-    import pytest
-    from .exceptions import FailedTestError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "different_length")
     out_name = os.path.join(test_dir, "out.txt")
@@ -343,12 +330,6 @@ reference gave 3 numbers:
 
 
 def test_check_ignore_order():
-    import os
-    import pytest
-    from .exceptions import FailedTestError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "ignore_order")
     out_name = os.path.join(test_dir, "out.txt")
@@ -377,12 +358,6 @@ def test_check_ignore_order():
 
 
 def test_check_ignore_order_and_sign():
-    import os
-    import pytest
-    from .exceptions import FailedTestError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "ignore_order_and_sign")
     out_name = os.path.join(test_dir, "out.txt")
@@ -411,12 +386,6 @@ def test_check_ignore_order_and_sign():
 
 
 def test_bad_keywords():
-    import os
-    import pytest
-    from .filter_api import recognized_kw
-    from .exceptions import FilterKeywordError
-    from .filter_constructor import get_filter
-
     with pytest.raises(FilterKeywordError) as e:
         _ = get_filter(raboof=0, foo=1)
     exception = """ERROR: keyword(s) (foo, raboof) not recognized
@@ -434,12 +403,6 @@ def test_bad_keywords():
 
 
 def test_only_string():
-    import os
-    import pytest
-    from .exceptions import BadFilterError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "only_string")
     out_name = os.path.join(test_dir, "out.txt")
@@ -472,12 +435,6 @@ def test_only_string():
 
 
 def test_check_integers():
-    import os
-    import pytest
-    from .exceptions import FailedTestError
-    from .check import check
-    from .filter_constructor import get_filter
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "integers")
     out_name = os.path.join(test_dir, "out.txt")

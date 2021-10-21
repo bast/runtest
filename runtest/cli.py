@@ -1,11 +1,11 @@
+from optparse import OptionParser
+import sys
+import os
+import inspect
+from .version import __version__
+
+
 def cli():
-
-    from optparse import OptionParser
-    import sys
-    import os
-    import inspect
-    from .version import __version__
-
     frame = inspect.stack()[-1]
     module = inspect.getmodule(frame[0])
     caller_file = module.__file__

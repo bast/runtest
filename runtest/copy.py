@@ -1,8 +1,8 @@
+from shutil import copy
+import os
+
+
 def copy_path(root_src_dir, root_dst_dir, exclude_files=[]):
-
-    from shutil import copy
-    import os
-
     for src_dir, dirs, files in os.walk(root_src_dir):
         dst_dir = src_dir.replace(root_src_dir, root_dst_dir)
         if not os.path.exists(dst_dir):
