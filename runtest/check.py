@@ -142,7 +142,7 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
                             log_diff.write("\n")
                             for k, line in enumerate(out_filtered):
                                 log_diff.write(".       %s" % line)
-                                for i, num in enumerate(out_numbers):
+                                for i, _ in enumerate(out_numbers):
                                     (line_num, start_char, length) = out_locations[i]
                                     if line_num == k:
                                         if errors[i]:

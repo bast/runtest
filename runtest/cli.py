@@ -60,6 +60,6 @@ def cli():
         help="run calculation(s) but do not verify results [default: %default]",
     )
 
-    (options, args) = parser.parse_args(args=sys.argv[1:])
+    (options, _args) = parser.parse_args(args=sys.argv[1:])
 
     return options
