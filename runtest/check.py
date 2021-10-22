@@ -176,14 +176,12 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
         raise FailedTestError(message)
 
 
-def test_check():
+def _test_setup(folder, filters):
     _here = os.path.abspath(os.path.dirname(__file__))
-    test_dir = os.path.join(_here, "test", "generic")
+    test_dir = os.path.join(_here, "test", folder)
     out_name = os.path.join(test_dir, "out.txt")
     ref_name = os.path.join(test_dir, "ref.txt")
     log_dir = test_dir
-
-    filters = [get_filter(abs_tolerance=0.1)]
     check(
         filter_list=filters,
         out_name=out_name,
@@ -192,29 +190,26 @@ def test_check():
         verbose=False,
     )
 
+
+def test_check():
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, "test", "generic")
+    out_name = os.path.join(test_dir, "out.txt")
+    ref_name = os.path.join(test_dir, "ref.txt")
+    log_dir = test_dir
+
+    _test_setup(folder="generic", filters=[get_filter(abs_tolerance=0.1)])
+
     filters = [get_filter()]
     with pytest.raises(FilterKeywordError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="generic", filters=[get_filter()])
     assert (
         "ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n"
         in str(e.value)
     )
 
-    filters = [get_filter(rel_tolerance=0.01)]
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="generic", filters=[get_filter(rel_tolerance=0.01)])
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
     with open(os.path.join(test_dir, "out.txt.diff"), "r") as f:
         assert (
@@ -224,15 +219,8 @@ def test_check():
 ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n"""
         )
 
-    filters = [get_filter(abs_tolerance=0.01)]
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="generic", filters=[get_filter(abs_tolerance=0.01)])
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
     with open(os.path.join(test_dir, "out.txt.diff"), "r") as f:
         assert (
@@ -242,14 +230,9 @@ ERROR           ### expected: 3.05 (rel diff: 1.64e-02)\n"""
 ERROR           ### expected: 3.05 (abs diff: 5.00e-02)\n"""
         )
 
-    filters = [get_filter(abs_tolerance=0.01, ignore_sign=True)]
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
+        _test_setup(
+            folder="generic", filters=[get_filter(abs_tolerance=0.01, ignore_sign=True)]
         )
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
     with open(os.path.join(test_dir, "out.txt.diff"), "r") as f:
@@ -265,17 +248,11 @@ def test_check_bad_filter():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "generic")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
-    filters = [get_filter(from_string="does not exist", num_lines=4)]
     with pytest.raises(BadFilterError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
+        _test_setup(
+            folder="generic",
+            filters=[get_filter(from_string="does not exist", num_lines=4)],
         )
     assert (
         'ERROR: filter [4 lines from "does not exist"] did not extract anything from file %s\n'
@@ -283,14 +260,10 @@ def test_check_bad_filter():
         in str(e.value)
     )
 
-    filters = [get_filter(from_string="does not exist", to_string="either")]
     with pytest.raises(BadFilterError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
+        _test_setup(
+            folder="generic",
+            filters=[get_filter(from_string="does not exist", to_string="either")],
         )
     assert (
         'ERROR: filter ["does not exist" ... "either"] did not extract anything from file %s\n'
@@ -303,18 +276,9 @@ def test_check_different_length():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "different_length")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
-    filters = [get_filter(abs_tolerance=0.1)]
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="different_length", filters=[get_filter(abs_tolerance=0.1)])
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
     with open(os.path.join(test_dir, "out.txt.diff"), "r") as f:
         assert (
@@ -333,27 +297,14 @@ def test_check_ignore_order():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "ignore_order")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
-    filters = [get_filter(abs_tolerance=0.1)]
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="ignore_order", filters=[get_filter(abs_tolerance=0.1)])
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
 
-    filters = [get_filter(abs_tolerance=0.1, ignore_order=True)]
-    check(
-        filter_list=filters,
-        out_name=out_name,
-        ref_name=ref_name,
-        log_dir=log_dir,
-        verbose=False,
+    _test_setup(
+        folder="ignore_order",
+        filters=[get_filter(abs_tolerance=0.1, ignore_order=True)],
     )
 
 
@@ -361,27 +312,16 @@ def test_check_ignore_order_and_sign():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "ignore_order_and_sign")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
-    filters = [get_filter(abs_tolerance=0.1)]
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
+        _test_setup(
+            folder="ignore_order_and_sign", filters=[get_filter(abs_tolerance=0.1)]
         )
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
 
-    filters = [get_filter(abs_tolerance=0.1, ignore_order=True, ignore_sign=True)]
-    check(
-        filter_list=filters,
-        out_name=out_name,
-        ref_name=ref_name,
-        log_dir=log_dir,
-        verbose=False,
+    _test_setup(
+        folder="ignore_order_and_sign",
+        filters=[get_filter(abs_tolerance=0.1, ignore_order=True, ignore_sign=True)],
     )
 
 
@@ -406,27 +346,11 @@ def test_only_string():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "only_string")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
-    filters = [get_filter(string="raboof")]
-    check(
-        filter_list=filters,
-        out_name=out_name,
-        ref_name=ref_name,
-        log_dir=log_dir,
-        verbose=False,
-    )
+    _test_setup(folder="only_string", filters=[get_filter(string="raboof")])
 
-    filters = [get_filter(string="foo")]
     with pytest.raises(BadFilterError) as e:
-        check(
-            filter_list=filters,
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="only_string", filters=[get_filter(string="foo")])
     assert (
         'ERROR: filter [1 lines from "foo"] did not extract anything from file %s\n'
         % out_name
@@ -438,39 +362,13 @@ def test_check_integers():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "integers")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
     # both integer and float input should work here
-    check(
-        filter_list=[get_filter(abs_tolerance=2)],
-        out_name=out_name,
-        ref_name=ref_name,
-        log_dir=log_dir,
-        verbose=False,
-    )
-    check(
-        filter_list=[get_filter(abs_tolerance=2.0)],
-        out_name=out_name,
-        ref_name=ref_name,
-        log_dir=log_dir,
-        verbose=False,
-    )
+    _test_setup(folder="integers", filters=[get_filter(abs_tolerance=2)])
+    _test_setup(folder="integers", filters=[get_filter(abs_tolerance=2.0)])
 
     with pytest.raises(FailedTestError) as e:
-        check(
-            filter_list=[get_filter(abs_tolerance=1)],
-            out_name=out_name,
-            ref_name=ref_name,
-            log_dir=log_dir,
-            verbose=False,
-        )
+        _test_setup(folder="integers", filters=[get_filter(abs_tolerance=1)])
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
 
-    check(
-        filter_list=[get_filter(rel_tolerance=1.0)],
-        out_name=out_name,
-        ref_name=ref_name,
-        log_dir=log_dir,
-        verbose=False,
-    )
+    _test_setup(folder="integers", filters=[get_filter(rel_tolerance=1.0)])
