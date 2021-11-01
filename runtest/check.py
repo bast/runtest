@@ -5,7 +5,6 @@ from .filter_constructor import get_filter
 from .scissors import cut_sections
 from .tuple_comparison import tuple_matches
 import os
-import pytest
 
 
 def check(filter_list, out_name, ref_name, log_dir, verbose=False):
@@ -177,6 +176,8 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
 
 
 def _test_setup(folder, filters):
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", folder)
     out_name = os.path.join(test_dir, "out.txt")
@@ -192,6 +193,8 @@ def _test_setup(folder, filters):
 
 
 def test_check():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "generic")
     out_name = os.path.join(test_dir, "out.txt")
@@ -245,6 +248,8 @@ ERROR           ### expected: 3.05 (abs diff: 5.00e-02 ignoring signs)\n"""
 
 
 def test_check_bad_filter():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "generic")
     out_name = os.path.join(test_dir, "out.txt")
@@ -273,6 +278,8 @@ def test_check_bad_filter():
 
 
 def test_check_different_length():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "different_length")
     out_name = os.path.join(test_dir, "out.txt")
@@ -294,6 +301,8 @@ reference gave 3 numbers:
 
 
 def test_check_ignore_order():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "ignore_order")
     out_name = os.path.join(test_dir, "out.txt")
@@ -309,6 +318,8 @@ def test_check_ignore_order():
 
 
 def test_check_ignore_order_and_sign():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "ignore_order_and_sign")
     out_name = os.path.join(test_dir, "out.txt")
@@ -326,6 +337,8 @@ def test_check_ignore_order_and_sign():
 
 
 def test_bad_keywords():
+    import pytest
+
     with pytest.raises(FilterKeywordError) as e:
         _ = get_filter(raboof=0, foo=1)
     exception = """ERROR: keyword(s) (foo, raboof) not recognized
@@ -343,6 +356,8 @@ def test_bad_keywords():
 
 
 def test_only_string():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "only_string")
     out_name = os.path.join(test_dir, "out.txt")
@@ -359,6 +374,8 @@ def test_only_string():
 
 
 def test_check_integers():
+    import pytest
+
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "integers")
     out_name = os.path.join(test_dir, "out.txt")
