@@ -176,8 +176,6 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
 
 
 def _test_setup(folder, filters):
-    import pytest
-
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", folder)
     out_name = os.path.join(test_dir, "out.txt")
