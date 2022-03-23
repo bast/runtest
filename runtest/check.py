@@ -62,6 +62,7 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
                         to_string=f.to_string,
                         to_is_re=f.to_is_re,
                         num_lines=f.num_lines,
+                        certain_occurrences=f.certain_occurrences,
                     )
                     if out_filtered == []:
                         if f.num_lines > 0:
@@ -88,6 +89,7 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
                         to_string=f.to_string,
                         to_is_re=f.to_is_re,
                         num_lines=f.num_lines,
+                        certain_occurrences=f.certain_occurrences,
                     )
                     if ref_filtered == []:
                         if f.num_lines > 0:

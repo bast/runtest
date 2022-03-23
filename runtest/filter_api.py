@@ -13,6 +13,7 @@ recognized_kw = [
     "num_lines",
     "rel_tolerance",
     "abs_tolerance",
+    "check_occurrences",
 ]
 
 incompatible_pairs = [

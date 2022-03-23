@@ -173,3 +173,20 @@ Example:
              mask=[1, 2, 3])
 
 Here we use only the first 3 floats in each line. Counting starts with 1.
+
+
+Extracting only certain occurrences
+----------------------------------
+
+The keyword ``check_occurrences`` is used to only extract some of the matching
+lines.
+
+Example:
+
+.. code-block:: python
+   get_filter(string='Electronic energy',
+              abs_tolerance=1.0e-10,
+              check_occurrences=[2,3])
+
+This example will extract only the second and third line which contain
+'Electronic energy'.

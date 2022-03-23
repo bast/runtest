@@ -22,6 +22,7 @@ def get_filter(**kwargs):
             "tolerance",
             "tolerance_is_relative",
             "tolerance_is_set",
+            "check_occurrences",
         ],
     )
 
@@ -64,6 +65,8 @@ def get_filter(**kwargs):
         _filter.tolerance_is_set = False
 
     _filter.mask = kwargs.get("mask", None)
+
+    _filter.certain_occurrences = kwargs.get("check_occurrences", None)
 
     _filter.from_is_re = False
     from_re = kwargs.get("from_re", "")
