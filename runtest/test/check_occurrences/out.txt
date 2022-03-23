@@ -1,0 +1,4 @@
+Excitation energy:    0.293268
+Excitation energy:    0.367474
+Excitation energy:    0.381243
+Excitation energy:    0.456861

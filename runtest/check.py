@@ -389,3 +389,23 @@ def test_check_integers():
     assert "ERROR: test %s failed\n" % out_name in str(e.value)
 
     _test_setup(folder="integers", filters=[get_filter(rel_tolerance=1.0)])
+
+
+def test_check_occurrences():
+    import pytest
+
+    _here = os.path.abspath(os.path.dirname(__file__))
+    test_dir = os.path.join(_here, "test", "check_occurrences")
+    out_name = os.path.join(test_dir, "out.txt")
+
+    _test_setup(folder="check_occurrences",
+                filters=[get_filter(string="Excitation energy",
+                                    abs_tolerance=1.0e-6,
+                                    check_occurrences=[2, 3])])
+
+    with pytest.raises(FailedTestError) as e:
+        _test_setup(folder="check_occurrences",
+                    filters=[get_filter(string="Excitation energy",
+                                        abs_tolerance=1.0e-6,
+                                        check_occurrences=[1, 4])])
+    assert "ERROR: test %s failed\n" % out_name in str(e.value)
