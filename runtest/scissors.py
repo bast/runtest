@@ -45,7 +45,7 @@ def cut_sections(
                     if end_line_matches:
                         for n in range(i, j + 1):
                             output.append(text[n])
-                        return output
+                        break
 
     return output
 
@@ -100,7 +100,7 @@ def test_cut_sections_re():
         to_is_re=True,
     )
 
-    assert res == ["    raboof", "2.0", "2.0", "    raboof2"]
+    assert res == ["    raboof", "2.0", "2.0", "    raboof2", "    raboof2"]
 
 
 def test_cut_sections_all():
@@ -119,4 +119,70 @@ last line"""
         "1.0 2.0 3.0",
         "1.0 2.0 3.0",
         "last line",
+    ]
+
+
+def test_cut_sections_from_string_to_string_2_matches():
+
+    text = """first line
+1.0 2.0 3.0
+start
+0.1234
+end
+start
+1.2345
+end
+1.0 2.0 3.0
+last line"""
+
+    res = cut_sections(
+        text=text.splitlines(),
+        from_string="start",
+        to_string="end",
+    )
+
+    assert res == [
+        "start",
+        "0.1234",
+        "end",
+        "start",
+        "1.2345",
+        "end",
+    ]
+
+
+def test_cut_sections_from_re_to_re_2_matches():
+
+    text = """first line
+1.0 2.0 3.0
+  raboof
+0.1234
+    raboof2
+   raboof
+1.2345
+0.2
+  raboof2
+1.0 2.0 3.0
+last line"""
+
+    res = cut_sections(
+        text=text.splitlines(),
+        from_string="r.*f",
+        from_is_re=True,
+        to_string="r.*f2",
+        to_is_re=True,
+    )
+    print("Result from cutting:")
+    print(res)
+
+    assert res == [
+        "  raboof",
+        "0.1234",
+        "    raboof2",
+        "    raboof2",
+        "   raboof",
+        "1.2345",
+        "0.2",
+        "  raboof2",
+        "  raboof2",
     ]
