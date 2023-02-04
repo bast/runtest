@@ -7,5 +7,5 @@ module = "runtest"
 author = "Radovan Bast"
 author-email = "radovan.bast@uit.no"
 home-page = "https://github.com/bast/runtest"
-description-file="README.rst"
+description-file="README.md"
 classifiers = ["License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"]
