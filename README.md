@@ -10,6 +10,10 @@
 
 Numerically tolerant end-to-end test library for research software.
 
+![image of a hardware circuit with red and green light bulbs](img/runtest-small.png)
+
+Image: [Midjourney](https://midjourney.com/), [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/legalcode)
+
 
 ## Installation
 
