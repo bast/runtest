@@ -19,8 +19,8 @@ def extract_numbers(text, mask=None):
     # followed by optional exponent part if desired
     (?: [EeDd] [+-]? \d+ ) ?
     """
-
-    pattern_int = re.compile("^-?[0-9]+$", re.VERBOSE)
+    pattern_number = re.compile(r"^[0-9\.eEdD\+\-]+[\s,]*$", re.VERBOSE)
+    pattern_int = re.compile(r"^-?[0-9]+[\s,]*$", re.VERBOSE)
     pattern_float = re.compile(numeric_const_pattern, re.VERBOSE)
     pattern_d = re.compile(r"[dD]")
 
@@ -32,7 +32,7 @@ def extract_numbers(text, mask=None):
         for w in line.split():
             # do not consider words like TzB1g
             # otherwise we would extract 1 later
-            if re.match(r"^[0-9\.eEdD\+\-]*$", w):
+            if re.match(pattern_number, w):
                 i += 1
                 if mask is not None:
                     if i not in mask:
@@ -146,4 +146,23 @@ def test_extract_numbers_mask():
         (1, 12, 3),
         (2, 0, 3),
         (2, 12, 3),
+    ]
+
+
+def test_extract_numbers_mask():
+
+    text = """1.0, 2.0, 3.0, 4.0
+1.0, 2.0, 3.0, 4.0
+1.0, 2.0, 3.0, 4.0"""
+
+    numbers, locations = extract_numbers(text.splitlines(), mask=[1, 3])
+
+    assert numbers == [1.0, 3.0, 1.0, 3.0, 1.0, 3.0]
+    assert locations == [
+        (0, 0, 3),
+        (0, 10, 3),
+        (1, 0, 3),
+        (1, 10, 3),
+        (2, 0, 3),
+        (2, 10, 3),
     ]
