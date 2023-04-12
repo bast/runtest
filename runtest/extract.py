@@ -176,3 +176,28 @@ def test_extract_comma_separated_numbers_mask():
         (4, 0, 2),
         (4, 8, 2),
     ]
+
+
+def test_extract_separated_numbers_mask():
+
+    text = """1.0, 2.0' 3.0, 4.0
+1.0, 2.0- 3.0, 4.0
+1.0, 2.0? 3.0, 4.0
+12, 22' 32, 42
+12, 22- 32, 42"""
+
+    numbers, locations = extract_numbers(text.splitlines(), mask=[1, 3])
+
+    assert numbers == [1.0, 4.0, 1.0, 3.0, 1.0, 4.0, 12, 42, 12, 32]
+    assert locations == [
+        (0, 0, 3),
+        (0, 15, 3),
+        (1, 0, 3),
+        (1, 10, 3),
+        (2, 0, 3),
+        (2, 15, 3),
+        (3, 0, 2),
+        (3, 12, 2),
+        (4, 0, 2),
+        (4, 8, 2),
+    ]
