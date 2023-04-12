@@ -149,7 +149,7 @@ def test_extract_numbers_mask():
     ]
 
 
-def test_extract_numbers_mask():
+def test_extract_comma_separated_numbers_mask():
 
     text = """1.0, 2.0, 3.0, 4.0
 1.0, 2.0, 3.0, 4.0
