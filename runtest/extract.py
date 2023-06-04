@@ -59,7 +59,6 @@ def extract_numbers(text, mask=None):
 
 
 def test_extract_numbers():
-
     text = """<<A( 3),B( 3)>> - linear response function (real):
 -----------------------------------------------------------------------------------------------
    A - Z-Dipole length      B1u  T+
@@ -135,7 +134,6 @@ def test_extract_numbers():
 
 
 def test_extract_numbers_mask():
-
     text = """1.0 2.0 3.0 4.0
 1.0 2.0 3.0 4.0
 1.0 2.0 3.0 4.0"""
@@ -154,7 +152,6 @@ def test_extract_numbers_mask():
 
 
 def test_extract_comma_separated_numbers_mask():
-
     text = """1.0, 2.0, 3.0, 4.0
 1.0, 2.0, 3.0, 4.0
 12, 22, 32, 42
@@ -179,7 +176,6 @@ def test_extract_comma_separated_numbers_mask():
 
 
 def test_extract_separated_numbers_mask():
-
     text = """1.0, 2.0' 3.0, 4.0
 1.0, 2.0- 3.0, 4.0
 1.0, 2.0? 3.0, 4.0

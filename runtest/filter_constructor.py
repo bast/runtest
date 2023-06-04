@@ -5,7 +5,6 @@ from .filter_api import recognized_kw, incompatible_pairs
 
 
 def get_filter(**kwargs):
-
     _filter = namedtuple(
         "_filter",
         [

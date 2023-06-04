@@ -52,9 +52,7 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
     with open(name_out, "w") as log_out:
         with open(name_ref, "w") as log_ref:
             with open(name_diff, "w") as log_diff:
-
                 for f in filter_list:
-
                     out_filtered = cut_sections(
                         open(out_name).readlines(),
                         from_string=f.from_string,
