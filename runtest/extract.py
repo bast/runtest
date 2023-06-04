@@ -19,8 +19,8 @@ def extract_numbers(text, mask=None):
     # followed by optional exponent part if desired
     (?: [EeDd] [+-]? \d+ ) ?
     """
-
-    pattern_int = re.compile("^-?[0-9]+$", re.VERBOSE)
+    pattern_number_and_separator = re.compile(r"^[0-9\.eEdD\+\-]+[,]?$", re.VERBOSE)
+    pattern_int = re.compile(r"-?[0-9]+", re.VERBOSE)
     pattern_float = re.compile(numeric_const_pattern, re.VERBOSE)
     pattern_d = re.compile(r"[dD]")
 
@@ -28,28 +28,32 @@ def extract_numbers(text, mask=None):
     locations = []
 
     for n, line in enumerate(text):
-        i = 0
+        n_matches = 0
         for w in line.split():
             # do not consider words like TzB1g
-            # otherwise we would extract 1 later
-            if re.match(r"^[0-9\.eEdD\+\-]*$", w):
-                i += 1
-                if mask is not None:
-                    if i not in mask:
-                        continue
-                is_integer = False
-                if len(pattern_float.findall(w)) > 0:
-                    is_integer = pattern_float.findall(w) == pattern_int.findall(w)
-                # apply floating point regex
-                for m in pattern_float.findall(w):
-                    index = line.index(m)
-                    # substitute dD by e
+            if not re.match(pattern_number_and_separator, w):
+                continue
+
+            n_matches += 1
+            if mask is not None and n_matches not in mask:
+                continue
+
+            is_integer = False
+            matched_floats = pattern_float.findall(w)
+
+            if len(matched_floats) > 0:
+                is_integer = matched_floats == pattern_int.findall(w)
+
+            # apply floating point regex
+            for m in matched_floats:
+                index = line.index(m)
+                # substitute dD by e
+                if is_integer:
+                    numbers.append(int(m))
+                else:
                     m = pattern_d.sub("e", m)
-                    if is_integer:
-                        numbers.append(int(m))
-                    else:
-                        numbers.append(float(m))
-                    locations.append((n, index, len(m)))
+                    numbers.append(float(m))
+                locations.append((n, index, len(m)))
 
     return numbers, locations
 
@@ -146,4 +150,54 @@ def test_extract_numbers_mask():
         (1, 12, 3),
         (2, 0, 3),
         (2, 12, 3),
+    ]
+
+
+def test_extract_comma_separated_numbers_mask():
+
+    text = """1.0, 2.0, 3.0, 4.0
+1.0, 2.0, 3.0, 4.0
+12, 22, 32, 42
+1.0, 2.0, 3.0, 4.0
+12, 22, 32, 42"""
+
+    numbers, locations = extract_numbers(text.splitlines(), mask=[1, 3])
+
+    assert numbers == [1.0, 3.0, 1.0, 3.0, 12, 32, 1.0, 3.0, 12, 32]
+    assert locations == [
+        (0, 0, 3),
+        (0, 10, 3),
+        (1, 0, 3),
+        (1, 10, 3),
+        (2, 0, 2),
+        (2, 8, 2),
+        (3, 0, 3),
+        (3, 10, 3),
+        (4, 0, 2),
+        (4, 8, 2),
+    ]
+
+
+def test_extract_separated_numbers_mask():
+
+    text = """1.0, 2.0' 3.0, 4.0
+1.0, 2.0- 3.0, 4.0
+1.0, 2.0? 3.0, 4.0
+12, 22' 32, 42
+12, 22- 32, 42"""
+
+    numbers, locations = extract_numbers(text.splitlines(), mask=[1, 3])
+
+    assert numbers == [1.0, 4.0, 1.0, 3.0, 1.0, 4.0, 12, 42, 12, 32]
+    assert locations == [
+        (0, 0, 3),
+        (0, 15, 3),
+        (1, 0, 3),
+        (1, 10, 3),
+        (2, 0, 3),
+        (2, 15, 3),
+        (3, 0, 2),
+        (3, 12, 2),
+        (4, 0, 2),
+        (4, 8, 2),
     ]
