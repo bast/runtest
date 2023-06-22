@@ -5,3 +5,4 @@ pytest-cov<2.6.0
 python-coveralls
 flit
 vulture
+fsfe-reuse
