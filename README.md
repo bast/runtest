@@ -1,7 +1,7 @@
 [![image](https://github.com/bast/runtest/workflows/Test/badge.svg)](https://github.com/bast/runtest/actions)
 [![image](https://coveralls.io/repos/bast/runtest/badge.png?branch=main)](https://coveralls.io/r/bast/runtest?branch=main)
 [![image](https://readthedocs.org/projects/runtest/badge/?version=latest)](http://runtest.readthedocs.io)
-[![image](https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg)](LICENSE)
+[![image](https://img.shields.io/badge/license-%20MPL--v2.0-blue.svg)](LICENSES/MPL-2.0.txt)
 [![image](https://zenodo.org/badge/DOI/10.5281/zenodo.1069004.svg)](https://doi.org/10.5281/zenodo.1069004)
 [![image](https://badge.fury.io/py/runtest.svg)](https://badge.fury.io/py/runtest)
 
