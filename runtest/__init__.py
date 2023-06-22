@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Radovan Bast <radovan.bast@uit.no>
+#
+# SPDX-License-Identifier: MPL-2.0
+
 """
 runtest: Numerically tolerant end-to-end test library for research software.
 """

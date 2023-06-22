@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Radovan Bast <radovan.bast@uit.no>
+#
+# SPDX-License-Identifier: MPL-2.0
+
 from .exceptions import FilterKeywordError, FailedTestError, BadFilterError
 from .extract import extract_numbers
 from .filter_api import recognized_kw
