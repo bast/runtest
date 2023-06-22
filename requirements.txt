@@ -6,3 +6,4 @@ python-coveralls
 flit
 vulture
 fsfe-reuse
+cffconvert
