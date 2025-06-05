@@ -24,7 +24,7 @@ $ pip install runtest
 
 ## Supported Python versions
 
-The library is tested with Python 3.7, 3.8, 3.9, 3.10.  If you want to test
+The library is tested with Python 3.10 - 3.13.  If you want to test
 runtest itself on your computer, you can follow what we do in the [CI
 workflow](https://github.com/bast/runtest/blob/main/.github/workflows/test.yml).
 
