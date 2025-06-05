@@ -18,4 +18,5 @@ __all__ = [
     "version_info",
     "run",
     "cli",
+    __version__,
 ]

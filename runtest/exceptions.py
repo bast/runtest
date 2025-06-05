@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MPL-2.0
 
+
 class FilterKeywordError(Exception):
     pass
 

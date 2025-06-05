@@ -137,8 +137,12 @@ def check(filter_list, out_name, ref_name, log_dir, verbose=False):
                             raise FilterKeywordError(
                                 "ERROR: for floats you have to specify either rel_tolerance or abs_tolerance\n"
                             )
-                        l = map(_tuple_matches, zip(out_numbers, ref_numbers))
-                        matching, errors = zip(*l)  # unzip tuples to two lists
+                        list_of_tuples = map(
+                            _tuple_matches, zip(out_numbers, ref_numbers)
+                        )
+                        matching, errors = zip(
+                            *list_of_tuples
+                        )  # unzip tuples to two lists
                         if not all(matching):
                             log_diff.write("\n")
                             for k, line in enumerate(out_filtered):
@@ -198,12 +202,9 @@ def test_check():
     _here = os.path.abspath(os.path.dirname(__file__))
     test_dir = os.path.join(_here, "test", "generic")
     out_name = os.path.join(test_dir, "out.txt")
-    ref_name = os.path.join(test_dir, "ref.txt")
-    log_dir = test_dir
 
     _test_setup(folder="generic", filters=[get_filter(abs_tolerance=0.1)])
 
-    filters = [get_filter()]
     with pytest.raises(FilterKeywordError) as e:
         _test_setup(folder="generic", filters=[get_filter()])
     assert (
@@ -342,9 +343,7 @@ def test_bad_keywords():
     with pytest.raises(FilterKeywordError) as e:
         _ = get_filter(raboof=0, foo=1)
     exception = """ERROR: keyword(s) (foo, raboof) not recognized
-       available keywords: ({0})\n""".format(
-        ", ".join(recognized_kw)
-    )
+       available keywords: ({0})\n""".format(", ".join(recognized_kw))
     assert exception in str(e.value)
 
     with pytest.raises(FilterKeywordError) as e:
