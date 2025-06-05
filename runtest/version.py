@@ -4,7 +4,7 @@
 
 from collections import namedtuple
 
-__version__ = "2.3.4"
+__version__ = "2.3.5"
 
 version_info = namedtuple("version_info", ["major", "minor", "micro", "releaselevel"])
 
