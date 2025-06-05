@@ -60,6 +60,10 @@ def test_tuple_matches():
         True,
         None,
     )
+    assert tuple_matches((3.45, 3.46), tolerance=0.01, error_definition="absolute") == (
+        True,
+        None,
+    )
     assert tuple_matches((13, 13), tolerance=1.0e-10, error_definition="relative") == (
         True,
         None,
